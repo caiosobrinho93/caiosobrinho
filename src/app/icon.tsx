@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-// Ícone do Nexus Vault gerado dinamicamente
+// Ícone do Nexus Vault gerado dinamicamente via SVG (100% autônomo e offline)
 export const size = {
   width: 32,
   height: 32,
@@ -12,7 +12,6 @@ export default function Icon() {
     (
       <div
         style={{
-          fontSize: 20,
           background: "linear-gradient(135deg, #09090b 0%, #18181b 100%)",
           width: "100%",
           height: "100%",
@@ -20,12 +19,21 @@ export default function Icon() {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: "8px",
-          border: "1.5px solid #a78bfa", // Violeta neon suave
-          color: "#c084fc", // Cor neon
-          fontWeight: "bold",
+          border: "1.5px solid #a78bfa", // Violeta neon
         }}
       >
-        ❖
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#c084fc" // Ciano/Violeta neon
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 2L2 12l10 10 10-10L12 2z" />
+        </svg>
       </div>
     ),
     {
