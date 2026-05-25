@@ -1,0 +1,65 @@
+import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { encrypt, decrypt } from "@/lib/crypto";
+
+export async function GET() {
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const passwords = await db.password.findMany({
+      where: { userId: session.userId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    // Decrypt passwords before returning to client
+    const decryptedPasswords = passwords.map((p) => ({
+      ...p,
+      password: decrypt(p.password),
+    }));
+
+    return NextResponse.json(decryptedPasswords);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch passwords" }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const { title, username, email, password, url, imageUrl, notes, category, tags } = await request.json();
+
+    if (!title || !password) {
+      return NextResponse.json({ error: "Title and Password are required" }, { status: 400 });
+    }
+
+    // Encrypt password
+    const encryptedPassword = encrypt(password);
+
+    const newPasswordRecord = await db.password.create({
+      data: {
+        userId: session.userId,
+        title,
+        username: username || "",
+        email: email || "",
+        password: encryptedPassword,
+        url: url || "",
+        imageUrl: imageUrl || "",
+        notes: notes || "",
+        category: category || "General",
+        tags: tags || "",
+      },
+    });
+
+    return NextResponse.json({
+      ...newPasswordRecord,
+      password: password, // Return original decrypted password to client
+    });
+  } catch (error) {
+    console.error("Create password error:", error);
+    return NextResponse.json({ error: "Failed to create password" }, { status: 500 });
+  }
+}

@@ -1,26 +1,421 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Futuristic Dark Theme System */
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 5.8%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  
+  /* Primary and Accent colors */
+  --primary: 250 84% 54%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 12%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 250 84% 54%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 85.7% 97.3%;
+  --border: 240 3.7% 12%;
+  --input: 240 3.7% 12%;
+  --ring: 250 84% 54%;
+  --radius: 1rem;
+
+  /* Accent Color Presets */
+  --theme-violet: 262 83% 58%;
+  --theme-cyan: 191 91% 47%;
+  --theme-emerald: 142 71% 45%;
+  --theme-rose: 346 87% 60%;
+  --theme-amber: 37 90% 51%;
+  --theme-carbon: 240 5% 35%;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Dynamic Accent classes for Tailwind v4 */
+.theme-violet {
+  --primary: var(--theme-violet);
+  --accent: var(--theme-violet);
+  --ring: var(--theme-violet);
+  --color-primary: hsl(var(--theme-violet));
+  --color-accent: hsl(var(--theme-violet));
+  --color-ring: hsl(var(--theme-violet));
+}
+.theme-cyan {
+  --primary: var(--theme-cyan);
+  --accent: var(--theme-cyan);
+  --ring: var(--theme-cyan);
+  --color-primary: hsl(var(--theme-cyan));
+  --color-accent: hsl(var(--theme-cyan));
+  --color-ring: hsl(var(--theme-cyan));
+}
+.theme-emerald {
+  --primary: var(--theme-emerald);
+  --accent: var(--theme-emerald);
+  --ring: var(--theme-emerald);
+  --color-primary: hsl(var(--theme-emerald));
+  --color-accent: hsl(var(--theme-emerald));
+  --color-ring: hsl(var(--theme-emerald));
+}
+.theme-rose {
+  --primary: var(--theme-rose);
+  --accent: var(--theme-rose);
+  --ring: var(--theme-rose);
+  --color-primary: hsl(var(--theme-rose));
+  --color-accent: hsl(var(--theme-rose));
+  --color-ring: hsl(var(--theme-rose));
+}
+.theme-amber {
+  --primary: var(--theme-amber);
+  --accent: var(--theme-amber);
+  --ring: var(--theme-amber);
+  --color-primary: hsl(var(--theme-amber));
+  --color-accent: hsl(var(--theme-amber));
+  --color-ring: hsl(var(--theme-amber));
+}
+.theme-carbon {
+  --primary: 240 5% 64.9%;
+  --accent: 240 5% 64.9%;
+  --ring: 240 5.9% 10%;
+  --color-primary: hsl(240 5% 64.9%);
+  --color-accent: hsl(240 5% 64.9%);
+  --color-ring: hsl(240 5% 30%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Layout density presets (CSS overrides for instant visual changes) */
+.density-compact {
+  font-size: 0.95rem;
+}
+.density-compact .p-5, .density-compact .p-6 {
+  padding: 0.85rem !important;
+}
+.density-compact .p-4 {
+  padding: 0.75rem !important;
+}
+.density-compact .gap-4, .density-compact .gap-6 {
+  gap: 0.75rem !important;
+}
+.density-compact .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem !important;
+}
+
+.density-spacious {
+  font-size: 1.05rem;
+}
+.density-spacious .p-5, .density-spacious .p-6 {
+  padding: 1.6rem !important;
+}
+.density-spacious .p-4 {
+  padding: 1.25rem !important;
+}
+.density-spacious .gap-4, .density-spacious .gap-6 {
+  gap: 1.75rem !important;
+}
+.density-spacious .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1.75rem !important;
+}
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+  --radius-2xl: calc(var(--radius) + 0.5rem);
+  --radius-3xl: calc(var(--radius) + 1rem);
+}
+
+/* Custom Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* Premium micro-interactions, Neon & Grid styling */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+/* Neon Glows */
+.neon-glow {
+  box-shadow: 0 0 15px hsl(var(--primary) / 0.12);
+  border-color: hsl(var(--primary) / 0.22) !important;
+}
+
+.neon-glow-hover {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.neon-glow-hover:hover {
+  box-shadow: 0 0 25px hsl(var(--primary) / 0.28);
+  border-color: hsl(var(--primary) / 0.45) !important;
+  transform: translateY(-2px);
+}
+
+.neon-text {
+  text-shadow: 0 0 8px hsl(var(--primary) / 0.55);
+}
+
+.neon-text-subtle {
+  text-shadow: 0 0 5px hsl(var(--primary) / 0.3);
+}
+
+/* Ambient Neon Glow */
+.ambient-glow {
+  position: relative;
+}
+.ambient-glow::before {
+  content: "";
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 450px;
+  height: 300px;
+  background: radial-gradient(circle, hsl(var(--primary) / 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+/* Neon Pulse Animation */
+@keyframes neon-pulse-keyframes {
+  0%, 100% {
+    box-shadow: 0 0 12px hsl(var(--primary) / 0.15);
+    border-color: hsl(var(--primary) / 0.25) !important;
+  }
+  50% {
+    box-shadow: 0 0 25px hsl(var(--primary) / 0.35);
+    border-color: hsl(var(--primary) / 0.6) !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.neon-pulse {
+  animation: neon-pulse-keyframes 3s infinite ease-in-out;
 }
+
+.neon-border {
+  border: 1px solid hsl(var(--primary) / 0.3) !important;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  overflow-x: hidden;
+  font-family: var(--font-outfit), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.008) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.008) 1px, transparent 1px);
+}
+
+/* Mobile Minimalization & Space Optimization */
+@media (max-width: 768px) {
+  .min-h-screen {
+    padding-bottom: 4.5rem; /* Ajuste para navegação mobile inferior */
+  }
+  
+  /* Compactar paddings e margens gerais */
+  .p-5, .p-6, .p-4 {
+    padding: 0.75rem !important;
+  }
+  
+  .gap-4, .gap-5, .gap-6 {
+    gap: 0.6rem !important;
+  }
+
+  .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.85rem !important;
+  }
+  
+  .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.65rem !important;
+  }
+
+  /* Redimensionar tipografia */
+  h1 {
+    font-size: 1.35rem !important;
+    line-height: 1.25 !important;
+  }
+  
+  h2 {
+    font-size: 1.05rem !important;
+  }
+  
+  h3 {
+    font-size: 0.95rem !important;
+  }
+
+  .text-\[28px\], .text-\[26px\] {
+    font-size: 1.5rem !important;
+  }
+
+  /* Ocultar elementos secundários no mobile */
+  .hide-mobile {
+    display: none !important;
+  }
+
+  /* Grid compacta */
+  .grid-cols-4, .grid-cols-3 {
+    grid-template-cols: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* --- SISTEMA DE CUSTOMIZAÇÃO DE TEMAS --- */
+
+/* 1. Intensidades de Brilho Neon */
+.neon-intensity-none .neon-glow,
+.neon-intensity-none .neon-glow-hover,
+.neon-intensity-none .neon-pulse,
+.neon-intensity-none .glow-border {
+  box-shadow: none !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  animation: none !important;
+}
+.neon-intensity-none .neon-text,
+.neon-intensity-none .neon-text-subtle {
+  text-shadow: none !important;
+}
+
+.neon-intensity-low .neon-glow {
+  box-shadow: 0 0 6px hsl(var(--primary) / 0.08) !important;
+  border-color: hsl(var(--primary) / 0.15) !important;
+}
+.neon-intensity-low .neon-glow-hover:hover {
+  box-shadow: 0 0 12px hsl(var(--primary) / 0.18) !important;
+  border-color: hsl(var(--primary) / 0.3) !important;
+}
+.neon-intensity-low .neon-pulse {
+  animation: neon-pulse-keyframes 5s infinite ease-in-out !important;
+}
+.neon-intensity-low .neon-text {
+  text-shadow: 0 0 4px hsl(var(--primary) / 0.3) !important;
+}
+
+.neon-intensity-medium .neon-glow {
+  box-shadow: 0 0 15px hsl(var(--primary) / 0.12) !important;
+  border-color: hsl(var(--primary) / 0.22) !important;
+}
+.neon-intensity-medium .neon-glow-hover:hover {
+  box-shadow: 0 0 25px hsl(var(--primary) / 0.28) !important;
+  border-color: hsl(var(--primary) / 0.45) !important;
+}
+.neon-intensity-medium .neon-pulse {
+  animation: neon-pulse-keyframes 3s infinite ease-in-out !important;
+}
+.neon-intensity-medium .neon-text {
+  text-shadow: 0 0 8px hsl(var(--primary) / 0.55) !important;
+}
+
+.neon-intensity-high .neon-glow {
+  box-shadow: 0 0 25px hsl(var(--primary) / 0.22), inset 0 0 8px hsl(var(--primary) / 0.08) !important;
+  border-color: hsl(var(--primary) / 0.38) !important;
+}
+.neon-intensity-high .neon-glow-hover:hover {
+  box-shadow: 0 0 40px hsl(var(--primary) / 0.5), inset 0 0 12px hsl(var(--primary) / 0.15) !important;
+  border-color: hsl(var(--primary) / 0.65) !important;
+}
+.neon-intensity-high .neon-pulse {
+  animation: neon-pulse-keyframes 1.5s infinite ease-in-out !important;
+}
+.neon-intensity-high .neon-text {
+  text-shadow: 0 0 15px hsl(var(--primary) / 0.85), 0 0 5px hsl(var(--primary) / 0.45) !important;
+}
+
+/* 2. Padrões de Grid de Fundo */
+.grid-style-none {
+  background-image: none !important;
+}
+.grid-style-fine {
+  background-size: 40px 40px !important;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.008) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.008) 1px, transparent 1px) !important;
+}
+.grid-style-lines {
+  background-size: 40px 40px !important;
+  background-image: 
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.008) 1px, transparent 1px) !important;
+}
+.grid-style-dots {
+  background-size: 30px 30px !important;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px) !important;
+}
+
+/* 3. Velocidades de Animação */
+.animation-speed-disabled *,
+.animation-speed-disabled *::before,
+.animation-speed-disabled *::after {
+  animation: none !important;
+  transition-duration: 0s !important;
+}
+.animation-speed-slow .neon-pulse,
+.animation-speed-slow .animate-pulse {
+  animation-duration: 6s !important;
+}
+.animation-speed-normal .neon-pulse,
+.animation-speed-normal .animate-pulse {
+  animation-duration: 3s !important;
+}
+.animation-speed-fast .neon-pulse,
+.animation-speed-fast .animate-pulse {
+  animation-duration: 1.5s !important;
+}
+
+/* Gradientes Customizados Estilizados para Presets */
+.bg-preset-synth {
+  background-color: #0b0713 !important;
+  background-image: radial-gradient(at top, rgba(124, 58, 237, 0.08) 0px, transparent 50%), radial-gradient(at bottom left, rgba(244, 63, 94, 0.03) 0px, transparent 40%) !important;
+}
+.bg-preset-cyber {
+  background-color: #03070b !important;
+  background-image: radial-gradient(at top right, rgba(6, 182, 212, 0.09) 0px, transparent 50%), radial-gradient(at bottom, rgba(8, 47, 73, 0.3) 0px, transparent 60%) !important;
+}
+.bg-preset-matrix {
+  background-color: #020503 !important;
+  background-image: radial-gradient(at top left, rgba(16, 185, 129, 0.06) 0px, transparent 50%) !important;
+}
+.bg-preset-sunset {
+  background-color: #0a0604 !important;
+  background-image: radial-gradient(at top, rgba(245, 158, 11, 0.07) 0px, transparent 50%), radial-gradient(at bottom right, rgba(244, 63, 94, 0.05) 0px, transparent 50%) !important;
+}
+.bg-preset-tokyo {
+  background-color: #080308 !important;
+  background-image: radial-gradient(at top, rgba(244, 63, 94, 0.08) 0px, transparent 50%), radial-gradient(at bottom, rgba(124, 58, 237, 0.06) 0px, transparent 50%) !important;
+}
+.bg-preset-carbon {
+  background-color: #070708 !important;
+  background-image: radial-gradient(at top, rgba(39, 39, 42, 0.15) 0px, transparent 60%) !important;
+}
+

@@ -1,0 +1,173 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String      @id @default(uuid())
+  username     String      @unique
+  passwordHash String
+  xp           Int         @default(0)
+  level        Int         @default(1)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  videos       Video[]
+  passwords    Password[]
+  torrents     Torrent[]
+  files        File[]
+  folders      Folder[]
+  wallpapers   Wallpaper[]
+  software     Software[]
+  notes        Note[]
+  goals        Goal[]
+}
+
+model Video {
+  id           String   @id @default(uuid())
+  title        String
+  url          String
+  thumbnailUrl String?
+  duration     Int?     // duration in seconds
+  progress     Int      @default(0) // progress in seconds
+  isFavorite   Boolean  @default(false)
+  category     String?
+  tags         String?  // comma-separated tags
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Password {
+  id           String   @id @default(uuid())
+  title        String
+  username     String?
+  email        String?
+  password     String   // AES-256 encrypted string
+  url          String?
+  imageUrl     String?  // App Logo/Banner URL
+  notes        String?
+  category     String?
+  tags         String?  // comma-separated tags
+  isFavorite   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Torrent {
+  id            String   @id @default(uuid())
+  title         String
+  magnet        String   @unique
+  status        String   @default("queued") // queued, downloading, seeding, paused, completed
+  progress      Float    @default(0.0)      // percentage 0 to 100
+  downloadSpeed Float    @default(0.0)      // in MB/s
+  uploadSpeed   Float    @default(0.0)      // in MB/s
+  size          String   // human-readable size e.g., "1.4 GB"
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Folder {
+  id             String   @id @default(uuid())
+  name           String
+  parentFolderId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  parentFolder   Folder?  @relation("FolderHierarchy", fields: [parentFolderId], references: [id], onDelete: Cascade)
+  childFolders   Folder[] @relation("FolderHierarchy")
+  files          File[]
+}
+
+model File {
+  id         String   @id @default(uuid())
+  name       String
+  path       String   // local file/upload URL
+  size       Int      // in bytes
+  mimeType   String
+  isFavorite Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  folderId   String?
+  folder     Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Wallpaper {
+  id         String   @id @default(uuid())
+  title      String
+  url        String
+  width      Int?
+  height     Int?
+  isFavorite Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Software {
+  id          String   @id @default(uuid())
+  name        String
+  version     String
+  description String?
+  downloadUrl String?
+  platform    String   // Windows, macOS, Linux, Web
+  iconUrl     String?
+  category    String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id         String   @id @default(uuid())
+  title      String
+  content    String   // Markdown body
+  category   String?
+  tags       String?  // comma-separated tags
+  isFavorite Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Goal {
+  id           String   @id @default(uuid())
+  title        String
+  targetValue  Float?
+  currentValue Float?
+  isCompleted  Boolean  @default(false)
+  deadline     DateTime?
+  xpReward     Int      @default(100)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
