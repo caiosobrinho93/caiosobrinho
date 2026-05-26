@@ -19,7 +19,9 @@ import {
   Tag,
   Folder,
   ArrowLeft,
-  ChevronRight
+  ChevronRight,
+  Lock,
+  Fingerprint
 } from "lucide-react";
 
 interface NoteItem {
@@ -72,6 +74,55 @@ function NotesContent() {
   
   // Responsividade no mobile
   const [showSidebarOnMobile, setShowSidebarOnMobile] = useState(true);
+
+  // Estados e Refs para Notas Seguras
+  const [revealedNoteIds, setRevealedNoteIds] = useState<string[]>([]);
+  const [isPressing, setIsPressing] = useState(false);
+  const pressTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Reset do estado de pressionamento ao trocar de nota
+  useEffect(() => {
+    setIsPressing(false);
+    if (pressTimeoutRef.current) {
+      clearTimeout(pressTimeoutRef.current);
+    }
+  }, [selectedNote]);
+
+  const isPrivateNote = (note: NoteItem | null) => {
+    if (!note) return false;
+    const checkString = (str?: string | null) => {
+      if (!str) return false;
+      const lower = str.toLowerCase();
+      return (
+        lower.includes("#privado") ||
+        lower.includes("#secret") ||
+        lower.includes("#seguro") ||
+        lower.includes("[privado]")
+      );
+    };
+    return (
+      checkString(note.title) ||
+      checkString(note.content) ||
+      checkString(note.tags) ||
+      checkString(note.category)
+    );
+  };
+
+  const handlePressStart = () => {
+    if (!selectedNote) return;
+    setIsPressing(true);
+    pressTimeoutRef.current = setTimeout(() => {
+      setIsPressing(false);
+      setRevealedNoteIds(prev => [...prev, selectedNote.id]);
+    }, 800);
+  };
+
+  const handlePressEnd = () => {
+    setIsPressing(false);
+    if (pressTimeoutRef.current) {
+      clearTimeout(pressTimeoutRef.current);
+    }
+  };
 
   useEffect(() => {
     const alreadyLoaded = useDataStore.getState().notes.hasLoaded;
@@ -412,42 +463,113 @@ function NotesContent() {
               </div>
             </div>
 
-            {/* Título e Categoria */}
-            <div className="p-4 border-b border-border/60 bg-muted/5 flex flex-col sm:flex-row gap-3 shrink-0">
-              <input
-                type="text"
-                placeholder="Título da Nota"
-                value={editTitle}
-                onChange={(e) => handleFieldChange("title", e.target.value)}
-                className="flex-1 bg-transparent border-0 font-bold text-lg text-white placeholder-muted-foreground focus:outline-none focus:ring-0 p-0 leading-tight"
-              />
-              
-              <div className="flex gap-2 shrink-0 items-center">
-                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider hidden sm:inline">Categoria:</span>
+            {/* Wrapper para Título, Categoria e Conteúdo para podermos aplicar o Overlay sobre ambos */}
+            <div className="flex-1 flex flex-col overflow-hidden relative">
+              {/* Título e Categoria */}
+              <div className="p-4 border-b border-border/60 bg-muted/5 flex flex-col sm:flex-row gap-3 shrink-0">
                 <input
                   type="text"
-                  placeholder="Geral"
-                  value={editCategory}
-                  onChange={(e) => handleFieldChange("category", e.target.value)}
-                  className="px-3.5 py-1.5 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-medium max-w-32"
+                  placeholder="Título da Nota"
+                  value={editTitle}
+                  onChange={(e) => handleFieldChange("title", e.target.value)}
+                  className="flex-1 bg-transparent border-0 font-bold text-lg text-white placeholder-muted-foreground focus:outline-none focus:ring-0 p-0 leading-tight"
                 />
+                
+                <div className="flex gap-2 shrink-0 items-center">
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider hidden sm:inline">Categoria:</span>
+                  <input
+                    type="text"
+                    placeholder="Geral"
+                    value={editCategory}
+                    onChange={(e) => handleFieldChange("category", e.target.value)}
+                    className="px-3.5 py-1.5 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-medium max-w-32"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Conteúdo do Editor / Visualizador */}
-            <div className="flex-1 overflow-y-auto p-5 relative">
-              {activeTab === "write" ? (
-                <textarea
-                  value={editContent}
-                  onChange={(e) => handleFieldChange("content", e.target.value)}
-                  placeholder="# Título&#10;&#10;Escreva as anotações do cofre usando formatação Markdown..."
-                  className="w-full h-full bg-transparent border-0 resize-none text-white/90 placeholder-muted-foreground/60 text-sm focus:outline-none focus:ring-0 p-0 leading-relaxed font-mono"
-                />
-              ) : (
-                <div
-                  className="prose prose-invert max-w-none text-sm leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: renderMarkdown(editContent) }}
-                />
+              {/* Conteúdo do Editor / Visualizador */}
+              <div className="flex-1 overflow-y-auto p-5 relative">
+                {activeTab === "write" ? (
+                  <textarea
+                    value={editContent}
+                    onChange={(e) => handleFieldChange("content", e.target.value)}
+                    placeholder="# Título&#10;&#10;Escreva as anotações do cofre usando formatação Markdown..."
+                    className="w-full h-full bg-transparent border-0 resize-none text-white/90 placeholder-muted-foreground/60 text-sm focus:outline-none focus:ring-0 p-0 leading-relaxed font-mono"
+                  />
+                ) : (
+                  <div
+                    className="prose prose-invert max-w-none text-sm leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: renderMarkdown(editContent) }}
+                  />
+                )}
+              </div>
+
+              {/* Overlay de Segurança Cyberpunk */}
+              {isPrivateNote(selectedNote) && !revealedNoteIds.includes(selectedNote.id) && (
+                <div className="absolute inset-0 z-30 backdrop-blur-2xl bg-black/95 flex flex-col items-center justify-center p-6 text-center select-none scanlines">
+                  <div className="max-w-md w-full flex flex-col items-center gap-6">
+                    {/* Anel de Recarga Animado */}
+                    <div className="relative flex items-center justify-center">
+                      <div className="absolute inset-0 -m-3 scale-110">
+                        <svg className="w-24 h-24 -rotate-90 mx-auto">
+                          <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="3" />
+                          <motion.circle
+                            cx="48" cy="48" r="40" fill="none"
+                            stroke="hsl(var(--primary))" strokeWidth="3"
+                            strokeDasharray={2 * Math.PI * 40}
+                            initial={{ strokeDashoffset: 2 * Math.PI * 40 }}
+                            animate={{ strokeDashoffset: isPressing ? 0 : 2 * Math.PI * 40 }}
+                            transition={{ duration: isPressing ? 0.8 : 0.2, ease: isPressing ? "linear" : "easeOut" }}
+                            strokeLinecap="round"
+                            style={{ filter: 'drop-shadow(0 0 6px hsl(var(--primary)))' }}
+                          />
+                        </svg>
+                      </div>
+                      
+                      <motion.div 
+                        animate={isPressing ? { scale: [1, 1.08, 1] } : {}}
+                        transition={{ repeat: Infinity, duration: 0.6 }}
+                        className="w-16 h-16 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary relative z-10"
+                      >
+                        <Fingerprint className="w-8 h-8 neon-pulse" />
+                      </motion.div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-black text-white tracking-widest uppercase flex items-center justify-center gap-1.5 font-display">
+                        <Lock className="w-3.5 h-3.5 text-primary" />
+                        Acesso Criptografado
+                      </h3>
+                      <p className="text-xs text-muted-foreground max-w-xs leading-relaxed font-medium">
+                        Esta nota foi classificada como privada. Pressione e segure o sensor ou use o desbloqueio rápido.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-3 w-full max-w-xs mt-2">
+                      <button
+                        onMouseDown={handlePressStart}
+                        onMouseUp={handlePressEnd}
+                        onMouseLeave={handlePressEnd}
+                        onTouchStart={(e) => { e.preventDefault(); handlePressStart(); }}
+                        onTouchEnd={handlePressEnd}
+                        className={`w-full py-3 rounded-sm font-bold text-xs uppercase tracking-wider transition-all border cursor-pointer select-none active:scale-[0.98] font-display ${
+                          isPressing 
+                            ? "bg-primary border-primary text-black shadow-[0_0_15px_rgba(197,254,0,0.4)]" 
+                            : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
+                        }`}
+                      >
+                        {isPressing ? "Acessando..." : "Segure para Revelar"}
+                      </button>
+
+                      <button
+                        onClick={() => setRevealedNoteIds(prev => [...prev, selectedNote.id])}
+                        className="py-1 text-[9px] text-muted-foreground hover:text-white uppercase tracking-wider font-bold transition-colors cursor-pointer"
+                      >
+                        Desbloqueio Rápido (Clique)
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>

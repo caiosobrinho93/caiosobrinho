@@ -10,12 +10,26 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Nexus Vault | Personal Operating System",
-  description: "Secure, private dashboard to organize files, credentials, videos, notes, software, and torrents.",
+  title: 'Nexus Vault | Personal Operating System',
+  description: 'Secure, private cyberpunk dashboard to organize files, credentials, videos, notes, software, and torrents.',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Nexus Vault',
+  },
+  applicationName: 'Nexus Vault',
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export const viewport = {
-  themeColor: "#000000",
+  themeColor: '#000000',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
 };
 
 
@@ -26,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${outfit.variable} dark h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30">
+      <body className="min-h-[100dvh] flex flex-col bg-background text-foreground selection:bg-primary/30 overscroll-none">
         <ThemeProvider>{children}</ThemeProvider>
         
         {/* Script para PWA Service Worker e auto-recuperação de erros de carregamento (ChunkLoadError) */}

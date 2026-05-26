@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useStatsStore } from "@/stores/statsStore";
 import { useDataStore } from "@/stores/dataStore";
 import { motion, AnimatePresence } from "framer-motion";
+import VideoPlayer from "@/components/VideoPlayer";
 import {
   Video,
   Plus,
@@ -634,76 +635,16 @@ export default function VideosPage() {
         )}
       </AnimatePresence>
 
-      {/* LIGHTBOX DO PLAYER DE VÍDEO */}
+      {/* LIGHTBOX DO PLAYER DE VÍDEO CYBERPUNK PREMIUM */}
       <AnimatePresence>
         {activeVideo && (
-          <div className="fixed inset-0 w-full h-full z-50 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.9 }}
-              exit={{ opacity: 0 }}
-              onClick={() => {
-                const videoEl = document.getElementById("preview-video-player") as HTMLVideoElement;
-                if (videoEl) {
-                  updateProgress(activeVideo.id, Math.floor(videoEl.currentTime));
-                }
-                setActiveVideo(null);
-              }}
-              className="absolute inset-0 bg-black/95 backdrop-blur-sm"
-            />
-
-            <motion.div
-              layoutId={activeVideo.id}
-              className="w-full max-w-4xl aspect-video bg-black border border-border rounded-sm relative z-10 flex flex-col overflow-hidden shadow-2xl"
-            >
-              <div className="absolute top-0 inset-x-0 h-14 bg-gradient-to-b from-black/80 to-transparent flex items-center justify-between px-5 pointer-events-none z-20">
-                <span className="text-sm font-semibold text-white truncate max-w-[80%] shadow-sm font-medium">
-                  {activeVideo.title}
-                </span>
-                <button
-                  onClick={() => {
-                    const videoEl = document.getElementById("preview-video-player") as HTMLVideoElement;
-                    if (videoEl) {
-                      updateProgress(activeVideo.id, Math.floor(videoEl.currentTime));
-                    }
-                    setActiveVideo(null);
-                  }}
-                  className="p-1.5 rounded-sm bg-black/40 hover:bg-black/60 text-white cursor-pointer pointer-events-auto border border-white/5 transition-colors"
-                >
-                  <X className="w-4.5 h-4.5" />
-                </button>
-              </div>
-
-              <div className="flex-1 w-full h-full relative">
-                {getEmbedUrl(activeVideo.url) ? (
-                  <iframe
-                    src={`${getEmbedUrl(activeVideo.url)}?autoplay=1`}
-                    title={activeVideo.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full border-0 absolute inset-0"
-                  />
-                ) : (
-                  <video
-                    id="preview-video-player"
-                    src={activeVideo.url}
-                    autoPlay
-                    controls
-                    className="w-full h-full object-contain"
-                    onLoadedMetadata={(e) => {
-                      const videoEl = e.currentTarget;
-                      if (activeVideo.progress > 0) {
-                        videoEl.currentTime = activeVideo.progress;
-                      }
-                    }}
-                    onPause={(e) => {
-                      updateProgress(activeVideo.id, Math.floor(e.currentTarget.currentTime));
-                    }}
-                  />
-                )}
-              </div>
-            </motion.div>
-          </div>
+          <VideoPlayer
+            video={activeVideo}
+            playlist={videos}
+            onClose={() => setActiveVideo(null)}
+            onUpdateProgress={updateProgress}
+            onPlayVideo={(nextVideo) => setActiveVideo(nextVideo)}
+          />
         )}
       </AnimatePresence>
     </div>

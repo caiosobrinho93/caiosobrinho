@@ -18,6 +18,8 @@ import {
   Star,
   Zap,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   Trophy,
   CheckCircle2,
   Circle,
@@ -166,6 +168,45 @@ export default function DashboardPage() {
   const [showAdvancedNewAccount, setShowAdvancedNewAccount] = useState(false);
   const [rewards, setRewards] = useState<any[]>([]);
   const [isClaimingReward, setIsClaimingReward] = useState<string | null>(null);
+
+  const [widgetOrder, setWidgetOrder] = useState<string[]>([
+    "recent_activities",
+    "bank_sync",
+    "storage",
+    "goals",
+    "rewards",
+    "shortcuts",
+    "operations",
+    "favorites",
+  ]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedOrder = localStorage.getItem("nexus_widget_order");
+      if (savedOrder) {
+        try {
+          const parsed = JSON.parse(savedOrder);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const validWidgets = [
+              "recent_activities",
+              "bank_sync",
+              "storage",
+              "goals",
+              "rewards",
+              "shortcuts",
+              "operations",
+              "favorites",
+            ];
+            const filtered = parsed.filter((w) => validWidgets.includes(w));
+            const missing = validWidgets.filter((w) => !filtered.includes(w));
+            setWidgetOrder([...filtered, ...missing]);
+          }
+        } catch (e) {
+          console.error("Failed to parse saved widget order", e);
+        }
+      }
+    }
+  }, []);
 
   const fetchRewards = async () => {
     try {
@@ -512,6 +553,566 @@ export default function DashboardPage() {
   const currentLevelXp = data.profile.xp % 1000;
   const xpPercentage = (currentLevelXp / 1000) * 100;
 
+  if (!data) return null; // Type-guard for compiler safety
+
+  const moveWidget = (idx: number, direction: 'up' | 'down') => {
+    const newOrder = [...widgetOrder];
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= newOrder.length) return;
+    
+    // Swap elements
+    const temp = newOrder[idx];
+    newOrder[idx] = newOrder[targetIdx];
+    newOrder[targetIdx] = temp;
+    
+    setWidgetOrder(newOrder);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("nexus_widget_order", JSON.stringify(newOrder));
+    }
+  };
+
+  const renderWidgetHeader = (title: string, icon: React.ReactNode, idx: number, extraActions?: React.ReactNode) => {
+    return (
+      <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-border/40 font-display">
+        <div className="flex items-center gap-1.5">
+          {icon}
+          <h2 className="text-[10px] font-display font-bold text-white uppercase tracking-wider">{title}</h2>
+        </div>
+        
+        <div className="flex items-center gap-2 pointer-events-auto">
+          {extraActions}
+          
+          <div className="flex items-center gap-0.5 bg-muted/15 border border-border/40 p-0.5 rounded-sm shrink-0">
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); moveWidget(idx, 'up'); }}
+              disabled={idx === 0}
+              className="p-0.5 text-muted-foreground hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              title="Subir Widget"
+            >
+              <ChevronUp className="w-3 h-3" />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); moveWidget(idx, 'down'); }}
+              disabled={idx === widgetOrder.length - 1}
+              className="p-0.5 text-muted-foreground hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              title="Baixar Widget"
+            >
+              <ChevronDown className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderRecentActivities = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="recent_activities"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-2 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader("Atividades Recentes", <Clock className="w-3.5 h-3.5 text-primary" />, idx, (
+          <span className="text-[8px] text-muted-foreground bg-muted/15 border border-border px-1.5 py-0.5 rounded-sm font-bold uppercase tracking-wider font-display">
+            Console Ativo
+          </span>
+        ))}
+        <div className="space-y-0.5">
+          {data.recentItems.slice(0, 4).map((item) => (
+            <div
+              key={item.id}
+              onClick={() => router.push(getModuleLink(item.type))}
+              className="flex items-center justify-between p-1.5 rounded-sm hover:bg-muted/15 transition-all cursor-pointer group border border-transparent hover:border-border/30"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-6.5 h-6.5 rounded-sm bg-card border border-border flex items-center justify-center shrink-0">
+                  {getModuleIcon(item.type)}
+                </div>
+                <div className="min-w-0 ">
+                  <div className="flex items-center gap-2">
+                    <p className="text-[11px] font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
+                      {item.title}
+                    </p>
+                    {item.createdBy && (
+                      <span className={`user-tag user-tag-${item.createdBy}`}>
+                        {item.createdBy === "caio" ? "Caio" : "Giselle"}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[9px] text-muted-foreground truncate leading-none mt-0.5 uppercase tracking-wide font-mono">
+                    {item.type} // {item.details}
+                  </p>
+                </div>
+              </div>
+              <span className="text-[9px] text-muted-foreground font-semibold whitespace-nowrap ml-4 shrink-0 flex items-center gap-0.5 font-mono">
+                {new Date(item.date).toLocaleDateString("pt-BR", {month: "short", day: "numeric"})}
+                <ArrowUpRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </span>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderBankSync = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="bank_sync"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-2 ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader("Sincronização Bancária", <CreditCard className="w-3.5 h-3.5 text-primary" />, idx, (
+          <button
+            onClick={() => setIsAccountsModalOpen(true)}
+            className="flex items-center gap-1 px-2 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 rounded-sm text-[8px] font-bold cursor-pointer transition-colors"
+          >
+            <Settings className="w-2.5 h-2.5" />
+            Gerenciar Contas
+          </button>
+        ))}
+
+        <AnimatePresence>
+          {isSyncingBank && syncMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="mb-2 p-1.5 bg-primary/5 border border-primary/20 rounded-sm flex items-center gap-2 text-[9px] text-primary"
+            >
+              <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
+              <span>{syncMessage}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {data.financialAccounts && data.financialAccounts.length > 0 ? (
+            data.financialAccounts.map((acc) => {
+              const prov = acc.provider.toLowerCase();
+              let borderColor = "border-primary/20";
+              let bgHoverColor = "hover:bg-primary/5";
+              let tagBg = "bg-primary/10 text-primary border-primary/20";
+              let nameTag = acc.provider.substring(0, 3).toUpperCase();
+
+              if (prov.includes("nubank")) {
+                borderColor = "border-fuchsia-500/25";
+                bgHoverColor = "hover:bg-fuchsia-950/5";
+                tagBg = "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/25";
+              } else if (prov.includes("santander")) {
+                borderColor = "border-red-500/25";
+                bgHoverColor = "hover:bg-red-950/5";
+                tagBg = "bg-red-500/10 text-red-400 border-red-500/25";
+              } else if (prov.includes("mercado pago") || prov.includes("mp")) {
+                borderColor = "border-sky-500/25";
+                bgHoverColor = "hover:bg-sky-950/5";
+                tagBg = "bg-sky-500/10 text-sky-400 border-sky-500/25";
+                nameTag = "MP";
+              } else if (prov.includes("itaú") || prov.includes("itau")) {
+                borderColor = "border-amber-500/25";
+                bgHoverColor = "hover:bg-amber-950/5";
+                tagBg = "bg-amber-500/10 text-amber-400 border-amber-500/25";
+              } else if (prov.includes("inter")) {
+                borderColor = "border-orange-500/25";
+                bgHoverColor = "hover:bg-orange-950/5";
+                tagBg = "bg-orange-500/10 text-orange-400 border-orange-500/25";
+              }
+
+              return (
+                <div
+                  key={acc.id}
+                  onClick={() => {
+                    setSelectedAccountForSync(acc);
+                    setSyncLogs([]);
+                    setSyncFileName("");
+                    setSyncFileContent("");
+                    setIsSyncModalOpen(true);
+                  }}
+                  className={`relative overflow-hidden p-2 rounded-sm border ${borderColor} bg-card/45 ${bgHoverColor} transition-all flex items-center justify-between h-12 cursor-pointer group`}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className={`px-1 py-0.5 border rounded-sm text-[8px] font-bold uppercase tracking-wider ${tagBg}`}>
+                      {nameTag}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-white font-bold">{acc.balance}</span>
+                      <span className="text-[7.5px] text-muted-foreground leading-none mt-0.5 uppercase tracking-wide font-mono">
+                        {acc.syncType === "ofx" ? "Extrato OFX" : acc.syncType === "openfinance" ? "Open Finance" : "Manual"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right flex flex-col items-end">
+                    <span className="text-[8px] text-muted-foreground block leading-tight group-hover:text-primary transition-colors font-mono">
+                      {acc.lastSync || "Pendente"}
+                    </span>
+                    <span className="text-[8px] text-emerald-400 font-semibold leading-tight mt-0.5 font-mono">
+                      {acc.trend}
+                    </span>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="p-3 border border-dashed border-border/60 rounded-sm text-center col-span-2 text-[9px] text-muted-foreground">
+              Nenhuma conta cadastrada. Clique em "Gerenciar Contas" para começar.
+            </div>
+          )}
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderStorage = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="storage"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-2 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader("Armazenamento", <HardDrive className="w-3.5 h-3.5 text-primary" />, idx, (
+          <span className="text-muted-foreground text-[10px] font-mono">
+            <span className="text-white font-bold">{data.storageStats.usedSize}</span> / {data.storageStats.totalSize}
+          </span>
+        ))}
+
+        <div className="w-full h-1 bg-muted rounded-none overflow-hidden mb-2">
+          <div
+            className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000"
+            style={{ width: `${data.storageStats.percentUsed}%` }}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 ">
+          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Cine Vault</span>
+            <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.videosSize || "0 B"}</span>
+          </div>
+          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Arquivos</span>
+            <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.docsSize || "0 B"}</span>
+          </div>
+          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Imagens</span>
+            <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.imagesSize || "0 B"}</span>
+          </div>
+          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Outros</span>
+            <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.othersSize || "0 B"}</span>
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderGoals = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="goals"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader(`Central de Metas`, <Trophy className="w-3.5 h-3.5 text-primary animate-pulse" />, idx, (
+          <span className="text-[8px] text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded-sm font-bold font-mono">
+            {currentLevelXp}/1000 XP
+          </span>
+        ))}
+
+        {/* Barra de XP Fina */}
+        <div className="w-full h-1 bg-muted rounded-none overflow-hidden mb-2.5">
+          <div
+            className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 rounded-none"
+            style={{ width: `${xpPercentage}%` }}
+          />
+        </div>
+
+        {/* Listagem de Metas Compacta */}
+        <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
+          <AnimatePresence initial={false}>
+            {data.goals.map((goal) => (
+              <motion.div
+                key={goal.id}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className={`flex items-center justify-between p-1.5 rounded-sm border transition-all ${
+                  goal.isCompleted
+                    ? "bg-emerald-500/5 border-emerald-500/10 text-emerald-100/50"
+                    : "bg-muted/10 border-border/40 text-white/90"
+                }`}
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <button
+                    type="button"
+                    onClick={() => handleToggleGoal(goal.id, goal.isCompleted)}
+                    className="text-muted-foreground hover:text-primary transition-colors cursor-pointer shrink-0"
+                  >
+                    {goal.isCompleted ? (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    ) : (
+                      <Circle className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                  <span className={`text-[10px] font-bold truncate ${goal.isCompleted ? "line-through opacity-50" : ""}`}>
+                    {goal.title}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0 ml-1.5">
+                  <span className={`text-[7px] px-1 py-0.5 rounded-sm font-bold ${
+                    goal.isCompleted ? "bg-emerald-500/10 text-emerald-400" : "bg-primary/10 text-primary"
+                  }`}>
+                    +{goal.xpReward} XP
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteGoal(goal.id)}
+                    className="text-muted-foreground/60 hover:text-destructive p-0.5 rounded hover:bg-muted/30 transition-all cursor-pointer"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          {data.goals.length === 0 && (
+            <p className="text-[9px] text-muted-foreground text-center py-3">Sem metas pendentes.</p>
+          )}
+        </div>
+
+        {/* Formulário para Nova Meta Compacto */}
+        <form onSubmit={handleAddGoal} className="mt-2.5 pt-2 border-t border-border/40 flex gap-1">
+          <input
+            type="text"
+            placeholder="Nova meta..."
+            value={newGoalTitle}
+            onChange={(e) => setNewGoalTitle(e.target.value)}
+            className="flex-1 px-2 py-1 text-[9px] bg-muted/20 border border-border/80 focus:border-primary rounded-sm text-white outline-none transition-all"
+            required
+          />
+          <select
+            value={newGoalXp}
+            onChange={(e) => setNewGoalXp(Number(e.target.value))}
+            className="px-1 py-1 text-[9px] bg-muted/20 border border-border/80 rounded-sm text-white outline-none cursor-pointer font-mono"
+          >
+            <option value={50}>50 XP</option>
+            <option value={100}>100 XP</option>
+            <option value={150}>150 XP</option>
+            <option value={200}>200 XP</option>
+          </select>
+          <button
+            type="submit"
+            disabled={isAddingGoal}
+            className="px-2 bg-primary hover:bg-primary/95 text-black rounded-sm flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 text-[9px] glass-btn glass-btn-primary font-bold"
+          >
+            {isAddingGoal ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3 h-3" />}
+          </button>
+        </form>
+      </motion.div>
+    );
+  };
+
+  const renderRewards = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="rewards"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader("Baú de Prêmios Pix", <Trophy className="w-3.5 h-3.5 text-primary" />, idx, (
+          <span className="text-[8px] text-muted-foreground uppercase font-bold font-display">
+            Co-op Shop
+          </span>
+        ))}
+
+        <p className="text-[9.5px] text-muted-foreground leading-tight mb-2.5">
+          Troque seu XP acumulado por Pix reais pagos pelo seu parceiro! O resgate gera automaticamente uma cobrança pendente.
+        </p>
+
+        <div className="space-y-2">
+          {rewards.map((reward) => {
+            const canClaim = data.profile.xp >= reward.costXp && reward.status === "disponivel";
+            const isClaimed = reward.status === "resgatado";
+            
+            return (
+              <div
+                key={reward.id}
+                className={`p-2 border rounded-sm flex items-center justify-between gap-3 transition-colors ${
+                  isClaimed
+                    ? "bg-muted/5 border-border/20 opacity-60"
+                    : canClaim
+                    ? "bg-primary/5 border-primary/20 hover:bg-primary/10"
+                    : "bg-card/30 border-border/40"
+                }`}
+              >
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-extrabold text-white leading-tight">{reward.title}</span>
+                    {isClaimed && (
+                      <span className="text-[7px] px-1 py-0.2 bg-primary/10 border border-primary/20 text-primary rounded-sm font-mono uppercase shrink-0">
+                        Resgatado por {reward.claimedBy === "caio" ? "Caio" : "Giselle"}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5 text-[8.5px] text-muted-foreground leading-none">
+                    <span>Valor: <strong className="text-emerald-400 font-mono font-bold">R$ {reward.amount.toFixed(2)}</strong></span>
+                    <span>•</span>
+                    <span>Custo: <strong className="text-primary font-mono font-bold">{reward.costXp} XP</strong></span>
+                  </div>
+                </div>
+
+                {!isClaimed && (
+                  <button
+                    type="button"
+                    onClick={() => handleClaimReward(reward.id)}
+                    disabled={!canClaim || isClaimingReward !== null}
+                    className={`px-2.5 py-1 rounded-sm text-[8px] font-black uppercase tracking-wider shrink-0 cursor-pointer transition-colors ${
+                      canClaim
+                        ? "bg-primary text-black hover:bg-primary/90"
+                        : "bg-muted/20 border border-border text-muted-foreground cursor-not-allowed"
+                    }`}
+                  >
+                    {isClaimingReward === reward.id ? (
+                      <Loader2 className="w-2.5 h-2.5 animate-spin" />
+                    ) : (
+                      "Resgatar"
+                    )}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderShortcuts = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="shortcuts"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader("Atalhos Rápidos", <Zap className="w-3 h-3 text-primary" />, idx)}
+        
+        <div className="grid grid-cols-2 gap-1.5">
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/notes?new=true")}
+            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+          >
+            <Plus className="w-2.5 h-2.5 text-primary shrink-0" />
+            Criar Nota
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/passwords?generate=true")}
+            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+          >
+            <Key className="w-2.5 h-2.5 text-secondary shrink-0" />
+            Nova Senha
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/torrents")}
+            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+          >
+            <RefreshCw className="w-2.5 h-2.5 text-amber shrink-0" />
+            Torrent
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/files")}
+            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+          >
+            <FolderOpen className="w-2.5 h-2.5 text-emerald shrink-0" />
+            Upload
+          </button>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderOperations = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="operations"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader("Operações Recentes", <Activity className="w-3 h-3 text-primary" />, idx)}
+
+        <div className="space-y-1.5 relative before:absolute before:inset-y-0.5 before:left-1.5 before:w-[1px] before:bg-border/40 text-[9px]">
+          {data.activityLog.slice(0, 3).map((log) => (
+            <div key={log.id} className="flex items-start gap-2.5 pl-3.5 relative">
+              <div className={`absolute left-[3px] w-1.5 h-1.5 border border-card mt-1 ${
+                log.status === "success" ? "bg-emerald-500" : log.status === "warning" ? "bg-amber-400" : "bg-primary"
+              }`} />
+              <div className="min-w-0">
+                <p className="text-[10px] text-white/95 leading-tight font-bold">{log.text}</p>
+                <span className="text-[8px] text-muted-foreground block mt-0.5 font-mono">{log.time}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderFavorites = (idx: number) => {
+    if (!data) return null;
+    return (
+      <motion.div
+        layout
+        key="favorites"
+        variants={itemVariants}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
+      >
+        {renderWidgetHeader(`Favoritos (${data.favorites.length})`, <Star className="w-3 h-3 text-primary fill-primary/10" />, idx)}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+          {data.favorites.length > 0 ? (
+            data.favorites.map((fav) => (
+              <div
+                key={fav.id}
+                onClick={() => router.push(getModuleLink(fav.type))}
+                className="flex items-center gap-1.5 p-1.5 bg-muted/10 hover:bg-muted/20 rounded-sm cursor-pointer transition-colors border border-border/40 min-w-0"
+              >
+                {getModuleIcon(fav.type)}
+                <span className="text-[9px] font-bold text-white/95 truncate flex-1 leading-tight flex items-center justify-between gap-1.5">
+                  <span className="truncate">{fav.title}</span>
+                  {fav.createdBy && (
+                    <span className={`user-tag user-tag-${fav.createdBy} shrink-0`}>
+                      {fav.createdBy === "caio" ? "Caio" : "Giselle"}
+                    </span>
+                  )}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p className="text-[8px] text-muted-foreground text-center py-2 col-span-2">Sem favoritos.</p>
+          )}
+        </div>
+      </motion.div>
+    );
+  };
+
   return (
     <motion.div
       variants={containerVariants}
@@ -674,501 +1275,32 @@ export default function DashboardPage() {
         })}
       </div>
 
-      {/* Seções em 2 Colunas (Cockpit Grid) */}
+      {/* Seções em 2 Colunas (Cockpit Grid) - Modular Reordenável */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        
-        {/* Lado Esquerdo: Atividades Recentes, Armazenamento e Integração Financeira */}
-        <div className="lg:col-span-2 space-y-3.5">
-          
-          {/* Atividades Recentes */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
-          >
-            <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-border/40">
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-primary" />
-                <h2 className="text-[10px] font-display font-semibold text-white">Atividades Recentes</h2>
-              </div>
-              <span className="text-[8px] text-muted-foreground bg-muted/15 border border-border px-1.5 py-0.5 rounded-sm  font-bold uppercase tracking-wider">
-                Console Ativo
-              </span>
-            </div>
-
-            <div className="space-y-0.5">
-              {data.recentItems.slice(0, 4).map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => router.push(getModuleLink(item.type))}
-                  className="flex items-center justify-between p-1.5 rounded-sm hover:bg-muted/15 transition-all cursor-pointer group border border-transparent hover:border-border/30"
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-6.5 h-6.5 rounded-sm bg-card border border-border flex items-center justify-center shrink-0">
-                      {getModuleIcon(item.type)}
-                    </div>
-                    <div className="min-w-0 ">
-                      <div className="flex items-center gap-2">
-                        <p className="text-[11px] font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
-                          {item.title}
-                        </p>
-                        {item.createdBy && (
-                          <span className={`user-tag user-tag-${item.createdBy}`}>
-                            {item.createdBy === "caio" ? "Caio" : "Giselle"}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[9px] text-muted-foreground truncate leading-none mt-0.5 uppercase tracking-wide">
-                        {item.type} // {item.details}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[9px]  text-muted-foreground font-semibold whitespace-nowrap ml-4 shrink-0 flex items-center gap-0.5">
-                    {new Date(item.date).toLocaleDateString("pt-BR", {month: "short", day: "numeric"})}
-                    <ArrowUpRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Widget de Integração Bancária */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
-          >
-            <div className="flex items-center justify-between gap-4 mb-2 pb-1.5 border-b border-border/40">
-              <div className="flex items-center gap-1.5">
-                <CreditCard className="w-3.5 h-3.5 text-primary" />
-                <div>
-                  <h2 className="text-[10px] font-display font-semibold text-white">Sincronização Bancária</h2>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsAccountsModalOpen(true)}
-                className="flex items-center gap-1 px-2 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 rounded-sm text-[8px] font-bold cursor-pointer transition-colors"
-              >
-                <Settings className="w-2.5 h-2.5" />
-                Gerenciar Contas
-              </button>
-            </div>
-
-            {/* Mensagem de Sincronização */}
-            <AnimatePresence>
-              {isSyncingBank && syncMessage && (
-                <motion.div
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="mb-2 p-1.5 bg-primary/5 border border-primary/20 rounded-sm flex items-center gap-2 text-[9px] text-primary"
-                >
-                  <Loader2 className="w-3 h-3 animate-spin shrink-0" />
-                  <span>{syncMessage}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {data.financialAccounts && data.financialAccounts.length > 0 ? (
-                data.financialAccounts.map((acc) => {
-                  // Cores customizadas conforme o banco
-                  const prov = acc.provider.toLowerCase();
-                  let borderColor = "border-primary/20";
-                  let bgHoverColor = "hover:bg-primary/5";
-                  let tagBg = "bg-primary/10 text-primary border-primary/20";
-                  let nameTag = acc.provider.substring(0, 3).toUpperCase();
-
-                  if (prov.includes("nubank")) {
-                    borderColor = "border-fuchsia-500/25";
-                    bgHoverColor = "hover:bg-fuchsia-950/5";
-                    tagBg = "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/25";
-                  } else if (prov.includes("santander")) {
-                    borderColor = "border-red-500/25";
-                    bgHoverColor = "hover:bg-red-950/5";
-                    tagBg = "bg-red-500/10 text-red-400 border-red-500/25";
-                  } else if (prov.includes("mercado pago") || prov.includes("mp")) {
-                    borderColor = "border-sky-500/25";
-                    bgHoverColor = "hover:bg-sky-950/5";
-                    tagBg = "bg-sky-500/10 text-sky-400 border-sky-500/25";
-                    nameTag = "MP";
-                  } else if (prov.includes("itaú") || prov.includes("itau")) {
-                    borderColor = "border-amber-500/25";
-                    bgHoverColor = "hover:bg-amber-950/5";
-                    tagBg = "bg-amber-500/10 text-amber-400 border-amber-500/25";
-                  } else if (prov.includes("inter")) {
-                    borderColor = "border-orange-500/25";
-                    bgHoverColor = "hover:bg-orange-950/5";
-                    tagBg = "bg-orange-500/10 text-orange-400 border-orange-500/25";
-                  }
-
-                  return (
-                    <div
-                      key={acc.id}
-                      onClick={() => {
-                        setSelectedAccountForSync(acc);
-                        setSyncLogs([]);
-                        setSyncFileName("");
-                        setSyncFileContent("");
-                        setIsSyncModalOpen(true);
-                      }}
-                      className={`relative overflow-hidden p-2 rounded-sm border ${borderColor} bg-card/45 ${bgHoverColor} transition-all flex items-center justify-between h-12 cursor-pointer group`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className={`px-1 py-0.5 border rounded-sm text-[8px] font-bold uppercase tracking-wider ${tagBg}`}>
-                          {nameTag}
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-xs text-white font-bold">{acc.balance}</span>
-                          <span className="text-[7.5px] text-muted-foreground leading-none mt-0.5 uppercase tracking-wide">
-                            {acc.syncType === "ofx" ? "Extrato OFX" : acc.syncType === "openfinance" ? "Open Finance" : "Manual"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-right flex flex-col items-end">
-                        <span className="text-[8px] text-muted-foreground block leading-tight group-hover:text-primary transition-colors">
-                          {acc.lastSync || "Pendente"}
-                        </span>
-                        <span className="text-[8px] text-emerald-400 font-semibold leading-tight mt-0.5">
-                          {acc.trend}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="p-3 border border-dashed border-border/60 rounded-sm text-center col-span-2 text-[9px] text-muted-foreground">
-                  Nenhuma conta cadastrada. Clique em "Gerenciar Contas" para começar.
-                </div>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Análise de Armazenamento */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
-          >
-            <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-border/40  text-[10px]">
-              <div className="flex items-center gap-1.5">
-                <HardDrive className="w-3.5 h-3.5 text-primary" />
-                <h2 className="font-display font-semibold text-white uppercase tracking-wide">Armazenamento</h2>
-              </div>
-              <span className="text-muted-foreground">
-                <span className="text-white font-bold">{data.storageStats.usedSize}</span> / {data.storageStats.totalSize}
-              </span>
-            </div>
-
-            <div className="w-full h-1 bg-muted rounded-none overflow-hidden mb-2">
-              <div
-                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000"
-                style={{ width: `${data.storageStats.percentUsed}%` }}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 ">
-              <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-                <span className="text-[8px] text-muted-foreground block leading-tight uppercase">Cine Vault</span>
-                <span className="text-xs font-bold text-white leading-tight">{data.storageStats.videosSize || "0 B"}</span>
-              </div>
-              <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-                <span className="text-[8px] text-muted-foreground block leading-tight uppercase">Arquivos</span>
-                <span className="text-xs font-bold text-white leading-tight">{data.storageStats.docsSize || "0 B"}</span>
-              </div>
-              <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-                <span className="text-[8px] text-muted-foreground block leading-tight uppercase">Imagens</span>
-                <span className="text-xs font-bold text-white leading-tight">{data.storageStats.imagesSize || "0 B"}</span>
-              </div>
-              <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-                <span className="text-[8px] text-muted-foreground block leading-tight uppercase">Outros</span>
-                <span className="text-xs font-bold text-white leading-tight">{data.storageStats.othersSize || "0 B"}</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Lado Direito: Gamificação (Nível/XP), Metas, Atalhos e Favoritos */}
-        <div className="space-y-3.5">
-          
-          {/* Card de Gamificação & Metas Fundido */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
-          >
-            <div className="flex items-center justify-between pb-1.5 border-b border-border/40 mb-2">
-              <div className="flex items-center gap-1.5">
-                <Trophy className="w-3.5 h-3.5 text-primary animate-pulse" />
-                <h2 className="text-[10px] font-display font-semibold text-white">Central de Metas (Nível {data.profile.level})</h2>
-              </div>
-              <span className="text-[8px] text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded-sm font-bold ">
-                {currentLevelXp}/1000 XP
-              </span>
-            </div>
-
-            {/* Barra de XP Fina */}
-            <div className="w-full h-1 bg-muted rounded-none overflow-hidden mb-2.5">
-              <div
-                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 rounded-none"
-                style={{ width: `${xpPercentage}%` }}
-              />
-            </div>
-
-            {/* Listagem de Metas Compacta */}
-            <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
-              <AnimatePresence initial={false}>
-                {data.goals.map((goal) => (
-                  <motion.div
-                    key={goal.id}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    className={`flex items-center justify-between p-1.5 rounded-sm border transition-all ${
-                      goal.isCompleted
-                        ? "bg-emerald-500/5 border-emerald-500/10 text-emerald-100/50"
-                        : "bg-muted/10 border-border/40 text-white/90"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <button
-                        onClick={() => handleToggleGoal(goal.id, goal.isCompleted)}
-                        className="text-muted-foreground hover:text-primary transition-colors cursor-pointer shrink-0"
-                      >
-                        {goal.isCompleted ? (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                        ) : (
-                          <Circle className="w-3.5 h-3.5" />
-                        )}
-                      </button>
-                      <span className={`text-[10px]  font-bold truncate ${goal.isCompleted ? "line-through opacity-50" : ""}`}>
-                        {goal.title}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1 shrink-0 ml-1.5">
-                      <span className={`text-[7px] px-1 py-0.5 rounded-sm font-bold ${
-                        goal.isCompleted ? "bg-emerald-500/10 text-emerald-400" : "bg-primary/10 text-primary"
-                      }`}>
-                        +{goal.xpReward} XP
-                      </span>
-                      <button
-                        onClick={() => handleDeleteGoal(goal.id)}
-                        className="text-muted-foreground/60 hover:text-destructive p-0.5 rounded hover:bg-muted/30 transition-all cursor-pointer"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-              {data.goals.length === 0 && (
-                <p className="text-[9px] text-muted-foreground text-center py-3 ">Sem metas pendentes.</p>
-              )}
-            </div>
-
-            {/* Formulário para Nova Meta Compacto */}
-            <form onSubmit={handleAddGoal} className="mt-2.5 pt-2 border-t border-border/40 flex gap-1 ">
-              <input
-                type="text"
-                placeholder="Nova meta..."
-                value={newGoalTitle}
-                onChange={(e) => setNewGoalTitle(e.target.value)}
-                className="flex-1 px-2 py-1 text-[9px] bg-muted/20 border border-border/80 focus:border-primary rounded-sm text-white outline-none transition-all"
-                required
-              />
-              <select
-                value={newGoalXp}
-                onChange={(e) => setNewGoalXp(Number(e.target.value))}
-                className="px-1 py-1 text-[9px] bg-muted/20 border border-border/80 rounded-sm text-white outline-none cursor-pointer"
-              >
-                <option value={50}>50 XP</option>
-                <option value={100}>100 XP</option>
-                <option value={150}>150 XP</option>
-                <option value={200}>200 XP</option>
-              </select>
-              <button
-                type="submit"
-                disabled={isAddingGoal}
-                className="px-2 bg-primary hover:bg-primary/95 text-black rounded-sm flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 text-[9px] glass-btn glass-btn-primary font-bold"
-              >
-                {isAddingGoal ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
-              </button>
-            </form>
-          </motion.div>
-
-          {/* Widget de Recompensas Pix Gamificadas */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
-          >
-            <div className="flex items-center justify-between pb-1.5 border-b border-border/40 mb-2">
-              <div className="flex items-center gap-1.5">
-                <Trophy className="w-3.5 h-3.5 text-primary" />
-                <h2 className="text-[10px] font-display font-semibold text-white uppercase tracking-wider">Baú de Prêmios Pix</h2>
-              </div>
-              <span className="text-[8px] text-muted-foreground uppercase font-bold">
-                Co-op Shop
-              </span>
-            </div>
-
-            <p className="text-[9.5px] text-muted-foreground leading-tight mb-2.5">
-              Troque seu XP acumulado por Pix reais pagos pelo seu parceiro! O resgate gera automaticamente uma cobrança pendente.
-            </p>
-
-            <div className="space-y-2">
-              {rewards.map((reward) => {
-                const canClaim = data.profile.xp >= reward.costXp && reward.status === "disponivel";
-                const isClaimed = reward.status === "resgatado";
-                
-                return (
-                  <div
-                    key={reward.id}
-                    className={`p-2 border rounded-sm flex items-center justify-between gap-3 transition-colors ${
-                      isClaimed
-                        ? "bg-muted/5 border-border/20 opacity-60"
-                        : canClaim
-                        ? "bg-primary/5 border-primary/20 hover:bg-primary/10"
-                        : "bg-card/30 border-border/40"
-                    }`}
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-extrabold text-white leading-tight">{reward.title}</span>
-                        {isClaimed && (
-                          <span className="text-[7px] px-1 py-0.2 bg-primary/10 border border-primary/20 text-primary rounded-sm font-mono uppercase shrink-0">
-                            Resgatado por {reward.claimedBy === "caio" ? "Caio" : "Giselle"}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-0.5 text-[8.5px] text-muted-foreground leading-none">
-                        <span>Valor: <strong className="text-emerald-400 font-mono font-bold">R$ {reward.amount.toFixed(2)}</strong></span>
-                        <span>•</span>
-                        <span>Custo: <strong className="text-primary font-mono font-bold">{reward.costXp} XP</strong></span>
-                      </div>
-                    </div>
-
-                    {!isClaimed && (
-                      <button
-                        onClick={() => handleClaimReward(reward.id)}
-                        disabled={!canClaim || isClaimingReward !== null}
-                        className={`px-2.5 py-1 rounded-sm text-[8px] font-black uppercase tracking-wider shrink-0 cursor-pointer transition-colors ${
-                          canClaim
-                            ? "bg-primary text-black hover:bg-primary/90"
-                            : "bg-muted/20 border border-border text-muted-foreground cursor-not-allowed"
-                        }`}
-                      >
-                        {isClaimingReward === reward.id ? (
-                          <Loader2 className="w-2.5 h-2.5 animate-spin" />
-                        ) : (
-                          "Resgatar"
-                        )}
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          {/* Atalhos Rápidos */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
-          >
-            <h2 className="text-[10px] font-display font-semibold text-white mb-2 flex items-center gap-1.5">
-              <Zap className="w-3 h-3 text-primary" />
-              Atalhos Rápidos
-            </h2>
-            <div className="grid grid-cols-2 gap-1.5">
-              <button
-                onClick={() => router.push("/dashboard/notes?new=true")}
-                className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
-              >
-                <Plus className="w-2.5 h-2.5 text-primary shrink-0" />
-                Criar Nota
-              </button>
-              <button
-                onClick={() => router.push("/dashboard/passwords?generate=true")}
-                className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
-              >
-                <Key className="w-2.5 h-2.5 text-secondary shrink-0" />
-                Nova Senha
-              </button>
-              <button
-                onClick={() => router.push("/dashboard/torrents")}
-                className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
-              >
-                <RefreshCw className="w-2.5 h-2.5 text-amber shrink-0" />
-                Torrent
-              </button>
-              <button
-                onClick={() => router.push("/dashboard/files")}
-                className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
-              >
-                <FolderOpen className="w-2.5 h-2.5 text-emerald shrink-0" />
-                Upload
-              </button>
-            </div>
-          </motion.div>
-
-          {/* Histórico de Log de Operações */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
-          >
-            <h2 className="text-[10px] font-display font-semibold text-white mb-2 flex items-center gap-1.5">
-              <Activity className="w-3 h-3 text-primary" />
-              Operações Recentes
-            </h2>
-
-            <div className="space-y-1.5 relative before:absolute before:inset-y-0.5 before:left-1.5 before:w-[1px] before:bg-border/40  text-[9px]">
-              {data.activityLog.slice(0, 3).map((log) => (
-                <div key={log.id} className="flex items-start gap-2.5 pl-3.5 relative">
-                  <div className={`absolute left-[3px] w-1.5 h-1.5 border border-card mt-1 ${
-                    log.status === "success" ? "bg-emerald-500" : log.status === "warning" ? "bg-amber-400" : "bg-primary"
-                  }`} />
-                  <div className="min-w-0">
-                    <p className="text-[10px] text-white/95 leading-tight font-bold">{log.text}</p>
-                    <span className="text-[8px] text-muted-foreground block mt-0.5">{log.time}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Favoritos */}
-          <motion.div
-            variants={itemVariants}
-            className={`glass-panel ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
-          >
-            <h2 className="text-[10px] font-display font-semibold text-white mb-1.5 flex items-center gap-1.5">
-              <Star className="w-3 h-3 text-primary fill-primary/10" />
-              Favoritos ({data.favorites.length})
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              {data.favorites.length > 0 ? (
-                data.favorites.map((fav) => (
-                  <div
-                    key={fav.id}
-                    onClick={() => router.push(getModuleLink(fav.type))}
-                    className="flex items-center gap-1.5 p-1.5 bg-muted/10 hover:bg-muted/20 rounded-sm cursor-pointer transition-colors border border-border/40 min-w-0"
-                  >
-                    {getModuleIcon(fav.type)}
-                    <span className="text-[9px]  font-bold text-white/95 truncate flex-1 leading-tight flex items-center justify-between gap-1.5">
-                      <span className="truncate">{fav.title}</span>
-                      {fav.createdBy && (
-                        <span className={`user-tag user-tag-${fav.createdBy} shrink-0`}>
-                          {fav.createdBy === "caio" ? "Caio" : "Giselle"}
-                        </span>
-                      )}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-[8px] text-muted-foreground text-center py-2 col-span-2 ">Sem favoritos.</p>
-              )}
-            </div>
-          </motion.div>
-
-        </div>
+        {widgetOrder.length > 0 ? (
+          widgetOrder.map((widgetId, idx) => {
+            if (widgetId === "recent_activities") return renderRecentActivities(idx);
+            if (widgetId === "bank_sync") return renderBankSync(idx);
+            if (widgetId === "storage") return renderStorage(idx);
+            if (widgetId === "goals") return renderGoals(idx);
+            if (widgetId === "rewards") return renderRewards(idx);
+            if (widgetId === "shortcuts") return renderShortcuts(idx);
+            if (widgetId === "operations") return renderOperations(idx);
+            if (widgetId === "favorites") return renderFavorites(idx);
+            return null;
+          })
+        ) : (
+          <>
+            {renderRecentActivities(0)}
+            {renderBankSync(1)}
+            {renderStorage(2)}
+            {renderGoals(3)}
+            {renderRewards(4)}
+            {renderShortcuts(5)}
+            {renderOperations(6)}
+            {renderFavorites(7)}
+          </>
+        )}
       </div>
 
       {/* MODAL 1: GERENCIAR CONTAS BANCÁRIAS */}

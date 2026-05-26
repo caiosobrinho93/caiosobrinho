@@ -39,6 +39,7 @@ export default function BillsPage() {
   const [activeTab, setActiveTab] = useState<"todas" | "pagar" | "receber" | "agendar">("todas");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedBill, setSelectedBill] = useState<BillItem | null>(null);
 
   // Form states
   const [formTitle, setFormTitle] = useState("");
@@ -187,40 +188,40 @@ export default function BillsPage() {
         </button>
       </div>
 
-      {/* Totais Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="glass-panel p-5 border border-red-500/10 flex items-center justify-between">
-          <div>
-            <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">A Pagar (Pendentes)</p>
-            <p className="text-xl font-bold text-red-400 mt-2">
+      {/* Totais Cards - compact 3-col on mobile */}
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-3 sm:gap-6">
+        <div className="glass-panel p-3 sm:p-5 border border-red-500/10 flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">A Pagar</p>
+            <p className="text-sm sm:text-xl font-bold text-red-400 mt-1">
               R$ {totalPagar.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl">
+          <div className="p-2 sm:p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl shrink-0 hidden sm:block">
             <TrendingDown className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="glass-panel p-5 border border-emerald-500/10 flex items-center justify-between">
-          <div>
-            <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">A Receber (Pendentes)</p>
-            <p className="text-xl font-bold text-emerald-400 mt-2">
+        <div className="glass-panel p-3 sm:p-5 border border-emerald-500/10 flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">A Receber</p>
+            <p className="text-sm sm:text-xl font-bold text-emerald-400 mt-1">
               R$ {totalReceber.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl">
+          <div className="p-2 sm:p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl shrink-0 hidden sm:block">
             <TrendingUp className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="glass-panel p-5 border border-amber-500/10 flex items-center justify-between">
-          <div>
-            <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Agendados (Pendentes)</p>
-            <p className="text-xl font-bold text-amber-400 mt-2">
+        <div className="glass-panel p-3 sm:p-5 border border-amber-500/10 flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">Agendados</p>
+            <p className="text-sm sm:text-xl font-bold text-amber-400 mt-1">
               R$ {totalAgendado.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl">
+          <div className="p-2 sm:p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl shrink-0 hidden sm:block">
             <Clock className="w-5 h-5" />
           </div>
         </div>
@@ -249,104 +250,156 @@ export default function BillsPage() {
           <Loader2 className="w-6 h-6 text-primary animate-spin" />
         </div>
       ) : filteredBills.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4">
-          {filteredBills.map((bill) => {
-            const isCompleted = bill.status === "pago" || bill.status === "recebido";
-            const diffDays = Math.ceil((new Date(bill.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-            
-            return (
-              <motion.div
-                key={bill.id}
-                layout
-                className={`glass-panel p-5 border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ${
-                  isCompleted 
-                    ? "border-border/30 opacity-60" 
-                    : bill.type === "pagar" 
-                      ? "border-red-500/15" 
-                      : bill.type === "receber"
-                        ? "border-emerald-500/15"
-                        : "border-amber-500/15"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`p-3 border rounded-xl shrink-0 ${
-                    bill.type === "pagar" 
-                      ? "text-red-400 bg-red-500/10 border-red-500/20" 
-                      : bill.type === "receber"
-                        ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-                        : "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                  }`}>
-                    <Calendar className="w-5 h-5" />
+        <>
+          {/* Mobile compact rows */}
+          <div className="flex flex-col gap-2 sm:hidden">
+            {filteredBills.map((bill) => {
+              const isCompleted = bill.status === "pago" || bill.status === "recebido";
+              return (
+                <motion.div
+                  key={bill.id}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border cursor-pointer active:scale-[0.99] transition-all ${
+                    isCompleted
+                      ? 'border-border/30 bg-card/20 opacity-70'
+                      : bill.type === 'pagar'
+                      ? 'border-red-500/20 bg-card/30 hover:border-red-500/35'
+                      : bill.type === 'receber'
+                      ? 'border-emerald-500/20 bg-card/30 hover:border-emerald-500/35'
+                      : 'border-amber-500/20 bg-card/30 hover:border-amber-500/35'
+                  }`}
+                  style={{ maxHeight: 80 }}
+                  onClick={() => setSelectedBill(bill)}
+                >
+                  <div className={`w-1 self-stretch rounded-full shrink-0 ${
+                    bill.type === 'pagar' ? 'bg-red-400' : bill.type === 'receber' ? 'bg-emerald-400' : 'bg-amber-400'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-xs font-semibold truncate leading-tight ${isCompleted ? 'line-through text-muted-foreground' : 'text-white'}`}>{bill.title}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                      {bill.type === 'pagar' ? 'A Pagar' : bill.type === 'receber' ? 'A Receber' : 'Agendado'}
+                      {' · '}{new Date(bill.dueDate).toLocaleDateString('pt-BR')}
+                    </p>
                   </div>
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className={`font-semibold text-base text-white ${isCompleted ? "line-through text-muted-foreground" : ""}`}>
-                        {bill.title}
-                      </h3>
-                      <span className={`user-tag user-tag-${bill.user.username}`}>
-                        {bill.user.username === "caio" ? "Caio" : "Giselle"}
-                      </span>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                        isCompleted
-                          ? "bg-muted text-muted-foreground"
-                          : bill.type === "pagar"
-                            ? "bg-red-500/10 text-red-400 border border-red-500/20"
-                            : bill.type === "receber"
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                              : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className={`text-sm font-bold ${
+                      bill.type === 'pagar' ? 'text-red-400' : bill.type === 'receber' ? 'text-emerald-400' : 'text-amber-400'
+                    }`}>R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <button onClick={(e) => { e.stopPropagation(); handleToggleStatus(bill.id, bill.status, bill.type); }}
+                      className={`p-1.5 rounded-lg border transition-colors ${
+                        isCompleted ? 'bg-muted/20 border-border text-muted-foreground' : 'bg-primary/10 border-primary/20 text-primary'
                       }`}>
-                        {bill.status}
-                      </span>
-                    </div>
-                    {bill.description && (
-                      <p className="text-xs text-muted-foreground mt-1 max-w-lg">{bill.description}</p>
-                    )}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground mt-2">
-                      <span>Vencimento: {new Date(bill.dueDate).toLocaleDateString("pt-BR")}</span>
-                      {!isCompleted && bill.status === "pendente" && (
-                        <span className={diffDays < 0 ? "text-red-400 font-semibold" : diffDays <= 2 ? "text-amber-400 font-semibold" : ""}>
-                          {diffDays < 0 ? "Atrasada" : diffDays === 0 ? "Vence hoje" : diffDays === 1 ? "Vence amanhã" : `Vence em ${diffDays} dias`}
-                        </span>
-                      )}
-                      {isCompleted && bill.paymentDate && (
-                        <span className="text-emerald-400">
-                          {bill.type === "pagar" ? "Paga" : "Recebida"} em: {new Date(bill.paymentDate).toLocaleDateString("pt-BR")}
-                        </span>
-                      )}
-                    </div>
+                      <Check className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={(e) => { e.stopPropagation(); handleDelete(bill.id); }}
+                      className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                </div>
+                </motion.div>
+              );
+            })}
+          </div>
 
-                <div className="flex items-center justify-between md:justify-end gap-4 border-t border-border/30 pt-3 md:border-t-0 md:pt-0 shrink-0">
-                  <span className="text-lg font-bold text-white">
-                    R$ {bill.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-                  
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleToggleStatus(bill.id, bill.status, bill.type)}
-                      className={`p-2 rounded-xl border transition-all cursor-pointer ${
-                        isCompleted
-                          ? "bg-muted/20 border-border text-muted-foreground hover:bg-muted/40 hover:text-white"
-                          : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
-                      }`}
-                      title={isCompleted ? "Marcar como pendente" : "Marcar como concluída"}
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(bill.id)}
-                      className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
-                      title="Excluir conta"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+          {/* Desktop full cards */}
+          <div className="hidden sm:grid grid-cols-1 gap-4">
+            {filteredBills.map((bill) => {
+              const isCompleted = bill.status === "pago" || bill.status === "recebido";
+              const diffDays = Math.ceil((new Date(bill.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+              
+              return (
+                <motion.div
+                  key={bill.id}
+                  layout
+                  className={`glass-panel p-5 border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ${
+                    isCompleted 
+                      ? "border-border/30 opacity-60" 
+                      : bill.type === "pagar" 
+                        ? "border-red-500/15" 
+                        : bill.type === "receber"
+                          ? "border-emerald-500/15"
+                          : "border-amber-500/15"
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`p-3 border rounded-xl shrink-0 ${
+                      bill.type === "pagar" 
+                        ? "text-red-400 bg-red-500/10 border-red-500/20" 
+                        : bill.type === "receber"
+                          ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                          : "text-amber-400 bg-amber-500/10 border-amber-500/20"
+                    }`}>
+                      <Calendar className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className={`font-semibold text-base text-white ${isCompleted ? "line-through text-muted-foreground" : ""}`}>
+                          {bill.title}
+                        </h3>
+                        <span className={`user-tag user-tag-${bill.user.username}`}>
+                          {bill.user.username === "caio" ? "Caio" : "Giselle"}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                          isCompleted
+                            ? "bg-muted text-muted-foreground"
+                            : bill.type === "pagar"
+                              ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                              : bill.type === "receber"
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                        }`}>
+                          {bill.status}
+                        </span>
+                      </div>
+                      {bill.description && (
+                        <p className="text-xs text-muted-foreground mt-1 max-w-lg">{bill.description}</p>
+                      )}
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground mt-2">
+                        <span>Vencimento: {new Date(bill.dueDate).toLocaleDateString("pt-BR")}</span>
+                        {!isCompleted && bill.status === "pendente" && (
+                          <span className={diffDays < 0 ? "text-red-400 font-semibold" : diffDays <= 2 ? "text-amber-400 font-semibold" : ""}>
+                            {diffDays < 0 ? "Atrasada" : diffDays === 0 ? "Vence hoje" : diffDays === 1 ? "Vence amanhã" : `Vence em ${diffDays} dias`}
+                          </span>
+                        )}
+                        {isCompleted && bill.paymentDate && (
+                          <span className="text-emerald-400">
+                            {bill.type === "pagar" ? "Paga" : "Recebida"} em: {new Date(bill.paymentDate).toLocaleDateString("pt-BR")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+
+                  <div className="flex items-center justify-between md:justify-end gap-4 border-t border-border/30 pt-3 md:border-t-0 md:pt-0 shrink-0">
+                    <span className="text-lg font-bold text-white">
+                      R$ {bill.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                    
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleToggleStatus(bill.id, bill.status, bill.type)}
+                        className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                          isCompleted
+                            ? "bg-muted/20 border-border text-muted-foreground hover:bg-muted/40 hover:text-white"
+                            : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
+                        }`}
+                        title={isCompleted ? "Marcar como pendente" : "Marcar como concluída"}
+                      >
+                        <Check className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(bill.id)}
+                        className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
+                        title="Excluir conta"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </>
       ) : (
         <div className="glass-panel p-10 text-center border border-border/50">
           <CreditCard className="w-10 h-10 text-muted-foreground/60 mx-auto mb-3" />
@@ -535,6 +588,114 @@ export default function BillsPage() {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Bill Detail Modal */}
+      <AnimatePresence>
+        {selectedBill && (
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedBill(null)}
+              className="absolute inset-0 bg-black"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              className="w-full sm:max-w-md bg-card border border-border rounded-t-2xl sm:rounded-2xl p-5 shadow-2xl relative z-10"
+            >
+              {/* Modal header */}
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/60">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    selectedBill.type === 'pagar' ? 'bg-red-400' : selectedBill.type === 'receber' ? 'bg-emerald-400' : 'bg-amber-400'
+                  }`} />
+                  <h3 className="font-bold text-white text-sm truncate max-w-[220px]">{selectedBill.title}</h3>
+                </div>
+                <button onClick={() => setSelectedBill(null)} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Amount */}
+              <div className="text-center py-3 mb-3">
+                <p className={`text-3xl font-bold ${
+                  selectedBill.type === 'pagar' ? 'text-red-400' : selectedBill.type === 'receber' ? 'text-emerald-400' : 'text-amber-400'
+                }`}>
+                  R$ {selectedBill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+
+              {/* Detail rows */}
+              <div className="space-y-2 text-xs mb-4">
+                <div className="flex items-center justify-between py-1.5 border-b border-border/30">
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Tipo</span>
+                  <span className={`px-2 py-0.5 rounded font-bold uppercase text-[10px] ${
+                    selectedBill.type === 'pagar' ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                    : selectedBill.type === 'receber' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                    : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                  }`}>
+                    {selectedBill.type === 'pagar' ? 'A Pagar' : selectedBill.type === 'receber' ? 'A Receber' : 'Agendado'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 border-b border-border/30">
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Status</span>
+                  <span className="text-white font-semibold capitalize">{selectedBill.status}</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 border-b border-border/30">
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Vencimento</span>
+                  <span className="text-white font-semibold flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-primary" />
+                    {new Date(selectedBill.dueDate).toLocaleDateString('pt-BR')}
+                  </span>
+                </div>
+                {selectedBill.paymentDate && (
+                  <div className="flex items-center justify-between py-1.5 border-b border-border/30">
+                    <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Pagamento</span>
+                    <span className="text-emerald-400 font-semibold">{new Date(selectedBill.paymentDate).toLocaleDateString('pt-BR')}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between py-1.5 border-b border-border/30">
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Usuário</span>
+                  <span className={`user-tag user-tag-${selectedBill.user.username}`}>
+                    {selectedBill.user.username === 'caio' ? 'Caio' : 'Giselle'}
+                  </span>
+                </div>
+                {selectedBill.description && (
+                  <div className="py-1.5">
+                    <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px] block mb-1">Descrição</span>
+                    <p className="text-white text-xs leading-relaxed">{selectedBill.description}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-2 pt-2 border-t border-border/40">
+                <button
+                  onClick={() => { handleToggleStatus(selectedBill.id, selectedBill.status, selectedBill.type); setSelectedBill(null); }}
+                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-colors cursor-pointer ${
+                    selectedBill.status === 'pago' || selectedBill.status === 'recebido'
+                      ? 'bg-muted/20 border-border text-muted-foreground'
+                      : 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20'
+                  }`}
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  {selectedBill.status === 'pago' || selectedBill.status === 'recebido' ? 'Marcar Pendente' : 'Marcar Concluída'}
+                </button>
+                <button
+                  onClick={() => { handleDelete(selectedBill.id); setSelectedBill(null); }}
+                  className="flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Excluir
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

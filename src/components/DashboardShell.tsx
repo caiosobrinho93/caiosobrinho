@@ -30,6 +30,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
+import NeonParticles from "./NeonParticles";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { APP_VERSION } from "@/lib/version";
 import { useStatsStore } from "@/stores/statsStore";
@@ -177,6 +178,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
     { name: "Notas", href: "/dashboard/notes", icon: FileText },
     { name: "Contas", href: "/dashboard/bills", icon: CreditCard },
     { name: "Comprovantes", href: "/dashboard/receipts", icon: FileCheck },
+    { name: "Metas & Kanban", href: "/dashboard/kanban", icon: LayoutGrid },
     { name: "DEV Central", href: "/dashboard/dev", icon: Code },
     { name: "Configurações", href: "/dashboard/settings", icon: Settings },
   ];
@@ -250,6 +252,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       style={customStyle}
       className={`theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${themeBgClass} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
     >
+      <NeonParticles />
       {/* Background Cyber Grid Layer */}
       <div className={`absolute inset-0 pointer-events-none z-0 ${gridStyleClass}`} />
       
@@ -328,7 +331,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             </button>
           )}
 
-          <div className="flex items-center gap-2 px-1.5 py-1 overflow-hidden">
+          <Link href="/dashboard/profile" className="flex items-center gap-2 px-1.5 py-1 overflow-hidden hover:bg-muted/10 border border-transparent hover:border-border/30 transition-all rounded cursor-pointer w-full">
             <div className={`w-7 h-7 rounded-sm overflow-hidden flex items-center justify-center border shrink-0 ${
               username === "caio"
                 ? "border-cyan-500/50 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
@@ -348,7 +351,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                 <span className="text-[8px] text-muted-foreground truncate leading-none uppercase tracking-wide">Cofre Compartilhado</span>
               </div>
             )}
-          </div>
+          </Link>
           
           <div className="flex items-center gap-0.5">
             <button
@@ -443,7 +446,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             </div>
             
             {/* User Avatar */}
-            <div className={`w-7.5 h-7.5 rounded-sm overflow-hidden flex items-center justify-center border select-none ${
+            <Link href="/dashboard/profile" className={`w-7.5 h-7.5 rounded-sm overflow-hidden flex items-center justify-center border select-none hover:opacity-85 transition-opacity cursor-pointer ${
               username === "caio" ? "border-cyan-400" : "border-fuchsia-400"
             }`}>
               <img 
@@ -451,7 +454,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                 className="w-full h-full object-cover" 
                 alt={username} 
               />
-            </div>
+            </Link>
           </div>
         </header>
  
@@ -655,6 +658,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                       { href: "/dashboard/passwords", icon: Key, name: "Senhas" },
                       { href: "/dashboard/notes", icon: FileText, name: "Notas" },
                       { href: "/dashboard/software", icon: Cpu, name: "Softwares" },
+                      { href: "/dashboard/kanban", icon: LayoutGrid, name: "Metas" },
                       { href: "/dashboard/dev", icon: Code, name: "DEV Central" },
                     ],
                   },
