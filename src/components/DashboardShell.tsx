@@ -45,6 +45,38 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Sincroniza dinamicamente a cor das barras do celular Android/iOS (PWA) com a cor do tema ativo
+  useEffect(() => {
+    if (!mounted) return;
+
+    let metaColor = "#110b1c"; // Fallback padrão
+    if (themePreset === "synth-violet") metaColor = "#0b0713";
+    else if (themePreset === "cyber-cyan") metaColor = "#03070b";
+    else if (themePreset === "matrix-green") metaColor = "#020503";
+    else if (themePreset === "sunset-horizon") metaColor = "#0a0604";
+    else if (themePreset === "tokyo-neon") metaColor = "#080308";
+    else if (themePreset === "carbon-stealth") metaColor = "#070708";
+    else if (themePreset === "cyber-limon") metaColor = "#050805"; // Cor escura do novo tema Limon
+    else if (themePreset === "custom") {
+      if (customTheme.bgGradient === "bg-preset-synth") metaColor = "#0b0713";
+      else if (customTheme.bgGradient === "bg-preset-cyber") metaColor = "#03070b";
+      else if (customTheme.bgGradient === "bg-preset-matrix") metaColor = "#020503";
+      else if (customTheme.bgGradient === "bg-preset-sunset") metaColor = "#0a0604";
+      else if (customTheme.bgGradient === "bg-preset-tokyo") metaColor = "#080308";
+      else if (customTheme.bgGradient === "bg-preset-carbon") metaColor = "#070708";
+      else if (customTheme.bgGradient === "bg-preset-limon") metaColor = "#050805";
+    }
+
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "theme-color");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", metaColor);
+  }, [themePreset, customTheme, mounted]);
+
   
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -118,7 +150,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       gridStyleClass = "grid-style-lines";
     } else if (themePreset === "tokyo-neon") {
       themeBgClass = "bg-preset-tokyo";
-      neonIntensityClass = "neon-intensity-high";
+      neonIntensityClass = "neon-intensity-medium";
       animationSpeedClass = "animation-speed-normal";
       gridStyleClass = "grid-style-dots";
     } else if (themePreset === "carbon-stealth") {
@@ -126,6 +158,11 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       neonIntensityClass = "neon-intensity-none";
       animationSpeedClass = "animation-speed-disabled";
       gridStyleClass = "grid-style-none";
+    } else if (themePreset === "cyber-limon") {
+      themeBgClass = "bg-preset-limon";
+      neonIntensityClass = "neon-intensity-high";
+      animationSpeedClass = "animation-speed-normal";
+      gridStyleClass = "grid-style-dots";
     } else if (themePreset === "custom") {
       neonIntensityClass = `neon-intensity-${customTheme.neonIntensity}`;
       animationSpeedClass = `animation-speed-${customTheme.animationSpeed}`;
@@ -142,6 +179,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
         themeBgClass = customTheme.bgGradient || "bg-preset-synth";
       }
     }
+
   }
 
   return (

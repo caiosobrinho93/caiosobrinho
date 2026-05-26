@@ -224,8 +224,10 @@ export default function WallpapersPage() {
                   key={item.id}
                   layoutId={item.id}
                   onClick={() => setActiveWallpaper(item)}
-                  className="bg-card/55 border border-border hover:border-primary/45 rounded-2xl overflow-hidden cursor-pointer shadow-sm group relative"
+                  whileTap={{ scale: 0.97 }}
+                  className="bg-card/55 border border-border rounded-2xl overflow-hidden cursor-pointer shadow-sm group relative hover-card-effects"
                 >
+
                   <img
                     src={item.url}
                     alt={item.title}

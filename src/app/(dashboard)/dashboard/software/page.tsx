@@ -254,8 +254,10 @@ export default function SoftwarePage() {
               <motion.div
                 key={item.id}
                 layoutId={item.id}
-                className="bg-card/55 border border-border hover:border-primary/45 p-5 rounded-2xl flex flex-col justify-between shadow-sm group hover:shadow-md transition-all duration-300 relative"
+                whileTap={{ scale: 0.98 }}
+                className="bg-card/55 border border-border p-5 rounded-2xl flex flex-col justify-between shadow-sm group relative hover-card-effects"
               >
+
                 <div>
                   <div className="flex gap-4">
                     <div className="w-12 h-12 rounded-xl bg-muted border border-border/80 flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">

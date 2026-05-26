@@ -325,8 +325,10 @@ function PasswordsContent() {
               <motion.div
                 key={item.id}
                 onClick={() => setSelectedPassword(item)}
-                className="group cursor-pointer bg-card/55 backdrop-blur-xl border border-border hover:border-primary/45 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between transition-all duration-300 hover:-translate-y-0.5"
+                whileTap={{ scale: 0.97 }}
+                className="group cursor-pointer bg-card/55 backdrop-blur-xl border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between hover-card-effects"
               >
+
                 {/* Imagem de Capa ou Gradiente */}
                 {item.imageUrl ? (
                   <div className="h-24 w-full relative bg-muted overflow-hidden flex items-center justify-center border-b border-border/50">

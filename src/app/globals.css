@@ -32,6 +32,7 @@
   --theme-rose: 346 87% 60%;
   --theme-amber: 37 90% 51%;
   --theme-carbon: 240 5% 35%;
+  --theme-limon: 78 95% 52%;
 }
 
 /* Dynamic Accent classes for Tailwind v4 */
@@ -82,6 +83,14 @@
   --color-primary: hsl(240 5% 64.9%);
   --color-accent: hsl(240 5% 64.9%);
   --color-ring: hsl(240 5% 30%);
+}
+.theme-limon {
+  --primary: var(--theme-limon);
+  --accent: var(--theme-limon);
+  --ring: var(--theme-limon);
+  --color-primary: hsl(var(--theme-limon));
+  --color-accent: hsl(var(--theme-limon));
+  --color-ring: hsl(var(--theme-limon));
 }
 
 /* Layout density presets (CSS overrides for instant visual changes) */
@@ -227,6 +236,23 @@
 
 .neon-border {
   border: 1px solid hsl(var(--primary) / 0.3) !important;
+}
+
+/* Efeito Tridimensional Flutuante e Tátil para Cards (Respeitando toque Mobile) */
+.hover-card-effects {
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+@media (hover: hover) {
+  .hover-card-effects:hover {
+    transform: translateY(-4px) scale(1.012);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45), 0 0 15px hsl(var(--primary) / 0.12);
+    border-color: hsl(var(--primary) / 0.4) !important;
+  }
+}
+.hover-card-effects:active {
+  transform: scale(0.98) translateY(0px) !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3) !important;
+  border-color: hsl(var(--primary) / 0.25) !important;
 }
 
 body {
@@ -417,5 +443,9 @@ body {
 .bg-preset-carbon {
   background-color: #070708 !important;
   background-image: radial-gradient(at top, rgba(39, 39, 42, 0.15) 0px, transparent 60%) !important;
+}
+.bg-preset-limon {
+  background-color: #050805 !important;
+  background-image: radial-gradient(at top left, rgba(163, 230, 53, 0.12) 0px, transparent 55%), radial-gradient(at bottom right, rgba(139, 92, 246, 0.08) 0px, transparent 60%) !important;
 }
 

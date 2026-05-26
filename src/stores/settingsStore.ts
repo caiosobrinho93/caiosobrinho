@@ -6,7 +6,7 @@ export interface CustomTheme {
   bgImage: string; // URL de imagem personalizada do cofre
   neonIntensity: "none" | "low" | "medium" | "high";
   animationSpeed: "disabled" | "slow" | "normal" | "fast";
-  accentColor: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon";
+  accentColor: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon" | "limon";
   gridStyle: "none" | "fine" | "lines" | "dots";
 }
 
@@ -17,15 +17,16 @@ export type ThemePreset =
   | "sunset-horizon" 
   | "tokyo-neon" 
   | "carbon-stealth" 
+  | "cyber-limon"
   | "custom";
 
 export interface SettingsState {
-  accentColor: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon";
+  accentColor: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon" | "limon";
   density: "compact" | "normal" | "spacious";
   animationsEnabled: boolean;
   themePreset: ThemePreset;
   customTheme: CustomTheme;
-  setAccentColor: (color: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon") => void;
+  setAccentColor: (color: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon" | "limon") => void;
   setDensity: (density: "compact" | "normal" | "spacious") => void;
   toggleAnimations: () => void;
   setThemePreset: (preset: ThemePreset) => void;
@@ -51,13 +52,14 @@ export const useSettingsStore = create<SettingsState>()(
       setDensity: (density) => set({ density: density }),
       toggleAnimations: () => set((state) => ({ animationsEnabled: !state.animationsEnabled })),
       setThemePreset: (preset) => set((state) => {
-        let newAccent: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon" = state.accentColor;
+        let newAccent: "violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon" | "limon" = state.accentColor;
         if (preset === "synth-violet") newAccent = "violet";
         else if (preset === "cyber-cyan") newAccent = "cyan";
         else if (preset === "matrix-green") newAccent = "emerald";
         else if (preset === "sunset-horizon") newAccent = "amber";
         else if (preset === "tokyo-neon") newAccent = "rose";
         else if (preset === "carbon-stealth") newAccent = "carbon";
+        else if (preset === "cyber-limon") newAccent = "limon";
         
         return { themePreset: preset, accentColor: newAccent };
       }),

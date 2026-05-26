@@ -51,13 +51,14 @@ export default function SettingsPage() {
     );
   }
 
-  const colors: Array<"violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon"> = [
+  const colors: Array<"violet" | "cyan" | "emerald" | "rose" | "amber" | "carbon" | "limon"> = [
     "violet",
     "cyan",
     "emerald",
     "rose",
     "amber",
     "carbon",
+    "limon",
   ];
 
   const colorLabels = {
@@ -67,6 +68,7 @@ export default function SettingsPage() {
     rose: "Neon Rose",
     amber: "Amber Glow",
     carbon: "Carbon Stealth",
+    limon: "Cyber Limon",
   };
 
   const colorHex = {
@@ -76,6 +78,7 @@ export default function SettingsPage() {
     rose: "bg-[#f43f5e]",
     amber: "bg-[#f59e0b]",
     carbon: "bg-[#52525b]",
+    limon: "bg-[#a3e635]",
   };
 
   const themePresets = [
@@ -126,6 +129,14 @@ export default function SettingsPage() {
       bgPreview: "from-[#1c1c1e] to-[#070708]",
       accentHex: "bg-[#52525b]",
       glowColor: "shadow-[#52525b]/10 border-zinc-800",
+    },
+    {
+      id: "cyber-limon" as const,
+      name: "Cyber Limon",
+      description: "Visual eSports de luxo em verde limão neon e roxo profundo.",
+      bgPreview: "from-[#0a140a] via-[#050805] to-[#0b0713]",
+      accentHex: "bg-[#a3e635]",
+      glowColor: "shadow-[#a3e635]/15 border-[#a3e635]/40",
     },
     {
       id: "custom" as const,
@@ -421,6 +432,7 @@ export default function SettingsPage() {
                     <option value="bg-preset-sunset">Amber Sunset (Laranja/Rosa)</option>
                     <option value="bg-preset-tokyo">Tokyo Neon Night (Rosa/Violeta)</option>
                     <option value="bg-preset-carbon">Carbon Stealth (Cinza Carbono)</option>
+                    <option value="bg-preset-limon">Cyber Limon (Preto/Limon)</option>
                   </select>
                 </div>
 
