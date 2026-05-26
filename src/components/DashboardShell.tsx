@@ -29,7 +29,8 @@ import {
   LayoutGrid,
   RefreshCw,
   Calculator,
-  Pin
+  Pin,
+  Music
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
 import NeonParticles from "./NeonParticles";
@@ -61,6 +62,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const [isUpdating, setIsUpdating] = useState(false);
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [isStickyNotesOpen, setIsStickyNotesOpen] = useState(false);
+  const [isRadioOpen, setIsRadioOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -470,6 +472,20 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               <Pin className="w-4 h-4" />
             </button>
 
+            {/* Synth Radio Trigger */}
+            <button
+              onClick={() => { playClickSound(); setIsRadioOpen(prev => !prev); }}
+              onMouseEnter={playHoverSound}
+              title="Rádio Synthwave"
+              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+                isRadioOpen 
+                  ? "bg-primary/20 border-primary/45 text-primary shadow-[0_0_10px_rgba(197,254,0,0.25)]" 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
+              }`}
+            >
+              <Music className="w-4 h-4" />
+            </button>
+
             {/* Storage indicator */}
             <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-sm border border-border/80 bg-card/20 text-[10px] ">
               <Database className="w-3 h-3 text-primary animate-pulse" />
@@ -702,30 +718,49 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                       { href: "/dashboard/dev", icon: Code, name: "DEV Central" },
                     ],
                   },
+                  {
+                    label: "Utilitários HUD",
+                    items: [
+                      { onClick: () => setIsCalculatorOpen(v => !v), icon: Calculator, name: "Calculadora" },
+                      { onClick: () => setIsStickyNotesOpen(v => !v), icon: Pin, name: "Rascunho HUD" },
+                      { onClick: () => setIsRadioOpen(v => !v), icon: Music, name: "Rádio Synth" },
+                    ] as any[],
+                  },
                 ].map((section, sIdx) => (
                   <div key={section.label}>
                     <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/30 mb-2 px-1">{section.label}</p>
                     <div className="grid grid-cols-2 gap-1.5">
                       {section.items.map((item, iIdx) => {
                         const Icon = item.icon;
-                        const isActive = pathname === item.href;
+                        const isActive = item.href ? pathname === item.href : false;
+                        
+                        const elementContent = (
+                          <div className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border transition-all cursor-pointer select-none active:scale-95 ${
+                            isActive
+                              ? "bg-white/8 border-white/15 text-white"
+                              : "bg-white/3 border-white/5 text-white/60 hover:text-white hover:bg-white/6 hover:border-white/10"
+                          }`}>
+                            <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-white/40"}`} />
+                            <span className="text-[11px] font-semibold truncate">{item.name}</span>
+                          </div>
+                        );
+
                         return (
                           <motion.div
                             key={item.name}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: (sIdx * section.items.length + iIdx) * 0.03 + 0.05, type: "spring", stiffness: 300, damping: 24 }}
+                            transition={{ delay: (sIdx * 4 + iIdx) * 0.03 + 0.05, type: "spring", stiffness: 300, damping: 24 }}
                           >
-                            <Link href={item.href} onClick={() => setIsCentralOptionsOpen(false)}>
-                              <div className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border transition-all cursor-pointer select-none active:scale-95 ${
-                                isActive
-                                  ? "bg-white/8 border-white/15 text-white"
-                                  : "bg-white/3 border-white/5 text-white/60 hover:text-white hover:bg-white/6 hover:border-white/10"
-                              }`}>
-                                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-white/40"}`} />
-                                <span className="text-[11px] font-semibold truncate">{item.name}</span>
+                            {item.href ? (
+                              <Link href={item.href} onClick={() => setIsCentralOptionsOpen(false)}>
+                                {elementContent}
+                              </Link>
+                            ) : (
+                              <div onClick={() => { setIsCentralOptionsOpen(false); item.onClick(); }}>
+                                {elementContent}
                               </div>
-                            </Link>
+                            )}
                           </motion.div>
                         );
                       })}
@@ -757,7 +792,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </>
         )}
       </AnimatePresence>
-      <SynthwaveRadio />
+      <SynthwaveRadio isOpen={isRadioOpen} onClose={() => setIsRadioOpen(false)} />
       <CyberCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} />
       <FloatingHUDNotes isOpen={isStickyNotesOpen} onClose={() => setIsStickyNotesOpen(false)} />
     </div>

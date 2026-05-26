@@ -170,46 +170,7 @@ export default function DashboardPage() {
   const [rewards, setRewards] = useState<any[]>([]);
   const [isClaimingReward, setIsClaimingReward] = useState<string | null>(null);
 
-  const [widgetOrder, setWidgetOrder] = useState<string[]>([
-    "recent_activities",
-    "bank_sync",
-    "storage",
-    "goals",
-    "rewards",
-    "shortcuts",
-    "operations",
-    "favorites",
-    "rss_tech",
-  ]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedOrder = localStorage.getItem("nexus_widget_order");
-      if (savedOrder) {
-        try {
-          const parsed = JSON.parse(savedOrder);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const validWidgets = [
-              "recent_activities",
-              "bank_sync",
-              "storage",
-              "goals",
-              "rewards",
-              "shortcuts",
-              "operations",
-              "favorites",
-              "rss_tech",
-            ];
-            const filtered = parsed.filter((w) => validWidgets.includes(w));
-            const missing = validWidgets.filter((w) => !filtered.includes(w));
-            setWidgetOrder([...filtered, ...missing]);
-          }
-        } catch (e) {
-          console.error("Failed to parse saved widget order", e);
-        }
-      }
-    }
-  }, []);
 
   const fetchRewards = async () => {
     try {
@@ -558,21 +519,7 @@ export default function DashboardPage() {
 
   if (!data) return null; // Type-guard for compiler safety
 
-  const moveWidget = (idx: number, direction: 'up' | 'down') => {
-    const newOrder = [...widgetOrder];
-    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
-    if (targetIdx < 0 || targetIdx >= newOrder.length) return;
-    
-    // Swap elements
-    const temp = newOrder[idx];
-    newOrder[idx] = newOrder[targetIdx];
-    newOrder[targetIdx] = temp;
-    
-    setWidgetOrder(newOrder);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("nexus_widget_order", JSON.stringify(newOrder));
-    }
-  };
+
 
   const renderWidgetHeader = (title: string, icon: React.ReactNode, idx: number, extraActions?: React.ReactNode) => {
     return (
@@ -584,27 +531,6 @@ export default function DashboardPage() {
         
         <div className="flex items-center gap-2 pointer-events-auto">
           {extraActions}
-          
-          <div className="flex items-center gap-0.5 bg-muted/15 border border-border/40 p-0.5 rounded-sm shrink-0">
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); moveWidget(idx, 'up'); }}
-              disabled={idx === 0}
-              className="p-0.5 text-muted-foreground hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-              title="Subir Widget"
-            >
-              <ChevronUp className="w-3 h-3" />
-            </button>
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); moveWidget(idx, 'down'); }}
-              disabled={idx === widgetOrder.length - 1}
-              className="p-0.5 text-muted-foreground hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-              title="Baixar Widget"
-            >
-              <ChevronDown className="w-3 h-3" />
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -1278,48 +1204,30 @@ export default function DashboardPage() {
         })}
       </div>
 
-      {/* Seções em 2 Colunas (Cockpit Grid) - Modular Reordenável */}
+      {/* Seções em 2 Colunas (Cockpit Grid) - Organizado e Linear */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {widgetOrder.length > 0 ? (
-          widgetOrder.map((widgetId, idx) => {
-            if (widgetId === "recent_activities") return renderRecentActivities(idx);
-            if (widgetId === "bank_sync") return renderBankSync(idx);
-            if (widgetId === "storage") return renderStorage(idx);
-            if (widgetId === "goals") return renderGoals(idx);
-            if (widgetId === "rewards") return renderRewards(idx);
-            if (widgetId === "shortcuts") return renderShortcuts(idx);
-            if (widgetId === "operations") return renderOperations(idx);
-            if (widgetId === "favorites") return renderFavorites(idx);
-            if (widgetId === "rss_tech") return (
-              <RssTechWidget
-                key="rss_tech"
-                idx={idx}
-                renderHeader={renderWidgetHeader}
-                itemVariants={itemVariants}
-                activeMobileTab={activeMobileTab}
-              />
-            );
-            return null;
-          })
-        ) : (
-          <>
-            {renderRecentActivities(0)}
-            {renderBankSync(1)}
-            {renderStorage(2)}
-            {renderGoals(3)}
-            {renderRewards(4)}
-            {renderShortcuts(5)}
-            {renderOperations(6)}
-            {renderFavorites(7)}
-            <RssTechWidget
-              key="rss_tech"
-              idx={8}
-              renderHeader={renderWidgetHeader}
-              itemVariants={itemVariants}
-              activeMobileTab={activeMobileTab}
-            />
-          </>
-        )}
+        {/* Coluna da Esquerda (Largura 2) - Principais Módulos */}
+        <div className="lg:col-span-2 space-y-4">
+          {renderRecentActivities(0)}
+          {renderBankSync(1)}
+          {renderStorage(2)}
+        </div>
+
+        {/* Coluna da Direita (Largura 1) - Metas, Atalhos, Util e Info */}
+        <div className="space-y-4">
+          {renderGoals(3)}
+          {renderRewards(4)}
+          {renderShortcuts(5)}
+          <RssTechWidget
+            key="rss_tech"
+            idx={6}
+            renderHeader={renderWidgetHeader}
+            itemVariants={itemVariants}
+            activeMobileTab={activeMobileTab}
+          />
+          {renderOperations(7)}
+          {renderFavorites(8)}
+        </div>
       </div>
 
       {/* MODAL 1: GERENCIAR CONTAS BANCÁRIAS */}
