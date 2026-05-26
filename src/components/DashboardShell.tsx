@@ -169,8 +169,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const navItems = [
     { name: "Painel Geral", href: "/dashboard", icon: LayoutDashboard },
     { name: "Cine Vault", href: "/dashboard/videos", icon: Video },
-    { name: "Chaveiro AES", href: "/dashboard/passwords", icon: Key },
-    { name: "Galeria UHD", href: "/dashboard/wallpapers", icon: ImageIcon },
+    { name: "Senhas", href: "/dashboard/passwords", icon: Key },
+    { name: "Imagens", href: "/dashboard/wallpapers", icon: ImageIcon },
     { name: "Torrents", href: "/dashboard/torrents", icon: DownloadCloud },
     { name: "Arquivos", href: "/dashboard/files", icon: FolderOpen },
     { name: "Softwares", href: "/dashboard/software", icon: Cpu },
@@ -669,7 +669,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                     <Link href="/dashboard/wallpapers" onClick={() => setIsCentralOptionsOpen(false)}>
                       <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
                         <ImageIcon className="w-4.5 h-4.5 text-fuchsia-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Galeria UHD</span>
+                        <span className="text-xs font-bold text-white">Imagens</span>
                       </div>
                     </Link>
                     <Link href="/dashboard/torrents" onClick={() => setIsCentralOptionsOpen(false)}>
@@ -688,7 +688,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                     <Link href="/dashboard/passwords" onClick={() => setIsCentralOptionsOpen(false)}>
                       <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
                         <Key className="w-4.5 h-4.5 text-rose-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Chaveiro AES</span>
+                        <span className="text-xs font-bold text-white">Senhas</span>
                       </div>
                     </Link>
                     <Link href="/dashboard/notes" onClick={() => setIsCentralOptionsOpen(false)}>

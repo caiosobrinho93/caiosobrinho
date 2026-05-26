@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadToSupabase } from "@/lib/storage";
 import { awardXP } from "@/lib/gamification";
 
 export async function GET(request: Request) {
@@ -64,24 +63,14 @@ export async function POST(request: Request) {
 
       // Tratar upload de vídeo físico
       if (file && file.size > 0) {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(path.join(uploadDir, filename), buffer);
-        url = `/uploads/${filename}`;
+        url = await uploadToSupabase(file, "videos");
       } else {
         url = urlText;
       }
 
       // Tratar upload de capa física
       if (thumbFile && thumbFile.size > 0) {
-        const buffer = Buffer.from(await thumbFile.arrayBuffer());
-        const filename = `${Date.now()}-${thumbFile.name.replace(/\s+/g, "_")}`;
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(path.join(uploadDir, filename), buffer);
-        thumbnailUrl = `/uploads/${filename}`;
+        thumbnailUrl = await uploadToSupabase(thumbFile, "thumbnails");
       } else {
         thumbnailUrl = thumbUrlText;
       }

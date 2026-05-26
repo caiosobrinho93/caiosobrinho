@@ -56,8 +56,8 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
     // Navegação
     { id: "nav-dash", label: "Ir para o Painel Geral", category: "Navegação", icon: LayoutDashboard, action: () => router.push("/dashboard") },
     { id: "nav-vid", label: "Ir para o Cine Vault (Vídeos)", category: "Navegação", icon: Video, action: () => router.push("/dashboard/videos") },
-    { id: "nav-pass", label: "Ir para o Chaveiro AES (Senhas)", category: "Navegação", icon: Key, action: () => router.push("/dashboard/passwords") },
-    { id: "nav-wall", label: "Ir para a Galeria UHD (Wallpapers)", category: "Navegação", icon: ImageIcon, action: () => router.push("/dashboard/wallpapers") },
+    { id: "nav-pass", label: "Ir para as Senhas", category: "Navegação", icon: Key, action: () => router.push("/dashboard/passwords") },
+    { id: "nav-wall", label: "Ir para as Imagens (Wallpapers)", category: "Navegação", icon: ImageIcon, action: () => router.push("/dashboard/wallpapers") },
     { id: "nav-torr", label: "Ir para os Torrents", category: "Navegação", icon: DownloadCloud, action: () => router.push("/dashboard/torrents") },
     { id: "nav-files", label: "Ir para os Arquivos", category: "Navegação", icon: FolderOpen, action: () => router.push("/dashboard/files") },
     { id: "nav-soft", label: "Ir para o Catálogo de Apps (Softwares)", category: "Navegação", icon: Cpu, action: () => router.push("/dashboard/software") },

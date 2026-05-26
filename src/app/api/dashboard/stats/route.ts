@@ -19,9 +19,9 @@ Bem-vindo ao seu novo sistema operacional pessoal! O Nexus Vault foi projetado p
 
 ### Módulos do Sistema
 1. **Cine Vault (Vídeos)**: Assista a vídeos locais ou incorpore links externos (ex: YouTube).
-2. **Chaveiro AES**: Gerenciador de credenciais com criptografia AES-256 local e gerador automático.
+2. **Senhas**: Gerenciador de credenciais com criptografia AES-256 local e gerador automático.
 3. **Arquivos**: Gerenciamento de pastas e arquivos com visualizador de imagens e PDFs integrados.
-4. **Galeria UHD**: Curadoria de papéis de parede com visualização em tela cheia.
+4. **Imagens**: Curadoria de papéis de parede com visualização em tela cheia.
 5. **Softwares**: Catálogo de aplicativos instalados, controle de versões e links de instaladores.
 6. **Torrents**: Lista de downloads de arquivos .torrent e botões com links magnet.
 7. **Integração Financeira**: Painel analítico de contas integradas.

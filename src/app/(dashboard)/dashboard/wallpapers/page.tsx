@@ -155,7 +155,7 @@ export default function WallpapersPage() {
         <div>
           <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-2">
             <ImageIcon className="w-5 h-5 text-primary" />
-            GALERIA UHD
+            IMAGENS
           </h1>
           <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
             Papéis de Parede Widescreen de Alta Definição
@@ -252,7 +252,7 @@ export default function WallpapersPage() {
                       <div className="min-w-0 ">
                         <span className="text-[11px] font-bold text-white truncate block uppercase tracking-wide">{item.title}</span>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="text-[8px] text-muted-foreground block">WIDESCREEN UHD</span>
+                          <span className="text-[8px] text-muted-foreground block">WIDESCREEN</span>
                           {item.user?.username && (
                             <span className={`user-tag user-tag-${item.user.username}`}>
                               {item.user.username === "caio" ? "Caio" : "Giselle"}
@@ -274,8 +274,8 @@ export default function WallpapersPage() {
         <div className="py-24 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-2xl">
           <ImageIcon className="w-10 h-10 text-muted-foreground mb-3" />
           <h3 className="text-sm font-semibold text-white">Nenhum wallpaper vinculado</h3>
-          <p className="text-xs text-muted-foreground mt-1 max-w-xs">
-            Comece vinculando ou subindo belos papéis de parede para o seu catálogo UHD.
+          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+            Comece vinculando ou subindo belos papéis de parede para o seu catálogo de imagens.
           </p>
           <button
             onClick={() => setIsModalOpen(true)}

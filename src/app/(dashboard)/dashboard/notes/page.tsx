@@ -343,49 +343,52 @@ function NotesContent() {
                 <button
                   type="button"
                   onClick={() => setShowSidebarOnMobile(true)}
-                  className="md:hidden p-1.5 rounded-sm border border-border text-muted-foreground hover:text-white shrink-0"
+                  className="md:hidden p-1.5 rounded-sm border border-border text-muted-foreground hover:text-white shrink-0 animate-pulse"
                   title="Voltar para lista"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                 </button>
                 {/* Write/Preview toggle tab */}
                 <div className="flex bg-muted/40 border border-border p-0.5 rounded-sm shrink-0">
-                <button
-                  onClick={() => setActiveTab("write")}
-                  className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
-                    activeTab === "write" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
-                  }`}
-                >
-                  <Edit3 className="w-3.5 h-3.5" />
-                  Editar
-                </button>
-                <button
-                  onClick={() => setActiveTab("preview")}
-                  className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
-                    activeTab === "preview" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
-                  }`}
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                  Visualizar
-                </button>
+                  <button
+                    onClick={() => setActiveTab("write")}
+                    className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
+                      activeTab === "write" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
+                    }`}
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Editar</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("preview")}
+                    className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
+                      activeTab === "preview" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
+                    }`}
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Visualizar</span>
+                  </button>
+                </div>
               </div>
-            </div>
 
               {/* Status e Ações */}
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5 bg-muted/40 border border-border/80 px-2.5 py-1 rounded-sm">
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1 bg-muted/40 border border-border/80 px-2 py-1 rounded-sm shrink-0">
                   {saveStatus === "saving" ? (
                     <>
-                      <Loader2 className="w-3 h-3 animate-spin text-primary" />
-                      Salvando...
+                      <Loader2 className="w-3 h-3 animate-spin text-primary shrink-0" />
+                      <span className="hidden sm:inline">Salvando...</span>
                     </>
                   ) : saveStatus === "saved" ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald" />
-                      Salvo
+                      <Check className="w-3 h-3 text-emerald shrink-0" />
+                      <span className="hidden sm:inline">Salvo</span>
                     </>
                   ) : (
-                    "Alterações não salvas"
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                      <span className="hidden sm:inline">Não salvo</span>
+                    </>
                   )}
                 </span>
 
@@ -397,14 +400,14 @@ function NotesContent() {
                       : "border-border text-muted-foreground hover:text-white"
                   }`}
                 >
-                  <Star className={`w-4.5 h-4.5 ${selectedNote.isFavorite ? "fill-current" : ""}`} />
+                  <Star className={`w-4 h-4 ${selectedNote.isFavorite ? "fill-current" : ""}`} />
                 </button>
                 
                 <button
                   onClick={() => handleDelete(selectedNote.id)}
                   className="p-2 rounded-sm border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
                 >
-                  <Trash2 className="w-4.5 h-4.5" />
+                  <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>

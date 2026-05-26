@@ -502,7 +502,7 @@ export default function DashboardPage() {
   }
 
   const moduleStats = [
-    { name: "Chaveiro AES", count: data.counts.passwords, details: "Credenciais seguras", icon: Key, color: "text-rose bg-rose/10 border-rose/20", href: "/dashboard/passwords" },
+    { name: "Senhas", count: data.counts.passwords, details: "Credenciais seguras", icon: Key, color: "text-rose bg-rose/10 border-rose/20", href: "/dashboard/passwords" },
     { name: "Cofre de Arquivos", count: data.counts.files, details: "Arquivos locais", icon: FolderOpen, color: "text-amber bg-amber/10 border-amber/20", href: "/dashboard/files" },
     { name: "Contas Ativas", count: data.counts.bills, details: "Pagar & Receber", icon: CreditCard, color: "text-emerald bg-emerald/10 border-emerald/20", href: "/dashboard/bills" },
     { name: "Comprovantes", count: data.counts.receipts, details: "Recibos salvos", icon: FileCheck, color: "text-cyan bg-cyan/10 border-cyan/20", href: "/dashboard/receipts" },

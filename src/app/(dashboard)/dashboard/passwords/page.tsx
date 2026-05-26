@@ -249,7 +249,7 @@ function PasswordsContent() {
         <div>
           <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2">
             <Key className="w-5 h-5 text-primary" />
-            CHAVEIRO AES
+            SENHAS
           </h1>
           <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
             Criptografia local AES-256 de Grau Militar
@@ -364,7 +364,7 @@ function PasswordsContent() {
       ) : (
         <div className="py-16 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-xl">
           <FolderKey className="w-8 h-8 text-muted-foreground mb-2" />
-          <h3 className="text-xs font-semibold text-white font-display">Chaveiro de Credenciais Vazio</h3>
+          <h3 className="text-xs font-semibold text-white font-display">Nenhuma Senha Salva</h3>
           <p className="text-[10px] text-muted-foreground mt-1 max-w-xs">
             Comece a armazenar detalhes criptografados de suas contas e logins.
           </p>
@@ -941,7 +941,7 @@ function PasswordsContent() {
 
 export default function PasswordsPage() {
   return (
-    <Suspense fallback={<div className="text-muted-foreground text-sm">Carregando chaveiro...</div>}>
+    <Suspense fallback={<div className="text-muted-foreground text-sm">Carregando senhas...</div>}>
       <PasswordsContent />
     </Suspense>
   );

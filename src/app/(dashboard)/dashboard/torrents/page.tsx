@@ -74,68 +74,7 @@ export default function TorrentsPage() {
     useDataStore.getState().fetchTorrents();
   }, []);
 
-  // Simulação de velocidade e progresso do cliente torrent em tempo real
-  useEffect(() => {
-    if (torrents.length === 0) return;
 
-    const interval = setInterval(() => {
-      const prevTorrents = useDataStore.getState().torrents.data;
-      let changed = false;
-      
-      const updated = prevTorrents.map((t) => {
-        if (t.status === "downloading") {
-          changed = true;
-          const newProgress = Math.min(100, t.progress + Math.random() * 1.5 + 0.5);
-          const isFinished = newProgress >= 100;
-          
-          const dlSpeed = isFinished ? 0.0 : parseFloat((10 + Math.random() * 25).toFixed(1));
-          const ulSpeed = isFinished
-            ? parseFloat((2 + Math.random() * 6).toFixed(1))
-            : parseFloat((0.2 + Math.random() * 1.8).toFixed(1));
-          
-          const nextStatus = isFinished ? "seeding" : "downloading";
-
-          if (isFinished) {
-            fetch(`/api/torrents/${t.id}`, {
-              method: "PATCH",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ status: "seeding", progress: 100, downloadSpeed: 0, uploadSpeed: ulSpeed }),
-            }).catch(console.error);
-          }
-
-          return {
-            ...t,
-            progress: parseFloat(newProgress.toFixed(1)),
-            downloadSpeed: dlSpeed,
-            uploadSpeed: ulSpeed,
-            status: nextStatus,
-          };
-        }
-        
-        if (t.status === "seeding") {
-          changed = true;
-          return {
-            ...t,
-            downloadSpeed: 0.0,
-            uploadSpeed: parseFloat((1.5 + Math.random() * 4).toFixed(1)),
-          };
-        }
-        
-        return t;
-      });
-
-      if (changed) {
-        updated.forEach(t => {
-          const original = prevTorrents.find(o => o.id === t.id);
-          if (original && (original.progress !== t.progress || original.status !== t.status)) {
-            useDataStore.getState().updateTorrent(t.id, { progress: t.progress, downloadSpeed: t.downloadSpeed, uploadSpeed: t.uploadSpeed, status: t.status });
-          }
-        });
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [torrents.length]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,29 +124,7 @@ export default function TorrentsPage() {
     }
   };
 
-  const handleToggleStatus = async (item: TorrentItem) => {
-    const nextStatus = item.status === "paused" ? "downloading" : "paused";
-    const dlSpeed = nextStatus === "downloading" ? 15.0 : 0.0;
-    const ulSpeed = nextStatus === "downloading" ? 0.8 : 0.0;
 
-    try {
-      const res = await fetch(`/api/torrents/${item.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status: nextStatus,
-          downloadSpeed: dlSpeed,
-          uploadSpeed: ulSpeed,
-        }),
-      });
-
-      if (res.ok) {
-        useDataStore.getState().updateTorrent(item.id, { status: nextStatus, downloadSpeed: dlSpeed, uploadSpeed: ulSpeed });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Remover este torrent do catálogo?")) return;
@@ -245,32 +162,12 @@ export default function TorrentsPage() {
     URL.revokeObjectURL(url);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "downloading":
-        return "bg-primary shadow-[0_0_8px_hsl(var(--primary))]";
-      case "seeding":
-        return "bg-emerald shadow-[0_0_8px_#10b981]";
-      case "paused":
-        return "bg-amber shadow-[0_0_8px_#f59e0b]";
-      default:
-        return "bg-muted-foreground/60";
-    }
+  const getStatusColor = () => {
+    return "bg-emerald shadow-[0_0_8px_#10b981]";
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "downloading":
-        return "Baixando";
-      case "seeding":
-        return "Semeando";
-      case "paused":
-        return "Pausado";
-      case "completed":
-        return "Concluído";
-      default:
-        return "Fila";
-    }
+  const getStatusText = () => {
+    return "Disponível";
   };
 
   const filteredTorrents = torrents.filter((t) =>
@@ -328,13 +225,12 @@ export default function TorrentsPage() {
       ) : filteredTorrents.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {filteredTorrents.map((item) => {
-            const isFinished = item.progress >= 100;
             return (
               <motion.div
                 key={item.id}
                 onClick={() => setSelectedTorrent(item)}
                 whileTap={{ scale: 0.97 }}
-                className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-sm p-4.5 flex flex-col justify-between h-32 relative overflow-hidden hover-card-effects"
+                className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-sm p-4.5 flex flex-col justify-between h-28 relative overflow-hidden hover-card-effects"
               >
                 {/* Linha superior */}
                 <div className="flex justify-between items-start gap-2.5">
@@ -355,38 +251,19 @@ export default function TorrentsPage() {
                   </div>
                   {/* Ponto Neon de Status */}
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className={`w-2 h-2 rounded-full ${getStatusColor(item.status)}`} />
-                    <span className="text-[9px] font-bold text-muted-foreground/90 uppercase hide-mobile">
-                      {getStatusText(item.status)}
+                    <span className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_8px_#10b981]" />
+                    <span className="text-[9px] font-bold text-emerald uppercase hide-mobile font-display tracking-wider">
+                      Disponível
                     </span>
                   </div>
                 </div>
 
-                {/* Info de Velocidade Curta no Mobile/Desktop */}
+                {/* Info do Arquivo */}
                 <div className="text-[10px] text-muted-foreground flex justify-between items-center mt-3">
-                  <span className="font-semibold">{item.progress}% concluído</span>
-                  {item.status === "downloading" && (
-                    <span className="font-mono text-primary font-bold flex items-center gap-0.5">
-                      <ArrowDown className="w-3 h-3 animate-bounce" />
-                      {item.downloadSpeed} M/s
-                    </span>
-                  )}
-                  {item.status === "seeding" && (
-                    <span className="font-mono text-emerald font-bold flex items-center gap-0.5">
-                      <ArrowUp className="w-3 h-3" />
-                      {item.uploadSpeed} M/s
-                    </span>
-                  )}
-                </div>
-
-                {/* Fita de Progresso Fina no Rodapé */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-muted/30">
-                  <div
-                    className={`h-full transition-all duration-500 ${
-                      item.status === "seeding" ? "bg-emerald shadow-[0_0_8px_#10b981]" : "bg-primary shadow-[0_0_8px_var(--primary)]"
-                    }`}
-                    style={{ width: `${item.progress}%` }}
-                  />
+                  <span className="font-semibold text-white/50">Clique para gerenciar arquivo</span>
+                  <span className="font-mono text-emerald font-bold flex items-center gap-0.5">
+                    PC Link
+                  </span>
                 </div>
               </motion.div>
             );
@@ -430,7 +307,7 @@ export default function TorrentsPage() {
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
                 <h2 className="text-sm font-bold text-white flex items-center gap-2">
                   <DownloadCloud className="w-5 h-5 text-primary" />
-                  Detalhes da Transferência
+                  Detalhes do Torrent
                 </h2>
                 <button
                   onClick={() => setSelectedTorrent(null)}
@@ -445,54 +322,16 @@ export default function TorrentsPage() {
                 <div>
                   <h3 className="text-sm font-extrabold text-white">{activeSelected.title}</h3>
                   <div className="flex gap-2 items-center mt-1.5">
-                    <span className="text-[10px] text-muted-foreground font-mono bg-muted/60 border border-border px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] text-muted-foreground font-mono bg-muted/60 border border-border px-1.5 py-0.5 rounded font-semibold">
                       Tamanho: {activeSelected.size}
                     </span>
-                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase flex items-center gap-1.5 ${
-                      activeSelected.status === "downloading" ? "bg-primary/10 text-primary" : activeSelected.status === "seeding" ? "bg-emerald/10 text-emerald" : "bg-muted text-muted-foreground"
-                    }`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${getStatusColor(activeSelected.status)}`} />
-                      {getStatusText(activeSelected.status)}
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase flex items-center gap-1.5 bg-emerald/10 text-emerald">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald shadow-[0_0_8px_#10b981]" />
+                      Disponível
                     </span>
                   </div>
                 </div>
 
-                {/* Painel do Gráfico de Simulação */}
-                <div className="p-4 bg-muted/20 border border-border/40 rounded-sm space-y-3.5">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-muted-foreground font-semibold">Progresso Geral:</span>
-                    <span className="text-white font-mono font-bold">{activeSelected.progress}%</span>
-                  </div>
-                  
-                  {/* Barra de Progresso */}
-                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden relative">
-                    <div
-                      className={`h-full transition-all duration-300 ${
-                        activeSelected.status === "seeding" ? "bg-emerald" : "bg-primary"
-                      }`}
-                      style={{ width: `${activeSelected.progress}%` }}
-                    />
-                  </div>
-
-                  {/* Estatísticas de Velocidade */}
-                  <div className="grid grid-cols-2 gap-4 pt-1.5 border-t border-border/30">
-                    <div className="flex items-center gap-2">
-                      <ArrowDown className="w-4 h-4 text-primary shrink-0" />
-                      <div>
-                        <span className="text-[9px] text-muted-foreground block font-bold">Download</span>
-                        <span className="font-mono text-xs text-white font-bold">{activeSelected.downloadSpeed} MB/s</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <ArrowUp className="w-4 h-4 text-emerald shrink-0" />
-                      <div>
-                        <span className="text-[9px] text-muted-foreground block font-bold">Upload</span>
-                        <span className="font-mono text-xs text-white font-bold">{activeSelected.uploadSpeed} MB/s</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 {/* Anotações */}
                 {(() => {
                   const { cleanNotes } = parseNotesAndFile(activeSelected.notes);
@@ -534,22 +373,6 @@ export default function TorrentsPage() {
                   </button>
 
                   <div className="flex gap-2">
-                    {/* Botão de simular Play / Pause */}
-                    <button
-                      onClick={() => handleToggleStatus(activeSelected)}
-                      disabled={activeSelected.status === "seeding"}
-                      className={`p-2 rounded-sm border transition-colors cursor-pointer ${
-                        activeSelected.status === "seeding"
-                          ? "border-border/45 text-muted-foreground/35 cursor-not-allowed"
-                          : activeSelected.status === "paused"
-                          ? "border-primary/20 bg-primary/10 text-primary hover:bg-primary/20"
-                          : "border-border text-muted-foreground hover:text-white hover:bg-muted/40"
-                      }`}
-                      title={activeSelected.status === "paused" ? "Retomar" : "Pausar"}
-                    >
-                      {activeSelected.status === "paused" ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4 fill-current" />}
-                    </button>
-
                     {/* Botão Baixar arquivo .torrent (Se Houver) */}
                     {(() => {
                       const { fileUrl } = parseNotesAndFile(activeSelected.notes);
@@ -760,7 +583,7 @@ export default function TorrentsPage() {
                         Indexando...
                       </>
                     ) : (
-                      "Iniciar Download"
+                    "Indexar Torrent"
                     )}
                   </button>
                 </div>

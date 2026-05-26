@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadToSupabase } from "@/lib/storage";
 import { awardXP } from "@/lib/gamification";
 
 export async function GET() {
@@ -47,12 +46,7 @@ export async function POST(request: Request) {
       const file = formData.get("file") as File | null;
 
       if (file && file.size > 0) {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(path.join(uploadDir, filename), buffer);
-        fileUrl = `/uploads/${filename}`;
+        fileUrl = await uploadToSupabase(file, "torrents");
       }
     } else {
       const body = await request.json();
@@ -88,10 +82,10 @@ export async function POST(request: Request) {
         title,
         magnet,
         size: size || "1.5 GB",
-        status: "downloading",
-        progress: 0.0,
-        downloadSpeed: 12.5,
-        uploadSpeed: 0.8,
+        status: "completed",
+        progress: 100.0,
+        downloadSpeed: 0.0,
+        uploadSpeed: 0.0,
         notes: finalNotes,
       },
     });
