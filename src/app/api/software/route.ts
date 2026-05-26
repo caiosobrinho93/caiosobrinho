@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadToSupabase } from "@/lib/storage";
 
 export async function GET() {
   const session = await getSession();
@@ -46,26 +45,16 @@ export async function POST(request: Request) {
       category = formData.get("category") as string || "Utilitários";
       notes = formData.get("notes") as string || "";
 
-      // Tratar upload do instalador do software
+      // Tratar upload do instalador do software para o Supabase Storage
       if (file && file.size > 0) {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(path.join(uploadDir, filename), buffer);
-        downloadUrl = `/uploads/${filename}`;
+        downloadUrl = await uploadToSupabase(file, "software");
       } else {
         downloadUrl = downloadUrlText;
       }
 
-      // Tratar upload do ícone do software
+      // Tratar upload do ícone do software para o Supabase Storage
       if (iconFile && iconFile.size > 0) {
-        const buffer = Buffer.from(await iconFile.arrayBuffer());
-        const filename = `${Date.now()}-${iconFile.name.replace(/\s+/g, "_")}`;
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(path.join(uploadDir, filename), buffer);
-        iconUrl = `/uploads/${filename}`;
+        iconUrl = await uploadToSupabase(iconFile, "icons");
       } else {
         iconUrl = `https://avatar.vercel.sh/${name.replace(/\s+/g, "").toLowerCase()}`;
       }
@@ -100,8 +89,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(software);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Create software error:", error);
-    return NextResponse.json({ error: "Falha ao registrar software" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Falha ao registrar software" }, { status: 500 });
   }
 }

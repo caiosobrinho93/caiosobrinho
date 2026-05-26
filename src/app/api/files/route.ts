@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadToSupabase } from "@/lib/storage";
 
 export async function GET(request: Request) {
   const session = await getSession();
@@ -77,14 +76,8 @@ export async function POST(request: Request) {
       const file = formData.get("file") as File;
       if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = `${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
-      
-      const uploadDir = path.join(process.cwd(), "public", "uploads");
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
-
-      const filePath = `/uploads/${filename}`;
+      // Salva o arquivo de forma persistente no Supabase Storage
+      const filePath = await uploadToSupabase(file, "files");
 
       const newFile = await db.file.create({
         data: {
@@ -101,8 +94,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("POST files upload error:", error);
-    return NextResponse.json({ error: "Failed to complete filesystem action" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to complete filesystem action" }, { status: 500 });
   }
 }

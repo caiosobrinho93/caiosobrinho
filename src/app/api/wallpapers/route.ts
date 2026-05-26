@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadToSupabase } from "@/lib/storage";
 
 export async function GET() {
   const session = await getSession();
@@ -34,13 +33,9 @@ export async function POST(request: Request) {
       const file = formData.get("file") as File | null;
       const urlText = formData.get("url") as string || "";
 
+      // Salva o arquivo de imagem no Supabase Storage
       if (file && file.size > 0) {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const filename = `${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(path.join(uploadDir, filename), buffer);
-        url = `/uploads/${filename}`;
+        url = await uploadToSupabase(file, "wallpapers");
       } else {
         url = urlText;
       }
@@ -63,8 +58,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(wallpaper);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Create wallpaper error:", error);
-    return NextResponse.json({ error: "Erro ao adicionar wallpaper" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Erro ao adicionar wallpaper" }, { status: 500 });
   }
 }
