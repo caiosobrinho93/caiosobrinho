@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   description: "Secure, private dashboard to organize files, credentials, videos, notes, software, and torrents.",
 };
 
+export const viewport = {
+  themeColor: "#110b1c",
+};
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
