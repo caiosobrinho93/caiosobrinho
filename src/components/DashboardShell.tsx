@@ -26,10 +26,12 @@ import {
   User,
   CreditCard,
   FileCheck,
-  LayoutGrid
+  LayoutGrid,
+  RefreshCw
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
 import { useSettingsStore } from "@/stores/settingsStore";
+import { APP_VERSION } from "@/lib/version";
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -46,10 +48,61 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const [isCentralOptionsOpen, setIsCentralOptionsOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Verifica se há uma nova versão disponível no servidor (Vercel) comparando com a atual (Local)
+  useEffect(() => {
+    if (!mounted) return;
+
+    const checkVersion = async () => {
+      try {
+        // Adiciona um timestamp na query string para burlar cache do navegador
+        const response = await fetch(`/api/version?t=${Date.now()}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.version && data.version !== APP_VERSION) {
+            console.log(`[Update Check] Nova versão disponível. Local: ${APP_VERSION}, Servidor: ${data.version}`);
+            setIsUpdateAvailable(true);
+          }
+        }
+      } catch (err) {
+        console.error("[Update Check] Falha ao verificar versão:", err);
+      }
+    };
+
+    // Executa imediatamente e a cada 30 segundos
+    checkVersion();
+    const interval = setInterval(checkVersion, 30000);
+    return () => clearInterval(interval);
+  }, [mounted]);
+
+  const handleUpdateApp = async () => {
+    setIsUpdating(true);
+    try {
+      // 1. Limpa todos os caches do Service Worker
+      if ("caches" in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map((name) => caches.delete(name)));
+      }
+
+      // 2. Remove registro do Service Worker
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map((reg) => reg.unregister()));
+      }
+
+      // 3. Recarrega a página forçando bypass de cache
+      window.location.reload();
+    } catch (err) {
+      console.error("[Update App] Erro ao limpar caches:", err);
+      window.location.reload();
+    }
+  };
 
   // Sincroniza dinamicamente a cor das barras do celular Android/iOS (PWA) com a cor do tema ativo
   useEffect(() => {
@@ -263,6 +316,17 @@ export default function DashboardShell({ children, username }: DashboardShellPro
 
         {/* Footer info & Logout */}
         <div className="p-2 border-t border-border flex flex-col gap-1 bg-muted/10  text-[10px]">
+          {isUpdateAvailable && (
+            <button
+              onClick={handleUpdateApp}
+              disabled={isUpdating}
+              className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded bg-primary text-black font-bold border border-primary text-[9px] cursor-pointer animate-pulse disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
+              <span>{isUpdating ? "Instalando..." : "Nova Versão - Atualizar"}</span>
+            </button>
+          )}
+
           <div className="flex items-center gap-2 px-1.5 py-1 overflow-hidden">
             <div className={`w-7 h-7 rounded-sm overflow-hidden flex items-center justify-center border shrink-0 ${
               username === "caio"
@@ -341,6 +405,18 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </div>
 
           <div className="flex items-center gap-3">
+            {isUpdateAvailable && (
+              <button
+                onClick={handleUpdateApp}
+                disabled={isUpdating}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary text-black font-bold text-[9px] animate-pulse border border-primary/20 shadow-[0_0_10px_rgba(215,254,0,0.4)] cursor-pointer disabled:opacity-50 shrink-0"
+              >
+                <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
+                <span className="hidden xs:inline">{isUpdating ? "Atualizando..." : "Atualizar App"}</span>
+                <span className="xs:hidden">{isUpdating ? "..." : "Atualizar"}</span>
+              </button>
+            )}
+
             {/* Search Trigger */}
             <button
               onClick={() => setIsCommandPaletteOpen(true)}
@@ -465,6 +541,17 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               </nav>
 
               <div className="pt-4 border-t border-border flex flex-col gap-3">
+                {isUpdateAvailable && (
+                  <button
+                    onClick={handleUpdateApp}
+                    disabled={isUpdating}
+                    className="flex items-center justify-center gap-2 p-3 w-full bg-primary text-black font-bold rounded-xl text-sm transition-colors cursor-pointer animate-pulse disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${isUpdating ? 'animate-spin' : ''}`} />
+                    <span>{isUpdating ? "Instalando..." : "Atualizar Nexus Vault"}</span>
+                  </button>
+                )}
+
                 <div className="flex items-center gap-3 px-1 font-sans">
                   <div className={`w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center border ${
                     username === "caio"
