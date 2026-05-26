@@ -1,38 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap');
 @import "tailwindcss";
 
+.font-display {
+  font-family: 'aviano-future', 'Syncopate', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 :root {
-  /* Futuristic Dark Theme System */
-  --background: 240 10% 3.9%;
+  /* Cyberpunk Retro-Neon Cockpit Theme System */
+  --background: 260 55% 4%;
   --foreground: 0 0% 98%;
-  --card: 240 10% 5.8%;
+  --card: 260 48% 6%;
   --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
+  --popover: 260 55% 4%;
   --popover-foreground: 0 0% 98%;
   
-  /* Primary and Accent colors */
-  --primary: 250 84% 54%;
-  --primary-foreground: 210 20% 98%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 12%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 250 84% 54%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 85.7% 97.3%;
-  --border: 240 3.7% 12%;
-  --input: 240 3.7% 12%;
-  --ring: 250 84% 54%;
-  --radius: 1rem;
+  /* Primary and Accent colors - Neon Pink & Neon Cyan */
+  --primary: 330 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 185 100% 50%;
+  --secondary-foreground: 260 55% 4%;
+  --muted: 260 40% 10%;
+  --muted-foreground: 260 15% 70%;
+  --accent: 330 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 260 40% 14%;
+  --input: 260 40% 10%;
+  --ring: 330 100% 50%;
+  --radius: 0.75rem;
 
   /* Accent Color Presets */
   --theme-violet: 262 83% 58%;
-  --theme-cyan: 191 91% 47%;
+  --theme-cyan: 185 100% 50%;
   --theme-emerald: 142 71% 45%;
-  --theme-rose: 346 87% 60%;
+  --theme-rose: 330 100% 50%;
   --theme-amber: 37 90% 51%;
   --theme-carbon: 240 5% 35%;
   --theme-limon: 78 95% 52%;
+}
+
+/* Botões 3D Mecânicos Estilo eSports/Arcade */
+.btn-3d-pink {
+  position: relative;
+  background-color: #ff007f;
+  color: #ffffff;
+  border: 1px solid #ff007f;
+  box-shadow: 0 4px 0 #b30059;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  user-select: none;
+}
+.btn-3d-pink:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #b30059;
+}
+
+.btn-3d-cyan {
+  position: relative;
+  background-color: #00f0ff;
+  color: #05020c;
+  border: 1px solid #00f0ff;
+  box-shadow: 0 4px 0 #0099a6;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  user-select: none;
+}
+.btn-3d-cyan:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #0099a6;
+}
+
+.btn-3d-purple {
+  position: relative;
+  background-color: #8b5cf6;
+  color: #ffffff;
+  border: 1px solid #8b5cf6;
+  box-shadow: 0 4px 0 #6d28d9;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  user-select: none;
+}
+.btn-3d-purple:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #6d28d9;
+}
+
+.btn-3d-yellow {
+  position: relative;
+  background-color: #ffe600;
+  color: #05020c;
+  border: 1px solid #ffe600;
+  box-shadow: 0 4px 0 #b3a100;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  user-select: none;
+}
+.btn-3d-yellow:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #b3a100;
+}
+
+.btn-3d-gray {
+  position: relative;
+  background-color: #1e1b2e;
+  color: #ffffff;
+  border: 1px solid #2a2542;
+  box-shadow: 0 4px 0 #12101c;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  user-select: none;
+}
+.btn-3d-gray:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #12101c;
+}
+
+/* Painéis de Alta Densidade Estilo Cockpit Cyberpunk */
+.card-cockpit {
+  background-color: rgba(14, 7, 34, 0.65);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 0, 127, 0.22);
+  box-shadow: 0 3px 0 rgba(255, 0, 127, 0.15);
+  border-radius: 12px;
+  padding: 0.85rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.card-cockpit:hover {
+  border-color: rgba(255, 0, 127, 0.45);
+  box-shadow: 0 3px 0 rgba(255, 0, 127, 0.3);
+}
+
+.card-cockpit-cyan {
+  background-color: rgba(14, 7, 34, 0.65);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  box-shadow: 0 3px 0 rgba(0, 240, 255, 0.15);
+  border-radius: 12px;
+  padding: 0.85rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.card-cockpit-cyan:hover {
+  border-color: rgba(0, 240, 255, 0.45);
+  box-shadow: 0 3px 0 rgba(0, 240, 255, 0.35);
+}
+
+.card-3d-interactive {
+  background-color: rgba(14, 7, 34, 0.7);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.1s;
+}
+@media (hover: hover) {
+  .card-3d-interactive:hover {
+    border-color: rgba(255, 0, 127, 0.3);
+    box-shadow: 0 4px 0 rgba(255, 0, 127, 0.25);
+  }
+}
+.card-3d-interactive:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 rgba(0, 0, 0, 0) !important;
 }
 
 /* Dynamic Accent classes for Tailwind v4 */

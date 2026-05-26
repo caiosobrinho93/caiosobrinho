@@ -171,33 +171,33 @@ export default function SoftwarePage() {
   return (
     <div className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Cpu className="w-6 h-6 text-primary" />
-            Softwares
+          <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2">
+            <Cpu className="w-5 h-5 text-primary" />
+            SOFTWARES
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Mapeie e gerencie seus instaladores, licenças pessoais e versões de aplicativos.
+          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+            Instaladores, Licenças e Versões de Aplicativos
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
+          className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[10px] font-bold btn-3d-pink cursor-pointer shrink-0"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-3.5 h-3.5" />
           Registrar App
         </button>
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 md:pb-0 scrollbar-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border ${
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer transition-colors border ${
                 activeCategory === cat
                   ? "bg-primary border-primary/20 text-white"
                   : "bg-card/40 border-border/80 text-muted-foreground hover:text-white"
@@ -209,20 +209,20 @@ export default function SoftwarePage() {
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <div className="relative w-full md:w-56">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-muted-foreground pointer-events-none">
-              <Search className="w-4 h-4" />
+          <div className="relative w-full sm:w-56">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-muted-foreground pointer-events-none">
+              <Search className="w-3.5 h-3.5" />
             </span>
             <input
               type="text"
               placeholder="Buscar softwares..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-card/40 border border-border/85 rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
+              className="w-full pl-9 pr-3 py-1.5 bg-card/45 border border-border/80 rounded-lg text-white placeholder-muted-foreground/60 text-[10px] focus:outline-none focus:border-primary transition-all"
             />
           </div>
 
-          <div className="flex bg-muted/40 border border-border p-0.5 rounded-lg shrink-0">
+          <div className="flex bg-muted/40 border border-border/70 p-0.5 rounded-lg shrink-0">
             <button
               onClick={() => setViewMode("grid")}
               className={`p-1.5 rounded cursor-pointer ${viewMode === "grid" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
@@ -249,72 +249,72 @@ export default function SoftwarePage() {
       ) : filteredSoftware.length > 0 ? (
         viewMode === "grid" ? (
           /* Visualização em Grade */
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {filteredSoftware.map((item) => (
               <motion.div
                 key={item.id}
                 layoutId={item.id}
                 whileTap={{ scale: 0.98 }}
-                className="bg-card/55 border border-border p-5 rounded-2xl flex flex-col justify-between shadow-sm group relative hover-card-effects"
+                className="card-cockpit flex flex-col justify-between hover:border-primary/40 transition-colors cursor-pointer group"
               >
 
                 <div>
-                  <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-muted border border-border/80 flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
+                  <div className="flex gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-muted border border-border/80 flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
                       {item.iconUrl ? (
                         <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" />
                       ) : (
-                        <Cpu className="w-6 h-6 text-primary" />
+                        <Cpu className="w-4.5 h-4.5 text-primary" />
                       )}
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-2.5">
-                        <div className="flex items-baseline gap-2 min-w-0 flex-wrap">
-                          <h3 className="text-sm font-semibold text-white truncate leading-tight group-hover:text-primary transition-colors">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-baseline gap-1.5 min-w-0 flex-wrap">
+                          <h3 className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
                             {item.name}
                           </h3>
-                          <span className="text-[10px] font-mono text-primary font-semibold shrink-0">
+                          <span className="text-[9px] font-mono text-primary font-bold shrink-0">
                             v{item.version}
                           </span>
                         </div>
 
-                        <span className="text-[9px] px-2 py-0.5 bg-muted rounded border border-border/85 text-muted-foreground font-semibold shrink-0">
+                        <span className="text-[9px] px-1.5 py-0.5 bg-muted rounded border border-border/80 text-muted-foreground font-bold uppercase shrink-0">
                           {item.category || "Geral"}
                         </span>
                       </div>
 
-                      <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed font-medium">
+                      <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2 leading-tight font-medium">
                         {item.description || "Nenhuma descrição fornecida."}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-4 flex items-center gap-1.5 flex-wrap">
+                  <div className="mt-3 flex items-center gap-1 flex-wrap border-t border-border/40 pt-2.5">
                     {item.platform.split(",").map((plat) => (
                       <span
                         key={plat}
-                        className="text-[9px] bg-muted/70 text-white border border-border px-2 py-0.5 rounded flex items-center gap-1 font-medium"
+                        className="text-[8px] bg-muted/60 text-white border border-border/80 px-1.5 py-0.5 rounded flex items-center gap-0.5 font-bold uppercase"
                       >
                         {getPlatformIcon(plat)}
                         {plat.trim()}
                       </span>
                     ))}
                     {item.notes && (
-                      <p className="text-[10px] text-muted-foreground/80 leading-none truncate max-w-full italic mt-1 sm:mt-0 sm:ml-auto">
+                      <p className="text-[9px] text-muted-foreground/70 leading-none truncate max-w-full italic mt-1 sm:mt-0 sm:ml-auto font-medium">
                         &ldquo;{item.notes}&rdquo;
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-2.5 border-t border-border/40 mt-5 pt-3.5">
+                <div className="flex items-center justify-end gap-2 border-t border-border/40 mt-3 pt-2.5 select-none">
                   {item.downloadUrl && (
                     <a
                       href={item.downloadUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3.5 py-1.5 bg-primary hover:bg-primary/95 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-md shadow-primary/10 cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg text-[10px] font-bold btn-3d-cyan flex items-center justify-center gap-1 cursor-pointer"
                     >
                       <Download className="w-3.5 h-3.5" />
                       Baixar App
@@ -322,9 +322,9 @@ export default function SoftwarePage() {
                   )}
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="p-1.5 rounded-xl border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
+                    className="p-1.5 rounded-lg border border-border text-muted-foreground hover:text-destructive btn-3d-gray cursor-pointer flex items-center justify-center"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </motion.div>

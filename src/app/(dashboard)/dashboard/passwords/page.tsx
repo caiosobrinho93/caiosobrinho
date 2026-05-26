@@ -248,45 +248,45 @@ function PasswordsContent() {
   return (
     <div className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Key className="w-6 h-6 text-primary" />
-            Chaveiro AES
+          <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2">
+            <Key className="w-5 h-5 text-primary" />
+            CHAVEIRO AES
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Armazene, gere e organize suas credenciais com criptografia local AES-256 de grau militar.
+          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+            Criptografia local AES-256 de Grau Militar
           </p>
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 select-none pb-1 sm:pb-0">
           <button
             onClick={() => {
               handleGenerate();
               setIsGeneratorOpen(true);
             }}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-muted border border-border text-white text-sm font-semibold rounded-xl hover:bg-muted/70 transition-all cursor-pointer"
+            className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold btn-3d-gray cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-            Gerador de Senha
+            <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
+            Gerador
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10"
+            className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[10px] font-bold btn-3d-pink cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
-            Adicionar Senha
+            <Plus className="w-3.5 h-3.5" />
+            Adicionar
           </button>
         </div>
       </div>
 
       {/* Barra de Ferramentas / Filtros */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 md:pb-0 scrollbar-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border ${
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer transition-colors border ${
                 activeCategory === cat
                   ? "bg-primary border-primary/20 text-white"
                   : "bg-card/40 border-border/80 text-muted-foreground hover:text-white"
@@ -297,87 +297,78 @@ function PasswordsContent() {
           ))}
         </div>
 
-        <div className="relative w-full md:w-72">
-          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-muted-foreground pointer-events-none">
-            <Search className="w-4 h-4" />
+        <div className="relative w-full sm:w-64">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-muted-foreground pointer-events-none">
+            <Search className="w-3.5 h-3.5" />
           </span>
           <input
             type="text"
             placeholder="Buscar por título ou usuário..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-card/40 border border-border/85 rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
+            className="w-full pl-9 pr-3 py-1.5 bg-card/45 border border-border/80 rounded-lg text-white placeholder-muted-foreground/60 text-[10px] focus:outline-none focus:border-primary transition-all"
           />
         </div>
       </div>
 
-      {/* Grade de Cards Minimalistas (Apenas Capa e Título) */}
+      {/* Grade de Cards Minimalistas (Compacto Cockpit) */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-36 bg-card/60 rounded-2xl border border-border/80" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 animate-pulse">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="h-14 bg-card/60 rounded-xl border border-border/80" />
           ))}
         </div>
       ) : filteredPasswords.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {filteredPasswords.map((item) => {
             return (
               <motion.div
                 key={item.id}
+                whileTap={{ scale: 0.98 }}
+                className="group cursor-pointer bg-card-cockpit flex items-center justify-between border border-border/70 rounded-xl p-3 hover:border-primary/40 transition-colors"
                 onClick={() => setSelectedPassword(item)}
-                whileTap={{ scale: 0.97 }}
-                className="group cursor-pointer bg-card/55 backdrop-blur-xl border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between hover-card-effects"
               >
-
-                {/* Imagem de Capa ou Gradiente */}
-                {item.imageUrl ? (
-                  <div className="h-24 w-full relative bg-muted overflow-hidden flex items-center justify-center border-b border-border/50">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => {
-                        // Se falhar a imagem externa, substitui por um ícone de lock
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                    <Key className="w-4 h-4 text-primary" />
                   </div>
-                ) : (
-                  <div className="h-24 w-full bg-gradient-to-br from-rose-500/10 to-primary/10 flex items-center justify-center border-b border-border/50 relative">
-                    <Lock className="w-6 h-6 text-muted-foreground/30 group-hover:text-primary/50 transition-colors" />
-                  </div>
-                )}
-
-                {/* Conteúdo do Card */}
-                <div className="p-4 flex items-center justify-between gap-3 bg-card/45">
                   <div className="min-w-0">
-                    <h3 className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
+                    <h3 className="text-xs font-bold text-white group-hover:text-primary transition-colors truncate leading-tight">
                       {item.title}
                     </h3>
-                    <span className="text-[9px] text-muted-foreground mt-0.5 block">
-                      {item.category || "Geral"}
+                    <span className="text-[9px] text-muted-foreground truncate block leading-tight mt-0.5">
+                      {item.username || item.email || "Sem credencial"}
                     </span>
                   </div>
-                  <div className="w-7 h-7 rounded-lg bg-muted border border-border/60 flex items-center justify-center shrink-0">
-                    <Key className="w-3.5 h-3.5 text-rose-400" />
-                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0 ml-3">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopy(`${item.id}-pass`, item.password);
+                    }}
+                    className="p-1.5 rounded-md bg-muted/40 hover:bg-primary/20 border border-border/80 text-muted-foreground hover:text-white transition-colors cursor-pointer"
+                    title="Copiar Senha"
+                  >
+                    {copiedId === `${item.id}-pass` ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
                 </div>
               </motion.div>
             );
           })}
         </div>
       ) : (
-        <div className="py-24 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-2xl">
-          <FolderKey className="w-10 h-10 text-muted-foreground mb-3" />
-          <h3 className="text-sm font-semibold text-white">Chaveiro de Credenciais Vazio</h3>
-          <p className="text-xs text-muted-foreground mt-1 max-w-xs">
+        <div className="py-16 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-xl">
+          <FolderKey className="w-8 h-8 text-muted-foreground mb-2" />
+          <h3 className="text-xs font-semibold text-white font-display">Chaveiro de Credenciais Vazio</h3>
+          <p className="text-[10px] text-muted-foreground mt-1 max-w-xs">
             Comece a armazenar detalhes criptografados de suas contas e logins.
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-4 px-3.5 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+            className="mt-3 px-3 py-1.5 bg-primary text-white rounded-lg text-[10px] font-bold btn-3d-pink cursor-pointer"
           >
-            Adicionar Primeira Senha
+            Adicionar Credencial
           </button>
         </div>
       )}

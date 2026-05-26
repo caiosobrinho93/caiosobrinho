@@ -197,18 +197,18 @@ export default function DashboardShell({ children, username }: DashboardShellPro
         className="hidden md:flex flex-col h-screen border-r border-border bg-card/45 backdrop-blur-xl relative shrink-0 z-30"
       >
         {/* Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-border">
-          <Link href="/dashboard" className="flex items-center gap-3 overflow-hidden select-none">
-            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-muted border border-border shrink-0">
-              <Terminal className="w-5 h-5 text-primary" />
+        <div className="h-14 flex items-center justify-between px-3 border-b border-border/80 bg-background/40">
+          <Link href="/dashboard" className="flex items-center gap-2 overflow-hidden select-none">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/30 shrink-0">
+              <Terminal className="w-4.5 h-4.5 text-primary animate-pulse" />
             </div>
             {!isSidebarCollapsed && (
               <motion.span
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="text-base font-bold tracking-wider text-white"
+                className="font-display text-xs tracking-wider text-white"
               >
-                NEXUS <span className="text-primary font-medium text-xs border border-primary/20 px-1.5 py-0.5 rounded-md ml-1">VAULT</span>
+                NEXUS <span className="text-primary font-bold text-[9px] bg-primary/10 border border-primary/30 px-1 py-0.5 rounded ml-1">VAULT</span>
               </motion.span>
             )}
           </Link>
@@ -302,21 +302,21 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         
         {/* Top Header */}
-        <header className="h-16 border-b border-border bg-card/30 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 shrink-0 z-20">
+        <header className="h-14 border-b border-border/80 bg-background/25 backdrop-blur-xl flex items-center justify-between px-4 md:px-5 shrink-0 z-20">
           
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-white cursor-pointer"
+              className="md:hidden p-1.5 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-white cursor-pointer"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-4.5 h-4.5" />
             </button>
-            <div className="hidden md:flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground font-medium">Cofre</span>
-              <span className="text-muted-foreground/40">/</span>
-              <span className="text-white font-semibold">{currentItem.name}</span>
+            <div className="hidden md:flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
+              <span className="text-muted-foreground">Cofre</span>
+              <span className="text-muted-foreground/30">/</span>
+              <span className="text-primary font-display">{currentItem.name}</span>
             </div>
-            <span className="md:hidden text-white font-bold text-base">
+            <span className="md:hidden text-primary font-display text-xs">
               {currentItem.name}
             </span>
           </div>

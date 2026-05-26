@@ -371,55 +371,59 @@ export default function DashboardPage() {
       animate="show"
       className="space-y-6"
     >
-      {/* Cabeçalho de Boas-vindas */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Cabeçalho de Boas-vindas (Compacto & Cockpit) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
-            {getGreeting()}, <span className="text-primary neon-text">{data.profile.username.split(" ")[0]}</span> 🌌
+          <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2">
+            <span>{getGreeting()}</span>
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-bold">
+              {data.profile.username.split(" ")[0].toUpperCase()}
+            </span>
+            <span className="text-[10px] bg-primary/10 border border-primary/20 px-1 py-0.5 rounded text-primary">⚡ COCKPIT</span>
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Cofre pessoal descriptografado. Todos os sistemas operacionais e integrados.
+          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+            Cofre Criptografado &bull; Sistemas Integrados
           </p>
         </div>
-        <div className="flex items-center gap-2.5 text-xs text-muted-foreground bg-card/45 backdrop-blur-xl border border-border/80 rounded-xl px-4 py-2.5 shadow-sm">
-          <Clock className="w-4 h-4 text-primary" />
-          <span>Último acesso: {new Date().toLocaleDateString("pt-BR")} às {new Date().toLocaleTimeString("pt-BR", {hour: '2-digit', minute:'2-digit'})}</span>
+        <div className="flex items-center gap-2 text-[10px] text-muted-foreground/80 bg-muted/30 border border-border/60 rounded-xl px-3 py-1.5 shrink-0">
+          <Clock className="w-3.5 h-3.5 text-primary animate-pulse" />
+          <span>Último Acesso: {new Date().toLocaleDateString("pt-BR")} às {new Date().toLocaleTimeString("pt-BR", {hour: '2-digit', minute:'2-digit'})}</span>
         </div>
       </div>
 
       {/* Navegação por Abas no Mobile (Otimização de Espaço) */}
-      <div className="md:hidden flex bg-card/40 border border-border p-1 rounded-xl gap-1">
+      <div className="md:hidden flex bg-card/40 border border-border/50 p-1 rounded-lg gap-1">
         <motion.button
           onClick={() => setActiveMobileTab("general")}
-          whileTap={{ scale: 0.95 }}
-          className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer ${
-            activeMobileTab === "general" ? "bg-primary text-white shadow-md shadow-primary/10 neon-text-subtle" : "text-muted-foreground"
+          whileTap={{ scale: 0.94 }}
+          className={`flex-1 py-1.5 text-[10px] font-bold rounded transition-all cursor-pointer ${
+            activeMobileTab === "general" ? "bg-primary text-white shadow-sm" : "text-muted-foreground"
           }`}
         >
-          📦 Painel
+          PAINEL
         </motion.button>
         <motion.button
           onClick={() => setActiveMobileTab("goals")}
-          whileTap={{ scale: 0.95 }}
-          className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer ${
-            activeMobileTab === "goals" ? "bg-primary text-white shadow-md shadow-primary/10 neon-text-subtle" : "text-muted-foreground"
+          whileTap={{ scale: 0.94 }}
+          className={`flex-1 py-1.5 text-[10px] font-bold rounded transition-all cursor-pointer ${
+            activeMobileTab === "goals" ? "bg-primary text-white shadow-sm" : "text-muted-foreground"
           }`}
         >
-          🎯 Metas
+          METAS
         </motion.button>
         <motion.button
           onClick={() => setActiveMobileTab("finance")}
-          whileTap={{ scale: 0.95 }}
-          className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer ${
-            activeMobileTab === "finance" ? "bg-primary text-white shadow-md shadow-primary/10 neon-text-subtle" : "text-muted-foreground"
+          whileTap={{ scale: 0.94 }}
+          className={`flex-1 py-1.5 text-[10px] font-bold rounded transition-all cursor-pointer ${
+            activeMobileTab === "finance" ? "bg-primary text-white shadow-sm" : "text-muted-foreground"
           }`}
         >
-          💳 Banco
+          BANCO
         </motion.button>
       </div>
 
-      {/* Grade de Métricas */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ${activeMobileTab === "general" ? "grid" : "hidden md:grid"}`}>
+      {/* Grade de Métricas Compacta (Horizontal) */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ${activeMobileTab === "general" ? "grid" : "hidden md:grid"}`}>
         {moduleStats.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -428,71 +432,71 @@ export default function DashboardPage() {
               variants={itemVariants}
               onClick={() => router.push(stat.href)}
               whileTap={{ scale: 0.97 }}
-              className="group cursor-pointer relative overflow-hidden p-5 bg-card/55 backdrop-blur-xl border border-border rounded-2xl shadow-sm hover-card-effects"
+              className="group cursor-pointer relative overflow-hidden p-3 bg-card-cockpit flex items-center justify-between border border-primary/20 rounded-xl hover:border-primary/50 transition-colors"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.01] to-transparent pointer-events-none" />
-              <div className="flex items-start justify-between">
-                <div className={`p-2.5 rounded-xl border ${stat.color}`}>
-                  <Icon className="w-5 h-5" />
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`p-2 rounded-lg border ${stat.color} shrink-0`}>
+                  <Icon className="w-4 h-4" />
                 </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary transition-colors" />
+                <div className="min-w-0">
+                  <h3 className="text-xs font-semibold text-white/95 group-hover:text-primary transition-colors leading-tight truncate">{stat.name}</h3>
+                  <p className="text-[10px] text-muted-foreground leading-tight mt-0.5 truncate">{stat.details}</p>
+                </div>
               </div>
-              <div className="mt-4">
-                <span className="text-[28px] font-extrabold text-white leading-none tracking-tight">
+              <div className="text-right shrink-0 ml-3">
+                <span className="font-display text-sm font-bold text-white group-hover:text-primary transition-colors">
                   {stat.count}
                 </span>
-                <h3 className="text-sm font-semibold text-white/95 mt-1">{stat.name}</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">{stat.details}</p>
               </div>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Seções em 2 Colunas */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Seções em 2 Colunas (Cockpit Grid) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         
         {/* Lado Esquerdo: Atividades Recentes, Armazenamento e Integração Financeira */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4">
           
           {/* Atividades Recentes */}
           <motion.div
             variants={itemVariants}
-            className={`bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
+            className={`card-cockpit ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
           >
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/60">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4.5 h-4.5 text-primary" />
-                <h2 className="text-base font-bold text-white">Atividades & Entradas Recentes</h2>
+            <div className="flex items-center justify-between mb-2 pb-2 border-b border-border/50">
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-primary" />
+                <h2 className="text-xs font-display text-white">Atividades Recentes</h2>
               </div>
-              <span className="text-[10px] text-muted-foreground bg-muted border border-border px-2 py-0.5 rounded-md uppercase tracking-wider font-semibold">
-                Atualizado
+              <span className="text-[8px] text-muted-foreground bg-muted/60 border border-border px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                Console Ativo
               </span>
             </div>
 
-            <div className="space-y-1">
-              {data.recentItems.map((item) => (
+            <div className="space-y-0.5">
+              {data.recentItems.slice(0, 4).map((item) => (
                 <div
                   key={item.id}
                   onClick={() => router.push(getModuleLink(item.type))}
-                  className="flex items-center justify-between p-3 rounded-xl hover:bg-muted/40 transition-all cursor-pointer group border border-transparent hover:border-border/60"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/30 transition-all cursor-pointer group border border-transparent hover:border-border/40"
                 >
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-card border border-border flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded bg-card border border-border flex items-center justify-center shrink-0">
                       {getModuleIcon(item.type)}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white truncate leading-tight group-hover:text-primary transition-colors">
+                      <p className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
                         {item.title}
                       </p>
-                      <p className="text-xs text-muted-foreground truncate leading-none mt-1">
+                      <p className="text-[10px] text-muted-foreground truncate leading-none mt-0.5">
                         {item.type} &bull; {item.details}
                       </p>
                     </div>
                   </div>
-                  <span className="text-[11px] text-muted-foreground font-medium whitespace-nowrap ml-4 shrink-0 flex items-center gap-1">
-                    {new Date(item.date).toLocaleDateString("pt-BR", {month: 'short', day: 'numeric'})}
-                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-[10px] text-muted-foreground font-semibold whitespace-nowrap ml-4 shrink-0 flex items-center gap-0.5">
+                    {new Date(item.date).toLocaleDateString("pt-BR", {month: "short", day: "numeric"})}
+                    <ArrowUpRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </span>
                 </div>
               ))}
@@ -502,27 +506,26 @@ export default function DashboardPage() {
           {/* Widget de Integração Bancária */}
           <motion.div
             variants={itemVariants}
-            className={`bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
+            className={`card-cockpit ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-3 border-b border-border/60">
-              <div className="flex items-center gap-2">
-                <CreditCard className="w-4.5 h-4.5 text-primary" />
+            <div className="flex items-center justify-between gap-4 mb-3 pb-2 border-b border-border/50">
+              <div className="flex items-center gap-1.5">
+                <CreditCard className="w-4 h-4 text-primary" />
                 <div>
-                  <h2 className="text-base font-bold text-white">Sincronização Financeira</h2>
-                  <p className="text-xs text-muted-foreground">Mercado Pago & Santander</p>
+                  <h2 className="text-xs font-display text-white">Sincronização Bancária</h2>
                 </div>
               </div>
               <button
                 disabled={isSyncingBank}
                 onClick={handleSyncFinancials}
-                className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-xl text-xs font-semibold transition-all cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-primary text-white rounded-lg text-[9px] font-bold btn-3d-pink cursor-pointer disabled:opacity-50 shrink-0"
               >
                 {isSyncingBank ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <Loader2 className="w-3 h-3 animate-spin" />
                 ) : (
-                  <RefreshCw className="w-3.5 h-3.5" />
+                  <RefreshCw className="w-3 h-3" />
                 )}
-                Sincronizar Contas
+                Sincronizar
               </button>
             </div>
 
@@ -533,50 +536,40 @@ export default function DashboardPage() {
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="mb-4 p-3 bg-primary/5 border border-primary/20 rounded-xl flex items-center gap-2.5 text-xs text-primary"
+                  className="mb-3 p-2 bg-primary/5 border border-primary/20 rounded-lg flex items-center gap-2 text-[10px] text-primary"
                 >
-                  <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
                   <span>{syncMessage}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* Mercado Pago */}
-              <div className="relative overflow-hidden p-5 rounded-2xl border border-sky-500/10 bg-gradient-to-br from-sky-950/20 to-sky-900/10 flex flex-col justify-between h-40">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl pointer-events-none" />
-                <div className="flex justify-between items-start">
-                  <div className="px-2.5 py-1 bg-sky-500/10 border border-sky-500/20 rounded-lg text-[10px] text-sky-400 font-bold tracking-wide uppercase">
-                    Mercado Pago
+              <div className="relative overflow-hidden p-3 rounded-xl border border-sky-500/20 bg-sky-950/10 flex items-center justify-between h-14">
+                <div className="flex items-center gap-2">
+                  <div className="px-1.5 py-0.5 bg-sky-500/10 border border-sky-500/20 rounded text-[8px] text-sky-400 font-bold uppercase tracking-wider">
+                    MP
                   </div>
-                  <span className="text-[10px] text-sky-400/70 font-semibold">{data.financialAccounts[0].lastSync}</span>
+                  <span className="text-xs text-white font-bold">{data.financialAccounts[0].balance}</span>
                 </div>
-                <div className="mt-4">
-                  <span className="text-[26px] font-extrabold text-white leading-none tracking-tight block">
-                    {data.financialAccounts[0].balance}
-                  </span>
-                  <span className="text-xs text-emerald-400 font-medium mt-1 inline-flex items-center gap-1">
-                    {data.financialAccounts[0].trend}
-                  </span>
+                <div className="text-right">
+                  <span className="text-[8px] text-sky-400/70 block leading-tight">{data.financialAccounts[0].lastSync.split(" às ")[1] || "Sinc."}</span>
+                  <span className="text-[9px] text-emerald-400 font-semibold leading-tight">{data.financialAccounts[0].trend}</span>
                 </div>
               </div>
 
               {/* Santander */}
-              <div className="relative overflow-hidden p-5 rounded-2xl border border-red-500/10 bg-gradient-to-br from-red-950/20 to-red-900/10 flex flex-col justify-between h-40">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full blur-2xl pointer-events-none" />
-                <div className="flex justify-between items-start">
-                  <div className="px-2.5 py-1 bg-red-500/10 border border-red-500/20 rounded-lg text-[10px] text-red-400 font-bold tracking-wide uppercase">
-                    Santander
+              <div className="relative overflow-hidden p-3 rounded-xl border border-red-500/20 bg-red-950/10 flex items-center justify-between h-14">
+                <div className="flex items-center gap-2">
+                  <div className="px-1.5 py-0.5 bg-red-500/10 border border-red-500/20 rounded text-[8px] text-red-400 font-bold uppercase tracking-wider">
+                    SAN
                   </div>
-                  <span className="text-[10px] text-red-400/70 font-semibold">{data.financialAccounts[1].lastSync}</span>
+                  <span className="text-xs text-white font-bold">{data.financialAccounts[1].balance}</span>
                 </div>
-                <div className="mt-4">
-                  <span className="text-[26px] font-extrabold text-white leading-none tracking-tight block">
-                    {data.financialAccounts[1].balance}
-                  </span>
-                  <span className="text-xs text-emerald-400 font-medium mt-1 inline-flex items-center gap-1">
-                    {data.financialAccounts[1].trend}
-                  </span>
+                <div className="text-right">
+                  <span className="text-[8px] text-red-400/70 block leading-tight">{data.financialAccounts[1].lastSync.split(" às ")[1] || "Sinc."}</span>
+                  <span className="text-[9px] text-emerald-400 font-semibold leading-tight">{data.financialAccounts[1].trend}</span>
                 </div>
               </div>
             </div>
@@ -585,99 +578,74 @@ export default function DashboardPage() {
           {/* Análise de Armazenamento */}
           <motion.div
             variants={itemVariants}
-            className={`bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
+            className={`card-cockpit ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
           >
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-2">
-                <HardDrive className="w-4.5 h-4.5 text-primary" />
-                <h2 className="text-base font-bold text-white">Análise de Armazenamento</h2>
+            <div className="flex items-center justify-between mb-2 pb-2 border-b border-border/50">
+              <div className="flex items-center gap-1.5">
+                <HardDrive className="w-4 h-4 text-primary" />
+                <h2 className="text-xs font-display text-white">Armazenamento</h2>
               </div>
-              <span className="text-xs text-muted-foreground">
-                <span className="text-white font-semibold">{data.storageStats.usedSize}</span> de {data.storageStats.totalSize}
+              <span className="text-[10px] text-muted-foreground">
+                <span className="text-white font-bold">{data.storageStats.usedSize}</span> / {data.storageStats.totalSize}
               </span>
             </div>
 
-            <div className="w-full h-3.5 bg-muted rounded-full overflow-hidden mb-5">
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden mb-3">
               <div
-                className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-1000"
+                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-1000"
                 style={{ width: `${data.storageStats.percentUsed}%` }}
               />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-3 bg-muted/30 border border-border/70 rounded-xl">
-                <span className="text-[10px] text-muted-foreground block">Cine Vault</span>
-                <span className="text-sm font-bold text-white mt-0.5 block">14.8 GB</span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="p-2 bg-muted/20 border border-border/40 rounded-lg text-center">
+                <span className="text-[9px] text-muted-foreground block leading-tight">Cine Vault</span>
+                <span className="text-xs font-bold text-white leading-tight">14.8 GB</span>
               </div>
-              <div className="p-3 bg-muted/30 border border-border/70 rounded-xl">
-                <span className="text-[10px] text-muted-foreground block">Arquivos do Cofre</span>
-                <span className="text-sm font-bold text-white mt-0.5 block">36.2 GB</span>
+              <div className="p-2 bg-muted/20 border border-border/40 rounded-lg text-center">
+                <span className="text-[9px] text-muted-foreground block leading-tight">Arquivos</span>
+                <span className="text-xs font-bold text-white leading-tight">36.2 GB</span>
               </div>
-              <div className="p-3 bg-muted/30 border border-border/70 rounded-xl">
-                <span className="text-[10px] text-muted-foreground block">Papéis de Parede</span>
-                <span className="text-sm font-bold text-white mt-0.5 block">2.6 GB</span>
+              <div className="p-2 bg-muted/20 border border-border/40 rounded-lg text-center">
+                <span className="text-[9px] text-muted-foreground block leading-tight">Wallpapers</span>
+                <span className="text-xs font-bold text-white leading-tight">2.6 GB</span>
               </div>
-              <div className="p-3 bg-muted/30 border border-border/70 rounded-xl">
-                <span className="text-[10px] text-muted-foreground block">Backups do Sistema</span>
-                <span className="text-sm font-bold text-white mt-0.5 block">0.2 GB</span>
+              <div className="p-2 bg-muted/20 border border-border/40 rounded-lg text-center">
+                <span className="text-[9px] text-muted-foreground block leading-tight">Backups</span>
+                <span className="text-xs font-bold text-white leading-tight">0.2 GB</span>
               </div>
             </div>
           </motion.div>
         </div>
 
         {/* Lado Direito: Gamificação (Nível/XP), Metas, Atalhos e Favoritos */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           
-          {/* Card de Gamificação / XP */}
+          {/* Card de Gamificação & Metas Fundido */}
           <motion.div
             variants={itemVariants}
-            className={`relative overflow-hidden bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 bg-gradient-to-br from-primary/5 via-transparent to-transparent neon-glow ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+            className={`card-cockpit ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
           >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
-                <Trophy className="w-6 h-6 animate-pulse" />
+            <div className="flex items-center justify-between pb-2 border-b border-border/50 mb-2">
+              <div className="flex items-center gap-1.5">
+                <Trophy className="w-4 h-4 text-primary animate-pulse" />
+                <h2 className="text-xs font-display text-white">Central de Metas (Nível {data.profile.level})</h2>
               </div>
-              <div>
-                <h2 className="text-base font-bold text-white">Nível de Acesso</h2>
-                <p className="text-xs text-muted-foreground">Cumpra metas para ganhar XP</p>
-              </div>
-            </div>
-
-            <div className="mt-5 space-y-2">
-              <div className="flex justify-between items-end text-xs">
-                <span className="font-extrabold text-primary text-sm">Nível {data.profile.level}</span>
-                <span className="text-muted-foreground font-semibold">{currentLevelXp} / 1000 XP</span>
-              </div>
-              <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-primary to-primary/60 transition-all duration-500 rounded-full"
-                  style={{ width: `${xpPercentage}%` }}
-                />
-              </div>
-              <span className="text-[10px] text-muted-foreground/80 block text-right">
-                Total acumulado: {data.profile.xp} XP
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Sistema de Metas */}
-          <motion.div
-            variants={itemVariants}
-            className={`bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
-          >
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/60">
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <CheckCircle2 className="w-4.5 h-4.5 text-primary" />
-                Minhas Metas
-              </h2>
-              <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-md font-semibold">
-                {data.goals.filter((g) => g.isCompleted).length}/{data.goals.length} Concluídas
+              <span className="text-[9px] text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded font-bold font-mono">
+                {currentLevelXp}/1000 XP
               </span>
             </div>
 
-            {/* Listagem de Metas */}
-            <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+            {/* Barra de XP Fina */}
+            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-3">
+              <div
+                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 rounded-full"
+                style={{ width: `${xpPercentage}%` }}
+              />
+            </div>
+
+            {/* Listagem de Metas Compacta */}
+            <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
               <AnimatePresence initial={false}>
                 {data.goals.map((goal) => (
                   <motion.div
@@ -685,37 +653,37 @@ export default function DashboardPage() {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: -10 }}
-                    className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
+                    className={`flex items-center justify-between p-2 rounded-lg border transition-all ${
                       goal.isCompleted
                         ? "bg-emerald-500/5 border-emerald-500/10 text-emerald-100/50"
-                        : "bg-muted/30 border-border/50 text-white/90"
+                        : "bg-muted/20 border-border/50 text-white/90"
                     }`}
                   >
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
                       <button
                         onClick={() => handleToggleGoal(goal.id, goal.isCompleted)}
                         className="text-muted-foreground hover:text-primary transition-colors cursor-pointer shrink-0"
                       >
                         {goal.isCompleted ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                         ) : (
-                          <Circle className="w-5 h-5" />
+                          <Circle className="w-4 h-4" />
                         )}
                       </button>
-                      <span className={`text-xs font-semibold truncate ${goal.isCompleted ? "line-through opacity-60" : ""}`}>
+                      <span className={`text-[11px] font-semibold truncate ${goal.isCompleted ? "line-through opacity-50" : ""}`}>
                         {goal.title}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0 ml-3">
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      <span className={`text-[8px] px-1 py-0.5 rounded font-bold ${
                         goal.isCompleted ? "bg-emerald-500/10 text-emerald-400" : "bg-primary/10 text-primary"
                       }`}>
                         +{goal.xpReward} XP
                       </span>
                       <button
                         onClick={() => handleDeleteGoal(goal.id)}
-                        className="text-muted-foreground/60 hover:text-destructive p-1 rounded hover:bg-muted/80 transition-all cursor-pointer"
+                        className="text-muted-foreground/60 hover:text-destructive p-0.5 rounded hover:bg-muted/85 transition-all cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -723,104 +691,101 @@ export default function DashboardPage() {
                   </motion.div>
                 ))}
               </AnimatePresence>
-
               {data.goals.length === 0 && (
-                <p className="text-xs text-muted-foreground text-center py-6">Nenhuma meta cadastrada.</p>
+                <p className="text-[10px] text-muted-foreground text-center py-4">Sem metas pendentes.</p>
               )}
             </div>
 
-            {/* Formulário para Nova Meta */}
-            <form onSubmit={handleAddGoal} className="mt-4 pt-3 border-t border-border/60 space-y-2">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Nova meta..."
-                  value={newGoalTitle}
-                  onChange={(e) => setNewGoalTitle(e.target.value)}
-                  className="flex-1 px-3 py-2 text-xs bg-muted/50 border border-border hover:border-border-hover focus:border-primary rounded-xl text-white outline-none transition-all"
-                  required
-                />
-                <select
-                  value={newGoalXp}
-                  onChange={(e) => setNewGoalXp(Number(e.target.value))}
-                  className="px-2 py-2 text-xs bg-muted/50 border border-border rounded-xl text-white outline-none cursor-pointer transition-all"
-                >
-                  <option value={50}>50 XP</option>
-                  <option value={100}>100 XP</option>
-                  <option value={150}>150 XP</option>
-                  <option value={200}>200 XP</option>
-                </select>
-                <button
-                  type="submit"
-                  disabled={isAddingGoal}
-                  className="px-3 bg-primary hover:bg-primary/95 text-white rounded-xl flex items-center justify-center transition-all cursor-pointer disabled:opacity-50"
-                >
-                  {isAddingGoal ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-                </button>
-              </div>
+            {/* Formulário para Nova Meta Compacto */}
+            <form onSubmit={handleAddGoal} className="mt-3 pt-2 border-t border-border/50 flex gap-1.5">
+              <input
+                type="text"
+                placeholder="Nova meta..."
+                value={newGoalTitle}
+                onChange={(e) => setNewGoalTitle(e.target.value)}
+                className="flex-1 px-2.5 py-1.5 text-[10px] bg-muted/40 border border-border/80 focus:border-primary rounded-lg text-white outline-none transition-all"
+                required
+              />
+              <select
+                value={newGoalXp}
+                onChange={(e) => setNewGoalXp(Number(e.target.value))}
+                className="px-1 py-1.5 text-[10px] bg-muted/40 border border-border/80 rounded-lg text-white outline-none cursor-pointer"
+              >
+                <option value={50}>50 XP</option>
+                <option value={100}>100 XP</option>
+                <option value={150}>150 XP</option>
+                <option value={200}>200 XP</option>
+              </select>
+              <button
+                type="submit"
+                disabled={isAddingGoal}
+                className="px-2 bg-primary hover:bg-primary/95 text-white rounded-lg flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 text-[10px] btn-3d-pink font-bold"
+              >
+                {isAddingGoal ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+              </button>
             </form>
           </motion.div>
 
           {/* Atalhos Rápidos */}
           <motion.div
             variants={itemVariants}
-            className={`bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+            className={`card-cockpit ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
           >
-            <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-              <Zap className="w-4.5 h-4.5 text-primary" />
+            <h2 className="text-xs font-display text-white mb-2.5 flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-primary" />
               Atalhos Rápidos
             </h2>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => router.push("/dashboard/notes?new=true")}
-                className="flex items-center gap-2 p-3 bg-muted/40 hover:bg-primary/10 hover:text-primary hover:border-primary/30 border border-border rounded-xl text-xs font-semibold transition-all cursor-pointer justify-start"
+                className="flex items-center gap-1.5 p-2 bg-muted/20 border border-border rounded-lg text-[9px] font-bold btn-3d-gray cursor-pointer justify-center"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3 h-3 text-primary shrink-0" />
                 Criar Nota
               </button>
               <button
                 onClick={() => router.push("/dashboard/passwords?generate=true")}
-                className="flex items-center gap-2 p-3 bg-muted/40 hover:bg-primary/10 hover:text-primary hover:border-primary/30 border border-border rounded-xl text-xs font-semibold transition-all cursor-pointer justify-start"
+                className="flex items-center gap-1.5 p-2 bg-muted/20 border border-border rounded-lg text-[9px] font-bold btn-3d-gray cursor-pointer justify-center"
               >
-                <Key className="w-3.5 h-3.5" />
+                <Key className="w-3 h-3 text-secondary shrink-0" />
                 Nova Senha
               </button>
               <button
                 onClick={() => router.push("/dashboard/torrents")}
-                className="flex items-center gap-2 p-3 bg-muted/40 hover:bg-primary/10 hover:text-primary hover:border-primary/30 border border-border rounded-xl text-xs font-semibold transition-all cursor-pointer justify-start"
+                className="flex items-center gap-1.5 p-2 bg-muted/20 border border-border rounded-lg text-[9px] font-bold btn-3d-gray cursor-pointer justify-center"
               >
-                <RefreshCw className="w-3.5 h-3.5" />
-                Add Torrent
+                <RefreshCw className="w-3 h-3 text-amber shrink-0" />
+                Torrent
               </button>
               <button
                 onClick={() => router.push("/dashboard/files")}
-                className="flex items-center gap-2 p-3 bg-muted/40 hover:bg-primary/10 hover:text-primary hover:border-primary/30 border border-border rounded-xl text-xs font-semibold transition-all cursor-pointer justify-start"
+                className="flex items-center gap-1.5 p-2 bg-muted/20 border border-border rounded-lg text-[9px] font-bold btn-3d-gray cursor-pointer justify-center"
               >
-                <FolderOpen className="w-3.5 h-3.5" />
-                Enviar Arquivo
+                <FolderOpen className="w-3 h-3 text-emerald shrink-0" />
+                Upload
               </button>
             </div>
           </motion.div>
 
-          {/* Histórico de Log de Segurança */}
+          {/* Histórico de Log de Operações */}
           <motion.div
             variants={itemVariants}
-            className={`bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
+            className={`card-cockpit ${activeMobileTab === "finance" ? "block" : "hidden md:block"}`}
           >
-            <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-              <Activity className="w-4.5 h-4.5 text-primary" />
-              Operações do Cofre
+            <h2 className="text-xs font-display text-white mb-2.5 flex items-center gap-1.5">
+              <Activity className="w-3.5 h-3.5 text-primary" />
+              Operações Recentes
             </h2>
 
-            <div className="space-y-3.5 relative before:absolute before:inset-y-0.5 before:left-2 before:w-[1px] before:bg-border/60">
-              {data.activityLog.map((log) => (
-                <div key={log.id} className="flex items-start gap-3 pl-5 relative">
-                  <div className={`absolute left-1 w-2.5 h-2.5 rounded-full border border-card ${
-                    log.status === "success" ? "bg-emerald" : log.status === "warning" ? "bg-amber" : "bg-primary"
+            <div className="space-y-2 relative before:absolute before:inset-y-0.5 before:left-1.5 before:w-[1px] before:bg-border/60">
+              {data.activityLog.slice(0, 3).map((log) => (
+                <div key={log.id} className="flex items-start gap-2.5 pl-4 relative">
+                  <div className={`absolute left-0.5 w-2 h-2 rounded-full border border-card mt-1 ${
+                    log.status === "success" ? "bg-emerald-500" : log.status === "warning" ? "bg-amber-400" : "bg-primary"
                   }`} />
                   <div className="min-w-0">
-                    <p className="text-xs text-white/90 leading-normal">{log.text}</p>
-                    <span className="text-[10px] text-muted-foreground block mt-0.5">{log.time}</span>
+                    <p className="text-[10px] text-white/90 leading-tight font-medium">{log.text}</p>
+                    <span className="text-[8px] text-muted-foreground block mt-0.5">{log.time}</span>
                   </div>
                 </div>
               ))}
@@ -830,30 +795,31 @@ export default function DashboardPage() {
           {/* Favoritos */}
           <motion.div
             variants={itemVariants}
-            className={`bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
+            className={`card-cockpit ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
           >
-            <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-              <Star className="w-4.5 h-4.5 text-primary fill-primary/10" />
-              Itens Favoritos ({data.favorites.length})
+            <h2 className="text-xs font-display text-white mb-2 flex items-center gap-1.5">
+              <Star className="w-3.5 h-3.5 text-primary fill-primary/10" />
+              Favoritos ({data.favorites.length})
             </h2>
 
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {data.favorites.length > 0 ? (
                 data.favorites.map((fav) => (
                   <div
                     key={fav.id}
                     onClick={() => router.push(getModuleLink(fav.type))}
-                    className="flex items-center gap-2.5 p-2 bg-muted/30 hover:bg-muted/50 rounded-xl cursor-pointer transition-colors border border-border/40"
+                    className="flex items-center gap-2 p-1.5 bg-muted/20 hover:bg-muted/40 rounded-lg cursor-pointer transition-colors border border-border/40 min-w-0"
                   >
                     {getModuleIcon(fav.type)}
-                    <span className="text-xs font-semibold text-white/90 truncate flex-1">{fav.title}</span>
+                    <span className="text-[10px] font-bold text-white/95 truncate flex-1 leading-tight">{fav.title}</span>
                   </div>
                 ))
               ) : (
-                <p className="text-xs text-muted-foreground text-center py-4">Nenhum favorito selecionado.</p>
+                <p className="text-[9px] text-muted-foreground text-center py-2 col-span-2">Sem favoritos.</p>
               )}
             </div>
           </motion.div>
+
         </div>
       </div>
     </motion.div>
