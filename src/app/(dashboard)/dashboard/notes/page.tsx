@@ -21,7 +21,9 @@ import {
   ArrowLeft,
   ChevronRight,
   Lock,
-  Fingerprint
+  Fingerprint,
+  Expand,
+  Minimize
 } from "lucide-react";
 
 interface NoteItem {
@@ -71,6 +73,18 @@ function NotesContent() {
   
   // Status de salvamento automático
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
+  const [isFocusMode, setIsFocusMode] = useState(false);
+
+  useEffect(() => {
+    if (isFocusMode) {
+      document.body.classList.add("focus-mode-active");
+    } else {
+      document.body.classList.remove("focus-mode-active");
+    }
+    return () => {
+      document.body.classList.remove("focus-mode-active");
+    };
+  }, [isFocusMode]);
   
   // Responsividade no mobile
   const [showSidebarOnMobile, setShowSidebarOnMobile] = useState(true);
@@ -299,10 +313,10 @@ function NotesContent() {
   );
 
   return (
-    <div className="flex h-[calc(100vh-140px)] border border-border bg-card/45 backdrop-blur-xl rounded-sm overflow-hidden shadow-sm">
+    <div className={`flex border bg-black md:bg-card/45 backdrop-blur-xl overflow-hidden shadow-sm ${isFocusMode ? "fixed inset-0 z-[100] w-screen h-screen rounded-none border-none" : "h-[calc(100vh-140px)] border-border rounded-sm"}`}>
       
       {/* PAINEL LATERAL: Listagem de notas */}
-      <div className={`w-full md:w-80 border-r border-border flex flex-col h-full bg-card/30 shrink-0 ${showSidebarOnMobile ? "flex" : "hidden md:flex"}`}>
+      <div className={`w-full md:w-80 border-r border-border flex flex-col h-full bg-card/30 shrink-0 ${isFocusMode ? "hidden" : showSidebarOnMobile ? "flex" : "hidden md:flex"}`}>
         <div className="p-4 border-b border-border flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
@@ -391,14 +405,16 @@ function NotesContent() {
             {/* Cabeçalho do Editor */}
             <div className="h-14 border-b border-border px-4 md:px-5 flex items-center justify-between shrink-0 bg-muted/10 gap-2">
               <div className="flex items-center gap-1.5 min-w-0">
-                <button
-                  type="button"
-                  onClick={() => setShowSidebarOnMobile(true)}
-                  className="md:hidden p-1.5 rounded-sm border border-border text-muted-foreground hover:text-white shrink-0 animate-pulse"
-                  title="Voltar para lista"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                </button>
+                {!isFocusMode && (
+                  <button
+                    type="button"
+                    onClick={() => setShowSidebarOnMobile(true)}
+                    className="md:hidden p-1.5 rounded-sm border border-border text-muted-foreground hover:text-white shrink-0 animate-pulse"
+                    title="Voltar para lista"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                  </button>
+                )}
                 {/* Write/Preview toggle tab */}
                 <div className="flex bg-muted/40 border border-border p-0.5 rounded-sm shrink-0">
                   <button
@@ -454,6 +470,15 @@ function NotesContent() {
                   <Star className={`w-4 h-4 ${selectedNote.isFavorite ? "fill-current" : ""}`} />
                 </button>
                 
+                <button
+                  type="button"
+                  onClick={() => setIsFocusMode(!isFocusMode)}
+                  className={`p-2 rounded-sm border cursor-pointer hover:bg-muted transition-colors ${isFocusMode ? "border-primary/20 bg-primary/10 text-primary shadow-[0_0_8px_rgba(197,254,0,0.2)]" : "border-border text-muted-foreground hover:text-white"}`}
+                  title={isFocusMode ? "Sair do Modo Foco" : "Modo Foco Fullscreen"}
+                >
+                  {isFocusMode ? <Minimize className="w-4 h-4" /> : <Expand className="w-4 h-4" />}
+                </button>
+
                 <button
                   onClick={() => handleDelete(selectedNote.id)}
                   className="p-2 rounded-sm border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"

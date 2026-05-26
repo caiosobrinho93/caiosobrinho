@@ -104,6 +104,7 @@ interface StatsData {
 }
 
 import { useStatsStore } from "@/stores/statsStore";
+import RssTechWidget from "@/components/RssTechWidget";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -178,6 +179,7 @@ export default function DashboardPage() {
     "shortcuts",
     "operations",
     "favorites",
+    "rss_tech",
   ]);
 
   useEffect(() => {
@@ -196,6 +198,7 @@ export default function DashboardPage() {
               "shortcuts",
               "operations",
               "favorites",
+              "rss_tech",
             ];
             const filtered = parsed.filter((w) => validWidgets.includes(w));
             const missing = validWidgets.filter((w) => !filtered.includes(w));
@@ -1287,6 +1290,15 @@ export default function DashboardPage() {
             if (widgetId === "shortcuts") return renderShortcuts(idx);
             if (widgetId === "operations") return renderOperations(idx);
             if (widgetId === "favorites") return renderFavorites(idx);
+            if (widgetId === "rss_tech") return (
+              <RssTechWidget
+                key="rss_tech"
+                idx={idx}
+                renderHeader={renderWidgetHeader}
+                itemVariants={itemVariants}
+                activeMobileTab={activeMobileTab}
+              />
+            );
             return null;
           })
         ) : (
@@ -1299,6 +1311,13 @@ export default function DashboardPage() {
             {renderShortcuts(5)}
             {renderOperations(6)}
             {renderFavorites(7)}
+            <RssTechWidget
+              key="rss_tech"
+              idx={8}
+              renderHeader={renderWidgetHeader}
+              itemVariants={itemVariants}
+              activeMobileTab={activeMobileTab}
+            />
           </>
         )}
       </div>

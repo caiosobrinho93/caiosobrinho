@@ -27,7 +27,9 @@ import {
   CreditCard,
   FileCheck,
   LayoutGrid,
-  RefreshCw
+  RefreshCw,
+  Calculator,
+  Pin
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
 import NeonParticles from "./NeonParticles";
@@ -35,6 +37,10 @@ import { useSettingsStore } from "@/stores/settingsStore";
 import { APP_VERSION } from "@/lib/version";
 import { useStatsStore } from "@/stores/statsStore";
 import { useDataStore } from "@/stores/dataStore";
+import { playClickSound, playHoverSound } from "./CyberAudio";
+import SynthwaveRadio from "./SynthwaveRadio";
+import CyberCalculator from "./CyberCalculator";
+import FloatingHUDNotes from "./FloatingHUDNotes";
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -53,6 +59,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const [mounted, setMounted] = useState(false);
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [isStickyNotesOpen, setIsStickyNotesOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -289,6 +297,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             return (
               <Link key={item.name} href={item.href}>
                 <div
+                  onClick={playClickSound}
+                  onMouseEnter={playHoverSound}
                   className={`flex items-center gap-3 px-3 py-2 text-[10px] font-display tracking-wider transition-all group relative cursor-pointer border ${
                     isActive
                       ? "bg-primary/5 text-primary border-primary/25 border-l-[3px] border-l-primary"
@@ -424,11 +434,40 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             {/* Search Trigger - Icon only */}
             <button
               id="search-trigger-btn"
-              onClick={() => setIsCommandPaletteOpen(true)}
+              onClick={() => { playClickSound(); setIsCommandPaletteOpen(true); }}
+              onMouseEnter={playHoverSound}
               title="Buscar (Ctrl+K)"
               className="flex items-center justify-center w-8 h-8 rounded-lg bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary transition-all cursor-pointer shrink-0"
             >
               <Search className="w-4 h-4" />
+            </button>
+
+            {/* Calculator Trigger */}
+            <button
+              onClick={() => { playClickSound(); setIsCalculatorOpen(prev => !prev); }}
+              onMouseEnter={playHoverSound}
+              title="Calculadora HUD"
+              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+                isCalculatorOpen 
+                  ? "bg-primary/20 border-primary/45 text-primary shadow-[0_0_10px_rgba(197,254,0,0.25)]" 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
+              }`}
+            >
+              <Calculator className="w-4 h-4" />
+            </button>
+
+            {/* Sticky Notes Trigger */}
+            <button
+              onClick={() => { playClickSound(); setIsStickyNotesOpen(prev => !prev); }}
+              onMouseEnter={playHoverSound}
+              title="Notas HUD"
+              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+                isStickyNotesOpen 
+                  ? "bg-primary/20 border-primary/45 text-primary shadow-[0_0_10px_rgba(197,254,0,0.25)]" 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
+              }`}
+            >
+              <Pin className="w-4 h-4" />
             </button>
 
             {/* Storage indicator */}
@@ -530,8 +569,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                   const isActive = pathname === item.href;
                   const Icon = item.icon;
                   return (
-                    <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link key={item.name} href={item.href} onClick={() => { playClickSound(); setIsMobileMenuOpen(false); }}>
                       <motion.div
+                        onMouseEnter={playHoverSound}
                         whileTap={{ scale: 0.96 }}
                         className={`flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                           isActive
@@ -717,6 +757,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </>
         )}
       </AnimatePresence>
+      <SynthwaveRadio />
+      <CyberCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} />
+      <FloatingHUDNotes isOpen={isStickyNotesOpen} onClose={() => setIsStickyNotesOpen(false)} />
     </div>
   );
 }

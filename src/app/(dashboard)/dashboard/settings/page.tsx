@@ -15,7 +15,10 @@ import {
   Sparkles,
   Info,
   Database,
-  Fingerprint
+  Fingerprint,
+  Bell,
+  Mail,
+  Send
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -36,6 +39,11 @@ export default function SettingsPage() {
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [isWiping, setIsWiping] = useState(false);
+  const [emailAlert, setEmailAlert] = useState("");
+  const [telegramToken, setTelegramToken] = useState("");
+  const [telegramChatId, setTelegramChatId] = useState("");
+  const [isTestingNotification, setIsTestingNotification] = useState(false);
+  const [saveAlertsSuccess, setSaveAlertsSuccess] = useState(false);
 
   // Estados da Biometria WebAuthn
   const [hasBiometrics, setHasBiometrics] = useState(false);
@@ -44,12 +52,56 @@ export default function SettingsPage() {
   const [biometricsError, setBiometricsError] = useState<string | null>(null);
   const [biometricsSuccess, setBiometricsSuccess] = useState(false);
 
+  const handleSaveAlerts = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("nexus_email_alert", emailAlert);
+      localStorage.setItem("nexus_telegram_token", telegramToken);
+      localStorage.setItem("nexus_telegram_chat_id", telegramChatId);
+      setSaveAlertsSuccess(true);
+      setTimeout(() => setSaveAlertsSuccess(false), 3000);
+    }
+  };
+
+  const handleTestNotification = async () => {
+    setIsTestingNotification(true);
+    try {
+      if (telegramToken && telegramChatId) {
+        const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: telegramChatId,
+            text: "⚡ *Nexus Vault OS Alert* ⚡\n\nIsso é um teste de integração de notificações do seu painel PWA local!",
+            parse_mode: "Markdown"
+          })
+        });
+        if (res.ok) {
+          alert("Mensagem de teste enviada com sucesso no Telegram!");
+        } else {
+          alert("Falha ao enviar mensagem no Telegram. Verifique o Token e Chat ID.");
+        }
+      } else {
+        alert("Por favor, preencha o Token do Bot e Chat ID do Telegram para testar.");
+      }
+    } catch (e) {
+      alert("Erro na requisição de teste: " + e);
+    } finally {
+      setIsTestingNotification(false);
+    }
+  };
+
   const statsData = useStatsStore((s) => s.data);
   const currentUser = statsData?.profile?.username || "";
 
   useEffect(() => {
     setMounted(true);
     useStatsStore.getState().fetchStats();
+    if (typeof window !== "undefined") {
+      setEmailAlert(localStorage.getItem("nexus_email_alert") || "");
+      setTelegramToken(localStorage.getItem("nexus_telegram_token") || "");
+      setTelegramChatId(localStorage.getItem("nexus_telegram_chat_id") || "");
+    }
   }, []);
 
   useEffect(() => {
@@ -699,7 +751,93 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* 4. Zona de Perigo */}
+      {/* 3.5. Integração de Lembretes & Alertas */}
+      <div className="glass-panel rounded-sm p-5 space-y-5">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2 border-b border-border/60 pb-3">
+          <Bell className="w-4 h-4 text-primary" />
+          Integração de Lembretes (Telegram & Email)
+        </h2>
+
+        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-sm flex items-start gap-3">
+          <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+          <p className="text-xs text-muted-foreground leading-normal">
+            Configure seu bot do Telegram ou Email para receber alertas automáticos de contas a pagar/receber próximas do vencimento e metas pendentes.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Email Form */}
+          <div className="p-4 bg-muted/10 border border-border rounded-sm space-y-3">
+            <div>
+              <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-primary" />
+                Alertas por E-mail
+              </h3>
+              <p className="text-[10px] text-muted-foreground mt-0.5 leading-normal">Receba relatórios diários de vencimento no e-mail especificado.</p>
+            </div>
+            <input
+              type="email"
+              placeholder="seu-email@dominio.com"
+              value={emailAlert}
+              onChange={(e) => setEmailAlert(e.target.value)}
+              className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-border rounded-sm text-white focus:border-primary outline-none transition-colors"
+            />
+          </div>
+
+          {/* Telegram Form */}
+          <div className="p-4 bg-muted/10 border border-border rounded-sm space-y-3">
+            <div>
+              <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
+                <Send className="w-3.5 h-3.5 text-primary" />
+                Alertas via Telegram Bot
+              </h3>
+              <p className="text-[10px] text-muted-foreground mt-0.5 leading-normal">Integre alertas imediatos usando a API de Bots do Telegram.</p>
+            </div>
+            <div className="space-y-1.5">
+              <input
+                type="text"
+                placeholder="Token do Bot (Ex: 123456:ABC-DEF...)"
+                value={telegramToken}
+                onChange={(e) => setTelegramToken(e.target.value)}
+                className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-border rounded-sm text-white focus:border-primary outline-none transition-colors"
+              />
+              <input
+                type="text"
+                placeholder="Chat ID (Ex: 987654321)"
+                value={telegramChatId}
+                onChange={(e) => setTelegramChatId(e.target.value)}
+                className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-border rounded-sm text-white focus:border-primary outline-none transition-colors"
+              />
+            </div>
+          </div>
+        </div>
+
+        {saveAlertsSuccess && (
+          <div className="p-3 text-[11px] rounded-sm border border-primary/20 bg-primary/10 text-primary font-semibold">
+            Configurações de alerta salvas com sucesso!
+          </div>
+        )}
+
+        <div className="flex justify-end gap-2 pt-2">
+          {telegramToken && telegramChatId && (
+            <button
+              onClick={handleTestNotification}
+              disabled={isTestingNotification}
+              className="px-4 py-2 border border-border/80 text-white hover:bg-muted/40 text-xs font-bold rounded-sm transition-colors cursor-pointer disabled:opacity-50"
+            >
+              {isTestingNotification ? "Enviando Teste..." : "Testar Telegram"}
+            </button>
+          )}
+          <button
+            onClick={handleSaveAlerts}
+            className="px-4 py-2 bg-primary text-black hover:bg-primary/95 text-xs font-bold rounded-sm transition-colors cursor-pointer"
+          >
+            Salvar Configurações de Alerta
+          </button>
+        </div>
+      </div>
+
+            {/* 4. Zona de Perigo */}
       <div className="bg-card/55 backdrop-blur-xl border border-destructive/20 rounded-sm p-5 space-y-4">
         <h2 className="text-sm font-bold text-destructive uppercase tracking-wider flex items-center gap-2 border-b border-destructive/10 pb-3">
           <Trash2 className="w-4 h-4 text-destructive" />

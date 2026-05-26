@@ -677,3 +677,24 @@ main {
   opacity: 0.35;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   FOCUS MODE ACTIVE CLASSES
+   ═══════════════════════════════════════════════════════════ */
+body.focus-mode-active aside,
+body.focus-mode-active header,
+body.focus-mode-active #magic-menu-btn,
+body.focus-mode-active .fixed.bottom-20,
+body.focus-mode-active .particles-canvas,
+body.focus-mode-active button[title="Calculadora HUD"],
+body.focus-mode-active button[title="Notas HUD"] {
+  display: none !important;
+}
+
+body.focus-mode-active main {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+}
+
