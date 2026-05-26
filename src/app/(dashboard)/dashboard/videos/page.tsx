@@ -263,7 +263,8 @@ export default function VideosPage() {
               layoutId={vid.id}
               key={vid.id}
               onClick={() => setActiveVideo(vid)}
-              className="group bg-card/55 backdrop-blur-xl border border-border hover:border-primary/45 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col h-full"
+              whileTap={{ scale: 0.97 }}
+              className="group bg-card/55 backdrop-blur-xl border border-border rounded-2xl overflow-hidden shadow-sm cursor-pointer flex flex-col h-full hover-card-effects"
             >
               <div className="relative aspect-video bg-black/60 shrink-0 overflow-hidden group">
                 {vid.thumbnailUrl ? (

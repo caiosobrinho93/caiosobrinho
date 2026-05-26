@@ -389,30 +389,33 @@ export default function DashboardPage() {
 
       {/* Navegação por Abas no Mobile (Otimização de Espaço) */}
       <div className="md:hidden flex bg-card/40 border border-border p-1 rounded-xl gap-1">
-        <button
+        <motion.button
           onClick={() => setActiveMobileTab("general")}
+          whileTap={{ scale: 0.95 }}
           className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer ${
             activeMobileTab === "general" ? "bg-primary text-white shadow-md shadow-primary/10 neon-text-subtle" : "text-muted-foreground"
           }`}
         >
           📦 Painel
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={() => setActiveMobileTab("goals")}
+          whileTap={{ scale: 0.95 }}
           className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer ${
             activeMobileTab === "goals" ? "bg-primary text-white shadow-md shadow-primary/10 neon-text-subtle" : "text-muted-foreground"
           }`}
         >
           🎯 Metas
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={() => setActiveMobileTab("finance")}
+          whileTap={{ scale: 0.95 }}
           className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer ${
             activeMobileTab === "finance" ? "bg-primary text-white shadow-md shadow-primary/10 neon-text-subtle" : "text-muted-foreground"
           }`}
         >
           💳 Banco
-        </button>
+        </motion.button>
       </div>
 
       {/* Grade de Métricas */}
@@ -424,7 +427,8 @@ export default function DashboardPage() {
               key={stat.name}
               variants={itemVariants}
               onClick={() => router.push(stat.href)}
-              className="group cursor-pointer relative overflow-hidden p-5 bg-card/55 backdrop-blur-xl border border-border hover:border-primary/45 rounded-2xl shadow-sm transition-all hover:-translate-y-0.5"
+              whileTap={{ scale: 0.97 }}
+              className="group cursor-pointer relative overflow-hidden p-5 bg-card/55 backdrop-blur-xl border border-border rounded-2xl shadow-sm hover-card-effects"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.01] to-transparent pointer-events-none" />
               <div className="flex items-start justify-between">

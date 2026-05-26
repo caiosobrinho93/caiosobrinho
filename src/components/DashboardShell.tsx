@@ -379,21 +379,27 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             const isActive = pathname === item.href;
             const Icon = item.icon;
             return (
-              <Link key={item.name} href={item.href} className="flex flex-col items-center justify-center w-14 h-full">
-                <Icon className={`w-5.5 h-5.5 ${isActive ? "text-primary scale-110" : "text-muted-foreground"}`} />
-                <span className={`text-[10px] mt-1 font-medium ${isActive ? "text-white" : "text-muted-foreground"}`}>
-                  {item.name.split(" ")[0]}
-                </span>
+              <Link key={item.name} href={item.href} className="flex flex-col items-center justify-center w-14 h-full select-none">
+                <motion.div
+                  whileTap={{ scale: 0.88 }}
+                  className="flex flex-col items-center justify-center w-full h-full"
+                >
+                  <Icon className={`w-5.5 h-5.5 ${isActive ? "text-primary scale-110" : "text-muted-foreground"}`} />
+                  <span className={`text-[10px] mt-1 font-medium ${isActive ? "text-white" : "text-muted-foreground"}`}>
+                    {item.name.split(" ")[0]}
+                  </span>
+                </motion.div>
               </Link>
             );
           })}
-          <button
+          <motion.button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="flex flex-col items-center justify-center w-14 h-full cursor-pointer"
+            whileTap={{ scale: 0.88 }}
+            className="flex flex-col items-center justify-center w-14 h-full cursor-pointer select-none"
           >
             <Menu className="w-5.5 h-5.5 text-muted-foreground" />
             <span className="text-[10px] mt-1 font-medium text-muted-foreground">Menu</span>
-          </button>
+          </motion.button>
         </nav>
       </div>
 
@@ -437,7 +443,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                   const Icon = item.icon;
                   return (
                     <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)}>
-                      <div
+                      <motion.div
+                        whileTap={{ scale: 0.96 }}
                         className={`flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                           isActive
                             ? "bg-primary/10 text-primary border border-primary/20"
@@ -446,7 +453,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                       >
                         <Icon className="w-5 h-5" />
                         <span>{item.name}</span>
-                      </div>
+                      </motion.div>
                     </Link>
                   );
                 })}

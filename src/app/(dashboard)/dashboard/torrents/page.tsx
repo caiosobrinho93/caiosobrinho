@@ -338,7 +338,8 @@ export default function TorrentsPage() {
               <motion.div
                 key={item.id}
                 onClick={() => setSelectedTorrent(item)}
-                className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border hover:border-primary/45 rounded-2xl p-4.5 flex flex-col justify-between h-32 relative overflow-hidden transition-all duration-300 neon-glow-hover"
+                whileTap={{ scale: 0.97 }}
+                className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-2xl p-4.5 flex flex-col justify-between h-32 relative overflow-hidden hover-card-effects"
               >
                 {/* Linha superior */}
                 <div className="flex justify-between items-start gap-2.5">
