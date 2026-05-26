@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.caiosobrinho.nexusvault",
+      "sha256_cert_fingerprints": [
+        "9F:C0:90:7C:65:49:5F:6E:E0:C2:18:8B:2D:25:37:8E:C8:8D:D5:89:99:BA:BF:DF:D5:94:95:54:8E:AC:CA:56"
+      ]
+    }
+  }
+]
