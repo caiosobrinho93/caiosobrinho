@@ -141,13 +141,18 @@ function PasswordsContent() {
         setFormNotes("");
         setIsModalOpen(false);
         fetchPasswords();
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Erro ao salvar credencial: ${errorData.error || res.statusText || "Erro interno do servidor"}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      alert(`Erro de rede ao conectar com o servidor: ${err.message || "Erro desconhecido"}`);
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   const handleToggleFavorite = async (item: PasswordItem) => {
     try {
