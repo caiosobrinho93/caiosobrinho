@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { uploadToSupabase } from "@/lib/storage";
+import { awardXP } from "@/lib/gamification";
 
 export async function GET() {
   const session = await getSession();
@@ -9,8 +10,14 @@ export async function GET() {
 
   try {
     const wallpapers = await db.wallpaper.findMany({
-      where: { userId: session.userId },
       orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
     });
     return NextResponse.json(wallpapers);
   } catch (error) {
@@ -56,6 +63,9 @@ export async function POST(request: Request) {
         url,
       },
     });
+
+    // Award +40 XP for wallpaper creation
+    await awardXP(session.userId, 40);
 
     return NextResponse.json(wallpaper);
   } catch (error: any) {

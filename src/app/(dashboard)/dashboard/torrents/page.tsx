@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useStatsStore } from "@/stores/statsStore";
+import { useDataStore } from "@/stores/dataStore";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   DownloadCloud,
@@ -35,12 +37,14 @@ interface TorrentItem {
   uploadSpeed: number;
   size: string;
   notes: string | null;
+  user?: {
+    username: string;
+  };
 }
 
 export default function TorrentsPage() {
-  const [torrents, setTorrents] = useState<TorrentItem[]>([]);
+  const { data: torrents, isLoading } = useDataStore(s => s.torrents);
   const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTorrent, setSelectedTorrent] = useState<TorrentItem | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -66,24 +70,8 @@ export default function TorrentsPage() {
     return { fileUrl: null, cleanNotes: notesText };
   };
 
-  // Buscar torrents
-  const fetchTorrents = async () => {
-    try {
-      setIsLoading(true);
-      const res = await fetch("/api/torrents");
-      if (res.ok) {
-        const data = await res.json();
-        setTorrents(data);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchTorrents();
+    useDataStore.getState().fetchTorrents();
   }, []);
 
   // Simulação de velocidade e progresso do cliente torrent em tempo real
@@ -91,53 +79,59 @@ export default function TorrentsPage() {
     if (torrents.length === 0) return;
 
     const interval = setInterval(() => {
-      setTorrents((prevTorrents) => {
-        let changed = false;
+      const prevTorrents = useDataStore.getState().torrents.data;
+      let changed = false;
+      
+      const updated = prevTorrents.map((t) => {
+        if (t.status === "downloading") {
+          changed = true;
+          const newProgress = Math.min(100, t.progress + Math.random() * 1.5 + 0.5);
+          const isFinished = newProgress >= 100;
+          
+          const dlSpeed = isFinished ? 0.0 : parseFloat((10 + Math.random() * 25).toFixed(1));
+          const ulSpeed = isFinished
+            ? parseFloat((2 + Math.random() * 6).toFixed(1))
+            : parseFloat((0.2 + Math.random() * 1.8).toFixed(1));
+          
+          const nextStatus = isFinished ? "seeding" : "downloading";
+
+          if (isFinished) {
+            fetch(`/api/torrents/${t.id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: "seeding", progress: 100, downloadSpeed: 0, uploadSpeed: ulSpeed }),
+            }).catch(console.error);
+          }
+
+          return {
+            ...t,
+            progress: parseFloat(newProgress.toFixed(1)),
+            downloadSpeed: dlSpeed,
+            uploadSpeed: ulSpeed,
+            status: nextStatus,
+          };
+        }
         
-        const updated = prevTorrents.map((t) => {
-          if (t.status === "downloading") {
-            changed = true;
-            const newProgress = Math.min(100, t.progress + Math.random() * 1.5 + 0.5);
-            const isFinished = newProgress >= 100;
-            
-            const dlSpeed = isFinished ? 0.0 : parseFloat((10 + Math.random() * 25).toFixed(1));
-            const ulSpeed = isFinished
-              ? parseFloat((2 + Math.random() * 6).toFixed(1))
-              : parseFloat((0.2 + Math.random() * 1.8).toFixed(1));
-            
-            const nextStatus = isFinished ? "seeding" : "downloading";
-
-            if (isFinished) {
-              fetch(`/api/torrents/${t.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "seeding", progress: 100, downloadSpeed: 0, uploadSpeed: ulSpeed }),
-              }).catch(console.error);
-            }
-
-            return {
-              ...t,
-              progress: parseFloat(newProgress.toFixed(1)),
-              downloadSpeed: dlSpeed,
-              uploadSpeed: ulSpeed,
-              status: nextStatus,
-            };
-          }
-          
-          if (t.status === "seeding") {
-            changed = true;
-            return {
-              ...t,
-              downloadSpeed: 0.0,
-              uploadSpeed: parseFloat((1.5 + Math.random() * 4).toFixed(1)),
-            };
-          }
-          
-          return t;
-        });
-
-        return changed ? updated : prevTorrents;
+        if (t.status === "seeding") {
+          changed = true;
+          return {
+            ...t,
+            downloadSpeed: 0.0,
+            uploadSpeed: parseFloat((1.5 + Math.random() * 4).toFixed(1)),
+          };
+        }
+        
+        return t;
       });
+
+      if (changed) {
+        updated.forEach(t => {
+          const original = prevTorrents.find(o => o.id === t.id);
+          if (original && (original.progress !== t.progress || original.status !== t.status)) {
+            useDataStore.getState().updateTorrent(t.id, { progress: t.progress, downloadSpeed: t.downloadSpeed, uploadSpeed: t.uploadSpeed, status: t.status });
+          }
+        });
+      }
     }, 3000);
 
     return () => clearInterval(interval);
@@ -175,7 +169,11 @@ export default function TorrentsPage() {
         setFormTorrentFile(null);
         setTorrentSourceType("magnet");
         setIsModalOpen(false);
-        fetchTorrents();
+        
+        // Atualiza no cache e na store global
+        const newTorrent = await res.json();
+        useDataStore.getState().addTorrent(newTorrent);
+        useStatsStore.getState().addTorrent();
       } else {
         const errorData = await res.json();
         alert(errorData.error || "Falha ao adicionar torrent");
@@ -204,13 +202,7 @@ export default function TorrentsPage() {
       });
 
       if (res.ok) {
-        setTorrents((prev) =>
-          prev.map((t) =>
-            t.id === item.id
-              ? { ...t, status: nextStatus, downloadSpeed: dlSpeed, uploadSpeed: ulSpeed }
-              : t
-          )
-        );
+        useDataStore.getState().updateTorrent(item.id, { status: nextStatus, downloadSpeed: dlSpeed, uploadSpeed: ulSpeed });
       }
     } catch (err) {
       console.error(err);
@@ -223,8 +215,11 @@ export default function TorrentsPage() {
     try {
       const res = await fetch(`/api/torrents/${id}`, { method: "DELETE" });
       if (res.ok) {
-        setTorrents((prev) => prev.filter((t) => t.id !== id));
+        useDataStore.getState().deleteTorrent(id);
         setSelectedTorrent(null);
+
+        // Atualiza a store global localmente
+        useStatsStore.getState().deleteTorrent();
       }
     } catch (err) {
       console.error(err);
@@ -300,7 +295,7 @@ export default function TorrentsPage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Adicionar Torrent
@@ -318,7 +313,7 @@ export default function TorrentsPage() {
             placeholder="Buscar torrents por nome..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-card/40 border border-border/85 rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-card/40 border border-border/85 rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
           />
         </div>
       </div>
@@ -327,7 +322,7 @@ export default function TorrentsPage() {
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-card/60 rounded-2xl border border-border/80" />
+            <div key={i} className="h-28 bg-card/60 rounded-sm border border-border/80" />
           ))}
         </div>
       ) : filteredTorrents.length > 0 ? (
@@ -339,14 +334,21 @@ export default function TorrentsPage() {
                 key={item.id}
                 onClick={() => setSelectedTorrent(item)}
                 whileTap={{ scale: 0.97 }}
-                className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-2xl p-4.5 flex flex-col justify-between h-32 relative overflow-hidden hover-card-effects"
+                className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-sm p-4.5 flex flex-col justify-between h-32 relative overflow-hidden hover-card-effects"
               >
                 {/* Linha superior */}
                 <div className="flex justify-between items-start gap-2.5">
                   <div className="min-w-0">
-                    <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate">
-                      {item.title}
-                    </h3>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[120px]">
+                        {item.title}
+                      </h3>
+                      {item.user?.username && (
+                        <span className={`user-tag user-tag-${item.user.username}`}>
+                          {item.user.username === "caio" ? "Caio" : "Giselle"}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[9px] text-muted-foreground font-mono bg-muted/60 border border-border/60 px-1.5 py-0.5 rounded inline-block mt-1 font-semibold">
                       {item.size}
                     </span>
@@ -391,7 +393,7 @@ export default function TorrentsPage() {
           })}
         </div>
       ) : (
-        <div className="py-24 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-2xl">
+        <div className="py-24 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-sm">
           <DownloadCloud className="w-10 h-10 text-muted-foreground mb-3 animate-bounce" />
           <h3 className="text-sm font-semibold text-white">Nenhum torrent catalogado</h3>
           <p className="text-xs text-muted-foreground mt-1 max-w-xs">
@@ -399,7 +401,7 @@ export default function TorrentsPage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-4 px-3.5 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+            className="mt-4 px-3.5 py-2 bg-primary text-white rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
           >
             Adicionar Primeiro Torrent
           </button>
@@ -422,7 +424,7 @@ export default function TorrentsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl relative z-10 overflow-hidden"
+              className="w-full max-w-md bg-card border border-border rounded-sm p-6 shadow-2xl relative z-10 overflow-hidden"
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
@@ -456,7 +458,7 @@ export default function TorrentsPage() {
                 </div>
 
                 {/* Painel do Gráfico de Simulação */}
-                <div className="p-4 bg-muted/20 border border-border/40 rounded-xl space-y-3.5">
+                <div className="p-4 bg-muted/20 border border-border/40 rounded-sm space-y-3.5">
                   <div className="flex justify-between items-center text-xs">
                     <span className="text-muted-foreground font-semibold">Progresso Geral:</span>
                     <span className="text-white font-mono font-bold">{activeSelected.progress}%</span>
@@ -495,7 +497,7 @@ export default function TorrentsPage() {
                 {(() => {
                   const { cleanNotes } = parseNotesAndFile(activeSelected.notes);
                   return cleanNotes ? (
-                    <div className="p-3 bg-muted/20 border border-border/40 rounded-xl">
+                    <div className="p-3 bg-muted/20 border border-border/40 rounded-sm">
                       <span className="text-[9px] font-bold text-muted-foreground uppercase block mb-1">Anotações</span>
                       <p className="text-xs text-white/85 leading-relaxed font-semibold">{cleanNotes}</p>
                     </div>
@@ -504,7 +506,7 @@ export default function TorrentsPage() {
 
                 {/* Magnet Link */}
                 {!activeSelected.magnet.includes("virtual-") && (
-                  <div className="p-3 bg-muted/20 border border-border/40 rounded-xl space-y-2">
+                  <div className="p-3 bg-muted/20 border border-border/40 rounded-sm space-y-2">
                     <span className="text-[9px] font-bold text-muted-foreground uppercase block">Link Magnético</span>
                     <div className="flex items-center justify-between gap-2.5">
                       <span className="text-[11px] text-white/80 font-mono truncate select-all flex-1">
@@ -512,7 +514,7 @@ export default function TorrentsPage() {
                       </span>
                       <button
                         onClick={() => handleCopy(activeSelected.id, activeSelected.magnet)}
-                        className="p-1.5 rounded-lg bg-card hover:bg-muted border border-border text-muted-foreground hover:text-white transition-colors cursor-pointer"
+                        className="p-1.5 rounded-sm bg-card hover:bg-muted border border-border text-muted-foreground hover:text-white transition-colors cursor-pointer"
                         title="Copiar link"
                       >
                         {copiedId === activeSelected.id ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
@@ -525,7 +527,7 @@ export default function TorrentsPage() {
                 <div className="pt-4 border-t border-border flex items-center justify-between gap-3 flex-wrap">
                   <button
                     onClick={() => handleDelete(activeSelected.id)}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-sm transition-all cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Excluir
@@ -536,7 +538,7 @@ export default function TorrentsPage() {
                     <button
                       onClick={() => handleToggleStatus(activeSelected)}
                       disabled={activeSelected.status === "seeding"}
-                      className={`p-2 rounded-xl border transition-colors cursor-pointer ${
+                      className={`p-2 rounded-sm border transition-colors cursor-pointer ${
                         activeSelected.status === "seeding"
                           ? "border-border/45 text-muted-foreground/35 cursor-not-allowed"
                           : activeSelected.status === "paused"
@@ -556,7 +558,7 @@ export default function TorrentsPage() {
                           <a
                             href={fileUrl}
                             download={`${activeSelected.title.replace(/\s+/g, "_")}.torrent`}
-                            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-sm transition-colors cursor-pointer"
                             title="Baixar arquivo .torrent real"
                           >
                             <Download className="w-4 h-4" />
@@ -567,7 +569,7 @@ export default function TorrentsPage() {
                         return (
                           <button
                             onClick={() => downloadTorrentFile(activeSelected)}
-                            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-sm transition-colors cursor-pointer"
                             title="Baixar arquivo .torrent virtual"
                           >
                             <Download className="w-4 h-4" />
@@ -581,7 +583,7 @@ export default function TorrentsPage() {
                     {activeSelected.magnet.startsWith("magnet:?") && !activeSelected.magnet.includes("virtual-") && (
                       <a
                         href={activeSelected.magnet}
-                        className="flex items-center gap-1.5 px-3.5 py-2 bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                        className="flex items-center gap-1.5 px-3.5 py-2 bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary text-xs font-bold rounded-sm transition-colors cursor-pointer"
                         title="Abrir no uTorrent local"
                       >
                         <LinkIcon className="w-4 h-4" />
@@ -612,7 +614,7 @@ export default function TorrentsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl relative z-10 overflow-hidden"
+              className="w-full max-w-md bg-card border border-border rounded-sm p-6 shadow-2xl relative z-10 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
@@ -621,7 +623,7 @@ export default function TorrentsPage() {
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                  className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -638,7 +640,7 @@ export default function TorrentsPage() {
                     placeholder="Ex: GTA V, Need for Speed, etc."
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                    className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
                   />
                 </div>
 
@@ -647,11 +649,11 @@ export default function TorrentsPage() {
                   <label className="block text-[10px] font-bold text-muted-foreground uppercase">
                     Origem do Torrent *
                   </label>
-                  <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
+                  <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
                     <button
                       type="button"
                       onClick={() => setTorrentSourceType("file")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                         torrentSourceType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -661,7 +663,7 @@ export default function TorrentsPage() {
                     <button
                       type="button"
                       onClick={() => setTorrentSourceType("magnet")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                         torrentSourceType === "magnet" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -681,7 +683,7 @@ export default function TorrentsPage() {
                       accept=".torrent"
                       required
                       onChange={(e) => setFormTorrentFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-xl"
+                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-sm"
                     />
                   </div>
                 ) : (
@@ -695,7 +697,7 @@ export default function TorrentsPage() {
                       placeholder="magnet:?xt=urn:btih:..."
                       value={formMagnet}
                       onChange={(e) => setFormMagnet(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-mono"
+                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-mono"
                     />
                   </div>
                 )}
@@ -710,7 +712,7 @@ export default function TorrentsPage() {
                       placeholder="Ex: 65 GB"
                       value={formSize}
                       onChange={(e) => setFormSize(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
                     />
                   </div>
 
@@ -721,7 +723,7 @@ export default function TorrentsPage() {
                     <input
                       type="text"
                       placeholder="Ex: Jogos, Cursos, ISOs"
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
                     />
                   </div>
                 </div>
@@ -735,7 +737,7 @@ export default function TorrentsPage() {
                     placeholder="Descrição sobre o conteúdo do torrent..."
                     value={formNotes}
                     onChange={(e) => setFormNotes(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all resize-none"
+                    className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all resize-none"
                   />
                 </div>
 
@@ -743,14 +745,14 @@ export default function TorrentsPage() {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-3.5 py-2 rounded-xl text-xs border border-border text-muted-foreground hover:text-white cursor-pointer hover:bg-muted/40 transition-colors"
+                    className="px-3.5 py-2 rounded-sm text-xs border border-border text-muted-foreground hover:text-white cursor-pointer hover:bg-muted/40 transition-colors"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>

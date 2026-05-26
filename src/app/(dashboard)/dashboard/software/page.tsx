@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useStatsStore } from "@/stores/statsStore";
+import { useDataStore } from "@/stores/dataStore";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Cpu,
@@ -31,19 +33,21 @@ interface SoftwareItem {
   iconUrl: string | null;
   category: string | null;
   notes: string | null;
+  user?: {
+    username: string;
+  };
 }
 
 export default function SoftwarePage() {
-  const [softwareList, setSoftwareList] = useState<SoftwareItem[]>([]);
+  const { data: softwareList, isLoading } = useDataStore(s => s.software);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Estados do formulário
   const [formName, setFormName] = useState("");
-  const [formVersion, setFormVersion] = useState("");
+  const [formVersion, setFormVersion] = useState("1.0.0");
   const [formDescription, setFormDescription] = useState("");
   const [installerUploadType, setInstallerUploadType] = useState<"file" | "url">("url");
   const [formInstallerFile, setFormInstallerFile] = useState<File | null>(null);
@@ -55,24 +59,10 @@ export default function SoftwarePage() {
   const [formCategory, setFormCategory] = useState("Utilitários");
   const [formNotes, setFormNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const fetchSoftware = async () => {
-    try {
-      setIsLoading(true);
-      const res = await fetch("/api/software");
-      if (res.ok) {
-        const data = await res.json();
-        setSoftwareList(data);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   useEffect(() => {
-    fetchSoftware();
+    useDataStore.getState().fetchSoftware();
   }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -109,8 +99,9 @@ export default function SoftwarePage() {
       });
 
       if (res.ok) {
+        const newSoftware = await res.json();
         setFormName("");
-        setFormVersion("");
+        setFormVersion("1.0.0");
         setFormDescription("");
         setFormDownloadUrl("");
         setFormPlatform("Windows, macOS");
@@ -122,7 +113,10 @@ export default function SoftwarePage() {
         setInstallerUploadType("url");
         setIconUploadType("url");
         setIsModalOpen(false);
-        fetchSoftware();
+
+        // Atualiza a store global localmente
+        useStatsStore.getState().addSoftware();
+        useDataStore.getState().addSoftware(newSoftware);
       } else {
         const err = await res.json();
         alert(err.error || "Erro ao registrar software");
@@ -140,7 +134,9 @@ export default function SoftwarePage() {
     try {
       const res = await fetch(`/api/software/${id}`, { method: "DELETE" });
       if (res.ok) {
-        setSoftwareList((prev) => prev.filter((s) => s.id !== id));
+        // Atualiza a store global localmente
+        useStatsStore.getState().deleteSoftware();
+        useDataStore.getState().deleteSoftware(id);
       }
     } catch (err) {
       console.error(err);
@@ -183,57 +179,57 @@ export default function SoftwarePage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[10px] font-bold btn-3d-pink cursor-pointer shrink-0"
+          className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer shrink-0 "
         >
           <Plus className="w-3.5 h-3.5" />
           Registrar App
         </button>
       </div>
-
+ 
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-none ">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer transition-colors border ${
+              className={`px-2.5 py-1 rounded-sm text-[9px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer transition-colors border ${
                 activeCategory === cat
-                  ? "bg-primary border-primary/20 text-white"
-                  : "bg-card/40 border-border/80 text-muted-foreground hover:text-white"
+                  ? "bg-primary border-primary/20 text-black"
+                  : "bg-card/25 border-border/80 text-muted-foreground hover:text-white"
               }`}
             >
               {cat}
             </button>
           ))}
         </div>
-
-        <div className="flex items-center gap-3 shrink-0">
+ 
+        <div className="flex items-center gap-2 shrink-0 ">
           <div className="relative w-full sm:w-56">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-muted-foreground pointer-events-none">
-              <Search className="w-3.5 h-3.5" />
+            <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-muted-foreground pointer-events-none">
+              <Search className="w-3 h-3 text-primary" />
             </span>
             <input
               type="text"
               placeholder="Buscar softwares..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-card/45 border border-border/80 rounded-lg text-white placeholder-muted-foreground/60 text-[10px] focus:outline-none focus:border-primary transition-all"
+              className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground/60 text-[9px] focus:outline-none focus:border-primary transition-all"
             />
           </div>
-
-          <div className="flex bg-muted/40 border border-border/70 p-0.5 rounded-lg shrink-0">
+ 
+          <div className="flex bg-muted/20 border border-border/70 p-0.5 rounded-sm shrink-0">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded cursor-pointer ${viewMode === "grid" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
+              className={`p-1 rounded-sm cursor-pointer ${viewMode === "grid" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
             >
-              <Grid className="w-3.5 h-3.5" />
+              <Grid className="w-3 h-3" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-1.5 rounded cursor-pointer ${viewMode === "list" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
+              className={`p-1 rounded-sm cursor-pointer ${viewMode === "list" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
             >
-              <List className="w-3.5 h-3.5" />
+              <List className="w-3 h-3" />
             </button>
           </div>
         </div>
@@ -249,28 +245,27 @@ export default function SoftwarePage() {
       ) : filteredSoftware.length > 0 ? (
         viewMode === "grid" ? (
           /* Visualização em Grade */
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
             {filteredSoftware.map((item) => (
               <motion.div
                 key={item.id}
                 layoutId={item.id}
                 whileTap={{ scale: 0.98 }}
-                className="card-cockpit flex flex-col justify-between hover:border-primary/40 transition-colors cursor-pointer group"
+                className="glass-panel flex flex-col justify-between hover:border-primary/45 transition-colors cursor-pointer group rounded-sm p-2.5"
               >
-
                 <div>
-                  <div className="flex gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-muted border border-border/80 flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
+                  <div className="flex gap-2.5">
+                    <div className="w-8 h-8 rounded-sm bg-muted border border-border/80 flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
                       {item.iconUrl ? (
                         <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" />
                       ) : (
-                        <Cpu className="w-4.5 h-4.5 text-primary" />
+                        <Cpu className="w-4 h-4 text-primary" />
                       )}
                     </div>
-
+ 
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-baseline gap-1.5 min-w-0 flex-wrap">
+                      <div className="flex items-start justify-between gap-1.5">
+                        <div className="flex items-baseline gap-1.5 min-w-0 flex-wrap ">
                           <h3 className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
                             {item.name}
                           </h3>
@@ -278,53 +273,60 @@ export default function SoftwarePage() {
                             v{item.version}
                           </span>
                         </div>
-
-                        <span className="text-[9px] px-1.5 py-0.5 bg-muted rounded border border-border/80 text-muted-foreground font-bold uppercase shrink-0">
-                          {item.category || "Geral"}
-                        </span>
+ 
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {item.user?.username && (
+                            <span className={`user-tag user-tag-${item.user.username}`}>
+                              {item.user.username === "caio" ? "Caio" : "Giselle"}
+                            </span>
+                          )}
+                          <span className="text-[8px] px-1.5 py-0.5 bg-muted rounded-sm border border-border/80 text-muted-foreground font-bold uppercase">
+                            {item.category || "Geral"}
+                          </span>
+                        </div>
                       </div>
-
-                      <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2 leading-tight font-medium">
+ 
+                      <p className="text-[9px] text-muted-foreground mt-1 line-clamp-2 leading-tight font-medium ">
                         {item.description || "Nenhuma descrição fornecida."}
                       </p>
                     </div>
                   </div>
-
-                  <div className="mt-3 flex items-center gap-1 flex-wrap border-t border-border/40 pt-2.5">
+ 
+                  <div className="mt-2.5 flex items-center gap-1.5 flex-wrap border-t border-border/40 pt-2 ">
                     {item.platform.split(",").map((plat) => (
                       <span
                         key={plat}
-                        className="text-[8px] bg-muted/60 text-white border border-border/80 px-1.5 py-0.5 rounded flex items-center gap-0.5 font-bold uppercase"
+                        className="text-[8px] bg-muted/30 text-white border border-border/80 px-1 py-0.5 rounded-sm flex items-center gap-0.5 font-bold uppercase"
                       >
                         {getPlatformIcon(plat)}
                         {plat.trim()}
                       </span>
                     ))}
                     {item.notes && (
-                      <p className="text-[9px] text-muted-foreground/70 leading-none truncate max-w-full italic mt-1 sm:mt-0 sm:ml-auto font-medium">
-                        &ldquo;{item.notes}&rdquo;
+                      <p className="text-[8px] text-muted-foreground/60 leading-none truncate max-w-full italic mt-1 sm:mt-0 sm:ml-auto font-bold uppercase tracking-wide">
+                        // {item.notes}
                       </p>
                     )}
                   </div>
                 </div>
-
-                <div className="flex items-center justify-end gap-2 border-t border-border/40 mt-3 pt-2.5 select-none">
+ 
+                <div className="flex items-center justify-end gap-1.5 border-t border-border/40 mt-2.5 pt-2 select-none ">
                   {item.downloadUrl && (
                     <a
                       href={item.downloadUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg text-[10px] font-bold btn-3d-cyan flex items-center justify-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-sm text-[9px] font-bold glass-btn glass-btn-primary flex items-center justify-center gap-1 cursor-pointer"
                     >
-                      <Download className="w-3.5 h-3.5" />
+                      <Download className="w-3 h-3" />
                       Baixar App
                     </a>
                   )}
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="p-1.5 rounded-lg border border-border text-muted-foreground hover:text-destructive btn-3d-gray cursor-pointer flex items-center justify-center"
+                    className="p-1 rounded-sm border border-border text-muted-foreground hover:text-destructive glass-btn cursor-pointer flex items-center justify-center"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </div>
               </motion.div>
@@ -438,212 +440,236 @@ export default function SoftwarePage() {
               </div>
 
               <form onSubmit={handleCreate} className="space-y-3.5">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
-                      Nome do App *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ex: Arc Browser"
-                      value={formName}
-                      onChange={(e) => setFormName(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
-                      Versão *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ex: 1.25.0"
-                      value={formVersion}
-                      onChange={(e) => setFormVersion(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
-                      Plataformas *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ex: macOS, Windows, Linux"
-                      value={formPlatform}
-                      onChange={(e) => setFormPlatform(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
-                      Categoria
-                    </label>
-                    <select
-                      value={formCategory}
-                      onChange={(e) => setFormCategory(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white text-xs focus:outline-none focus:ring-0 transition-all cursor-pointer"
-                    >
-                      {categories.slice(1).map((cat) => (
-                        <option key={cat} value={cat} className="bg-card">
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Seletores de abas do instalador (Upload vs URL) */}
-                <div className="space-y-1.5">
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase">
-                    Instalador do Software *
-                  </label>
-                  <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
-                    <button
-                      type="button"
-                      onClick={() => setInstallerUploadType("file")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        installerUploadType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
-                      }`}
-                    >
-                      <Upload className="w-3.5 h-3.5" />
-                      Upload Arquivo
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setInstallerUploadType("url")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        installerUploadType === "url" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
-                      }`}
-                    >
-                      <LinkIcon className="w-3.5 h-3.5" />
-                      Colar Link URL
-                    </button>
-                  </div>
-                </div>
-
-                {installerUploadType === "file" ? (
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
-                      Selecionar Instalador (.exe, .dmg, .zip, etc.)
-                    </label>
-                    <input
-                      type="file"
-                      required
-                      onChange={(e) => setFormInstallerFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-xl"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
-                      URL de Download do Instalador
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="https://exemplo.com/instalador.exe"
-                      value={formDownloadUrl}
-                      onChange={(e) => setFormDownloadUrl(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
-                    />
-                  </div>
-                )}
-
-                {/* Seletores de abas do ícone (Upload vs URL) */}
-                <div className="space-y-1.5">
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase">
-                    Ícone do Aplicativo
-                  </label>
-                  <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
-                    <button
-                      type="button"
-                      onClick={() => setIconUploadType("file")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        iconUploadType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
-                      }`}
-                    >
-                      <Upload className="w-3.5 h-3.5" />
-                      Upload Ícone
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIconUploadType("url")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
-                        iconUploadType === "url" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
-                      }`}
-                    >
-                      <LinkIcon className="w-3.5 h-3.5" />
-                      Colar Link URL
-                    </button>
-                  </div>
-                </div>
-
-                {iconUploadType === "file" ? (
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
-                      Selecionar Arquivo de Ícone
-                    </label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => setFormIconFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-xl"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
-                      URL da Imagem do Ícone
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="https://exemplo.com/icone.png"
-                      value={formIconUrl}
-                      onChange={(e) => setFormIconUrl(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
-                    />
-                  </div>
-                )}
-
                 <div>
                   <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
-                    Descrição
-                  </label>
-                  <textarea
-                    rows={2}
-                    placeholder="Resumo sobre a utilidade do aplicativo..."
-                    value={formDescription}
-                    onChange={(e) => setFormDescription(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all resize-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
-                    Notas da Plataforma (Chaves de licença, etc.)
+                    Nome do App *
                   </label>
                   <input
                     type="text"
-                    placeholder="Ex: Licença gratuita pessoal"
-                    value={formNotes}
-                    onChange={(e) => setFormNotes(e.target.value)}
+                    required
+                    placeholder="Ex: Arc Browser"
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
                     className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
                   />
                 </div>
 
+                <div>
+                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                    Plataformas *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ex: macOS, Windows, Linux"
+                    value={formPlatform}
+                    onChange={(e) => setFormPlatform(e.target.value)}
+                    className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                  />
+                </div>
+
+                {/* Botão de Opções Avançadas */}
+                <div className="pt-1 pb-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    className="text-[9px] text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                  >
+                    {showAdvanced ? "Ocultar Opções Avançadas" : "Exibir Opções Avançadas"}
+                  </button>
+                </div>
+
+                {/* Campos Ocultos (Avançados) */}
+                <AnimatePresence>
+                  {showAdvanced && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-3.5 overflow-hidden pt-1.5 border-t border-border/30"
+                    >
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                            Versão *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="Ex: 1.25.0"
+                            value={formVersion}
+                            onChange={(e) => setFormVersion(e.target.value)}
+                            className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                            Categoria
+                          </label>
+                          <select
+                            value={formCategory}
+                            onChange={(e) => setFormCategory(e.target.value)}
+                            className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white text-xs focus:outline-none focus:ring-0 transition-all cursor-pointer"
+                          >
+                            {categories.slice(1).map((cat) => (
+                              <option key={cat} value={cat} className="bg-card">
+                                {cat}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Seletores de abas do instalador (Upload vs URL) */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase">
+                          Instalador do Software *
+                        </label>
+                        <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
+                          <button
+                            type="button"
+                            onClick={() => setInstallerUploadType("file")}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                              installerUploadType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
+                            }`}
+                          >
+                            <Upload className="w-3.5 h-3.5" />
+                            Upload Arquivo
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setInstallerUploadType("url")}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                              installerUploadType === "url" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
+                            }`}
+                          >
+                            <LinkIcon className="w-3.5 h-3.5" />
+                            Colar Link URL
+                          </button>
+                        </div>
+                      </div>
+
+                      {installerUploadType === "file" ? (
+                        <div>
+                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                            Selecionar Instalador (.exe, .dmg, .zip, etc.)
+                          </label>
+                          <input
+                            type="file"
+                            required
+                            onChange={(e) => setFormInstallerFile(e.target.files?.[0] || null)}
+                            className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-xl"
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                            URL de Download do Instalador
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="https://exemplo.com/instalador.exe"
+                            value={formDownloadUrl}
+                            onChange={(e) => setFormDownloadUrl(e.target.value)}
+                            className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                          />
+                        </div>
+                      )}
+
+                      {/* Seletores de abas do ícone (Upload vs URL) */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase">
+                          Ícone do Aplicativo
+                        </label>
+                        <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
+                          <button
+                            type="button"
+                            onClick={() => setIconUploadType("file")}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                              iconUploadType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
+                            }`}
+                          >
+                            <Upload className="w-3.5 h-3.5" />
+                            Upload Ícone
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setIconUploadType("url")}
+                            className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                              iconUploadType === "url" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
+                            }`}
+                          >
+                            <LinkIcon className="w-3.5 h-3.5" />
+                            Colar Link URL
+                          </button>
+                        </div>
+                      </div>
+
+                      {iconUploadType === "file" ? (
+                        <div>
+                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                            Selecionar Arquivo de Ícone
+                          </label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setFormIconFile(e.target.files?.[0] || null)}
+                            className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-xl"
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                            URL da Imagem do Ícone
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="https://exemplo.com/icone.png"
+                            value={formIconUrl}
+                            onChange={(e) => setFormIconUrl(e.target.value)}
+                            className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                          />
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                          Descrição
+                        </label>
+                        <textarea
+                          rows={2}
+                          placeholder="Resumo sobre a utilidade do aplicativo..."
+                          value={formDescription}
+                          onChange={(e) => setFormDescription(e.target.value)}
+                          className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all resize-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                          Notas da Plataforma (Chaves de licença, etc.)
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Ex: Licença gratuita pessoal"
+                          value={formNotes}
+                          onChange={(e) => setFormNotes(e.target.value)}
+                          className="w-full px-3.5 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all"
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <div className="pt-2 border-t border-border flex items-center justify-end gap-2.5">
                   <button
                     type="button"
-                    onClick={() => setIsModalOpen(false)}
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setShowAdvanced(false);
+                    }}
                     className="px-3.5 py-2 rounded-xl text-xs border border-border text-muted-foreground hover:text-white cursor-pointer hover:bg-muted/40 transition-colors"
                   >
                     Cancelar

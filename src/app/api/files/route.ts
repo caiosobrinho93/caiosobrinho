@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { uploadToSupabase } from "@/lib/storage";
+import { awardXP } from "@/lib/gamification";
 
 export async function GET(request: Request) {
   const session = await getSession();
@@ -12,13 +13,17 @@ export async function GET(request: Request) {
   const search = searchParams.get("search") || "";
 
   try {
-    const userId = session.userId;
-
     if (search) {
       const files = await db.file.findMany({
         where: {
-          userId,
           name: { contains: search },
+        },
+        include: {
+          user: {
+            select: {
+              username: true,
+            },
+          },
         },
         orderBy: { createdAt: "desc" },
       });
@@ -27,16 +32,28 @@ export async function GET(request: Request) {
 
     const folders = await db.folder.findMany({
       where: {
-        userId,
         parentFolderId: folderId === "root" || !folderId ? null : folderId,
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
       },
       orderBy: { name: "asc" },
     });
 
     const files = await db.file.findMany({
       where: {
-        userId,
         folderId: folderId === "root" || !folderId ? null : folderId,
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
       },
       orderBy: { name: "asc" },
     });
@@ -69,6 +86,9 @@ export async function POST(request: Request) {
         },
       });
 
+      // Award +20 XP for folder creation
+      await awardXP(session.userId, 20);
+
       return NextResponse.json(newFolder);
     }
 
@@ -89,6 +109,9 @@ export async function POST(request: Request) {
           folderId: folderId === "root" || !folderId ? null : folderId,
         },
       });
+
+      // Award +50 XP for uploading file
+      await awardXP(session.userId, 50);
 
       return NextResponse.json(newFile);
     }

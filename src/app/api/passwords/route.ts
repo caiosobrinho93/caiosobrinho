@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { encrypt, decrypt } from "@/lib/crypto";
+import { awardXP } from "@/lib/gamification";
 
 export async function GET() {
   const session = await getSession();
@@ -9,14 +10,21 @@ export async function GET() {
 
   try {
     const passwords = await db.password.findMany({
-      where: { userId: session.userId },
       orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
     });
 
     // Decrypt passwords before returning to client
     const decryptedPasswords = passwords.map((p) => ({
       ...p,
       password: decrypt(p.password),
+      createdBy: p.user.username,
     }));
 
     return NextResponse.json(decryptedPasswords);
@@ -53,6 +61,9 @@ export async function POST(request: Request) {
         tags: tags || "",
       },
     });
+
+    // Award +30 XP for password creation
+    await awardXP(session.userId, 30);
 
     return NextResponse.json({
       ...newPasswordRecord,

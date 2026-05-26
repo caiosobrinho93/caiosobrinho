@@ -23,6 +23,11 @@ export async function POST(request: Request) {
         userId: session.userId,
         isCompleted: false,
       },
+      include: {
+        user: {
+          select: { username: true }
+        }
+      }
     });
 
     return NextResponse.json(goal);

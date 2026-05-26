@@ -18,7 +18,6 @@ export async function PATCH(
     const goal = await db.goal.findFirst({
       where: {
         id,
-        userId: session.userId,
       },
     });
 
@@ -88,7 +87,6 @@ export async function DELETE(
     const goal = await db.goal.findFirst({
       where: {
         id,
-        userId: session.userId,
       },
     });
 

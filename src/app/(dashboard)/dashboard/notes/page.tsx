@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback, Suspense } from "react";
+import { useStatsStore } from "@/stores/statsStore";
+import { useDataStore } from "@/stores/dataStore";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -28,6 +30,9 @@ interface NoteItem {
   tags: string | null;
   isFavorite: boolean;
   updatedAt: string;
+  user?: {
+    username: string;
+  };
 }
 
 // Helper simples de debouncer
@@ -51,11 +56,10 @@ function useDebounce<T extends (...args: any[]) => any>(callback: T, delay: numb
 function NotesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [notes, setNotes] = useState<NoteItem[]>([]);
+  const { data: notes, isLoading } = useDataStore(s => s.notes);
   const [search, setSearch] = useState("");
   const [selectedNote, setSelectedNote] = useState<NoteItem | null>(null);
   const [activeTab, setActiveTab] = useState<"write" | "preview">("write");
-  const [isLoading, setIsLoading] = useState(true);
 
   // Estados do Editor
   const [editTitle, setEditTitle] = useState("");
@@ -66,26 +70,14 @@ function NotesContent() {
   // Status de salvamento automático
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
 
-  const fetchNotes = async (selectFirst = false) => {
-    try {
-      setIsLoading(true);
-      const res = await fetch("/api/notes");
-      if (res.ok) {
-        const data = await res.json();
-        setNotes(data);
-        if (selectFirst && data.length > 0 && !selectedNote) {
-          loadNote(data[0]);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchNotes(true);
+    const alreadyLoaded = useDataStore.getState().notes.hasLoaded;
+    useDataStore.getState().fetchNotes().then(() => {
+      if (!alreadyLoaded && !selectedNote) {
+        const data = useDataStore.getState().notes.data;
+        if (data.length > 0) loadNote(data[0]);
+      }
+    });
   }, []);
 
   // Manipular gatilhos de URL (?new=true)
@@ -119,9 +111,9 @@ function NotesContent() {
       });
       if (res.ok) {
         setSaveStatus("saved");
-        setNotes((prev) =>
-          prev.map((n) => (n.id === id ? { ...n, ...updates, updatedAt: new Date().toISOString() } : n))
-        );
+        useDataStore.getState().updateNote(id, { ...updates, updatedAt: new Date().toISOString() });
+        // Keep selectedNote in sync
+        setSelectedNote(prev => prev?.id === id ? { ...prev, ...updates, updatedAt: new Date().toISOString() } : prev);
       } else {
         setSaveStatus("unsaved");
       }
@@ -164,8 +156,11 @@ function NotesContent() {
 
       if (res.ok) {
         const newNote = await res.json();
-        setNotes((prev) => [newNote, ...prev]);
+        useDataStore.getState().addNote(newNote);
         loadNote(newNote);
+        
+        // Atualiza a store global localmente
+        useStatsStore.getState().addNote(newNote, newNote.user?.username || "caio");
       }
     } catch (e) {
       console.error(e);
@@ -178,10 +173,13 @@ function NotesContent() {
     try {
       const res = await fetch(`/api/notes/${id}`, { method: "DELETE" });
       if (res.ok) {
-        setNotes((prev) => prev.filter((n) => n.id !== id));
+        useDataStore.getState().deleteNote(id);
         if (selectedNote?.id === id) {
           setSelectedNote(null);
         }
+        
+        // Atualiza a store global localmente
+        useStatsStore.getState().deleteNote(id);
       }
     } catch (e) {
       console.error(e);
@@ -197,10 +195,11 @@ function NotesContent() {
       });
       if (res.ok) {
         const nextFav = !note.isFavorite;
-        setNotes((prev) =>
-          prev.map((n) => (n.id === note.id ? { ...n, isFavorite: nextFav } : n))
-        );
+        useDataStore.getState().toggleNoteFavorite(note.id, nextFav);
         setSelectedNote((prev) => (prev?.id === note.id ? { ...prev, isFavorite: nextFav } : prev));
+        
+        // Atualiza a store global localmente
+        useStatsStore.getState().toggleNoteFavorite(note.id, nextFav, note.title, note.user?.username || "caio");
       }
     } catch (e) {
       console.error(e);
@@ -244,19 +243,19 @@ function NotesContent() {
   );
 
   return (
-    <div className="flex h-[calc(100vh-140px)] border border-border bg-card/45 backdrop-blur-xl rounded-2xl overflow-hidden shadow-sm">
+    <div className="flex h-[calc(100vh-140px)] border border-border bg-card/45 backdrop-blur-xl rounded-sm overflow-hidden shadow-sm">
       
       {/* PAINEL LATERAL: Listagem de notas */}
       <div className="w-80 border-r border-border flex flex-col h-full bg-card/30 shrink-0">
         <div className="p-4 border-b border-border flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+            <span className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
               <FileText className="w-4 h-4 text-primary" />
               Editor de Notas
             </span>
             <button
               onClick={handleCreateNote}
-              className="p-1.5 rounded-lg bg-primary hover:bg-primary/90 text-white cursor-pointer"
+              className="p-1.5 rounded-sm glass-btn glass-btn-primary text-black cursor-pointer"
               title="Nova Nota"
             >
               <Plus className="w-4 h-4" />
@@ -272,7 +271,7 @@ function NotesContent() {
               placeholder="Buscar título ou categoria..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-muted/40 border border-border rounded-lg text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
+              className="w-full pl-9 pr-3 py-1.5 bg-muted/40 border border-border rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
             />
           </div>
         </div>
@@ -280,7 +279,7 @@ function NotesContent() {
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {isLoading ? (
             [...Array(3)].map((_, i) => (
-              <div key={i} className="h-16 bg-muted/20 animate-pulse rounded-lg border border-border/40" />
+              <div key={i} className="h-16 bg-muted/20 animate-pulse rounded-sm border border-border/40" />
             ))
           ) : filteredNotes.length > 0 ? (
             filteredNotes.map((note) => {
@@ -289,7 +288,7 @@ function NotesContent() {
                 <div
                   key={note.id}
                   onClick={() => loadNote(note)}
-                  className={`p-3.5 rounded-xl cursor-pointer select-none transition-colors border group ${
+                  className={`p-3.5 rounded-sm cursor-pointer select-none transition-colors border group ${
                     isSelected
                       ? "bg-primary/10 border-primary/20 text-white"
                       : "border-transparent text-muted-foreground hover:bg-muted/40 hover:text-white"
@@ -305,9 +304,16 @@ function NotesContent() {
                   </div>
                   
                   <div className="flex justify-between items-center mt-2 text-[10px] leading-none">
-                    <span className="px-1.5 py-0.5 bg-muted rounded text-muted-foreground font-semibold">
-                      {note.category || "Geral"}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="px-1.5 py-0.5 bg-muted rounded text-muted-foreground font-semibold">
+                        {note.category || "Geral"}
+                      </span>
+                      {note.user?.username && (
+                        <span className={`user-tag user-tag-${note.user.username}`}>
+                          {note.user.username === "caio" ? "Caio" : "Giselle"}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-muted-foreground/60 font-mono">
                       {new Date(note.updatedAt).toLocaleDateString("pt-BR", {month: "short", day: "numeric"})}
                     </span>
@@ -329,7 +335,7 @@ function NotesContent() {
             {/* Cabeçalho do Editor */}
             <div className="h-14 border-b border-border px-5 flex items-center justify-between shrink-0 bg-muted/10">
               {/* Write/Preview toggle tab */}
-              <div className="flex bg-muted/40 border border-border p-0.5 rounded-lg shrink-0">
+              <div className="flex bg-muted/40 border border-border p-0.5 rounded-sm shrink-0">
                 <button
                   onClick={() => setActiveTab("write")}
                   className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
@@ -352,7 +358,7 @@ function NotesContent() {
 
               {/* Status e Ações */}
               <div className="flex items-center gap-3">
-                <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5 bg-muted/40 border border-border/80 px-2.5 py-1 rounded-lg">
+                <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5 bg-muted/40 border border-border/80 px-2.5 py-1 rounded-sm">
                   {saveStatus === "saving" ? (
                     <>
                       <Loader2 className="w-3 h-3 animate-spin text-primary" />
@@ -370,7 +376,7 @@ function NotesContent() {
 
                 <button
                   onClick={() => handleToggleFavorite(selectedNote)}
-                  className={`p-2 rounded-xl border cursor-pointer hover:bg-muted transition-colors ${
+                  className={`p-2 rounded-sm border cursor-pointer hover:bg-muted transition-colors ${
                     selectedNote.isFavorite
                       ? "border-primary/20 bg-primary/10 text-primary"
                       : "border-border text-muted-foreground hover:text-white"
@@ -381,7 +387,7 @@ function NotesContent() {
                 
                 <button
                   onClick={() => handleDelete(selectedNote.id)}
-                  className="p-2 rounded-xl border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
+                  className="p-2 rounded-sm border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
                 >
                   <Trash2 className="w-4.5 h-4.5" />
                 </button>
@@ -405,7 +411,7 @@ function NotesContent() {
                   placeholder="Geral"
                   value={editCategory}
                   onChange={(e) => handleFieldChange("category", e.target.value)}
-                  className="px-3.5 py-1.5 bg-muted/40 border border-border focus:border-primary rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-medium max-w-32"
+                  className="px-3.5 py-1.5 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-medium max-w-32"
                 />
               </div>
             </div>
@@ -436,7 +442,7 @@ function NotesContent() {
             </p>
             <button
               onClick={handleCreateNote}
-              className="mt-4 px-3.5 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+              className="mt-4 px-3.5 py-2 bg-primary text-white rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
             >
               Criar Primeira Nota
             </button>

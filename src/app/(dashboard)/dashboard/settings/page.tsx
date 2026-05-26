@@ -43,10 +43,10 @@ export default function SettingsPage() {
     return (
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
-          <div className="h-8 w-48 bg-muted/30 rounded-xl animate-pulse" />
-          <div className="h-4 w-96 bg-muted/20 rounded-lg mt-2 animate-pulse" />
+          <div className="h-8 w-48 bg-muted/30 rounded-sm animate-pulse" />
+          <div className="h-4 w-96 bg-muted/20 rounded-sm mt-2 animate-pulse" />
         </div>
-        <div className="bg-card/55 border border-border rounded-2xl p-5 h-64 animate-pulse" />
+        <div className="bg-card/55 border border-border rounded-sm p-5 h-64 animate-pulse" />
       </div>
     );
   }
@@ -250,9 +250,9 @@ export default function SettingsPage() {
       </div>
 
       {/* 1. Visual e Temas do Painel */}
-      <div className="bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 space-y-6">
+      <div className="glass-panel rounded-sm p-5 space-y-6">
         <div className="border-b border-border/60 pb-3 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2">
             <Palette className="w-4 h-4 text-primary" />
             Temas do Dashboard
           </h2>
@@ -271,14 +271,14 @@ export default function SettingsPage() {
                 <button
                   key={preset.id}
                   onClick={() => setThemePreset(preset.id)}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-2.5 transition-all cursor-pointer group relative overflow-hidden ${
+                  className={`p-3 rounded-sm border text-left flex flex-col gap-2.5 transition-all cursor-pointer group relative overflow-hidden ${
                     isSelected
                       ? "border-primary bg-primary/5 shadow-lg shadow-primary/5 scale-[1.01]"
                       : "border-border bg-muted/10 hover:bg-muted/20 hover:border-white/10"
                   }`}
                 >
                   {/* Preview de gradiente e cor */}
-                  <div className={`w-full h-12 rounded-lg bg-gradient-to-br ${preset.bgPreview} border border-white/5 flex items-center justify-center shadow-inner relative`}>
+                  <div className={`w-full h-12 rounded-sm bg-gradient-to-br ${preset.bgPreview} border border-white/5 flex items-center justify-center shadow-inner relative`}>
                     <div className={`w-4.5 h-4.5 rounded-full ${preset.accentHex} border border-white/20 shadow-md ${preset.glowColor} shadow-lg`} />
                     {isSelected && (
                       <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center text-white border border-white/10">
@@ -303,10 +303,10 @@ export default function SettingsPage() {
 
         {/* EDITOR DE TEMA CUSTOMIZADO (Condicional) */}
         {themePreset === "custom" && (
-          <div className="p-4 bg-muted/20 border border-border/80 rounded-2xl space-y-5 animate-fadeIn">
+          <div className="p-4 bg-muted/20 border border-border/80 rounded-sm space-y-5 animate-fadeIn">
             <div className="flex items-center gap-2 border-b border-border/40 pb-2.5">
               <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Ajustes Finos do Tema Customizado</h3>
+              <h3 className="font-display text-xs tracking-widest text-white leading-tight">Ajustes Finos do Tema Customizado</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -345,7 +345,7 @@ export default function SettingsPage() {
                         key={grid.id}
                         type="button"
                         onClick={() => updateCustomTheme({ gridStyle: grid.id as any })}
-                        className={`py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer border ${
+                        className={`py-1.5 px-3 rounded-sm text-[10px] font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.gridStyle === grid.id
                             ? "bg-primary/10 text-primary border-primary/30"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
@@ -374,7 +374,7 @@ export default function SettingsPage() {
                         key={intensity.id}
                         type="button"
                         onClick={() => updateCustomTheme({ neonIntensity: intensity.id as any })}
-                        className={`py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer border ${
+                        className={`py-1.5 px-3 rounded-sm text-[10px] font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.neonIntensity === intensity.id
                             ? "bg-primary/10 text-primary border-primary/30"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
@@ -400,7 +400,7 @@ export default function SettingsPage() {
                         key={speed.id}
                         type="button"
                         onClick={() => updateCustomTheme({ animationSpeed: speed.id as any })}
-                        className={`py-1.5 px-3 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer border ${
+                        className={`py-1.5 px-3 rounded-sm text-[10px] font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.animationSpeed === speed.id
                             ? "bg-primary/10 text-primary border-primary/30"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
@@ -424,7 +424,7 @@ export default function SettingsPage() {
                     value={customTheme.bgGradient}
                     disabled={!!customTheme.bgImage}
                     onChange={(e) => updateCustomTheme({ bgGradient: e.target.value })}
-                    className="w-full px-3 py-2 bg-muted/40 border border-border rounded-xl text-xs text-white outline-none cursor-pointer focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-3 py-2 bg-muted/40 border border-border rounded-sm text-xs text-white outline-none cursor-pointer focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="bg-preset-synth">Synthwave Gradient (Roxo/Rosa)</option>
                     <option value="bg-preset-cyber">Deep Ocean Grid (Ciano/Preto)</option>
@@ -445,7 +445,7 @@ export default function SettingsPage() {
                       placeholder="Ex: /uploads/meu-wallpaper.png ou URL"
                       value={customTheme.bgImage}
                       onChange={(e) => updateCustomTheme({ bgImage: e.target.value })}
-                      className="w-full px-3 py-2 bg-muted/40 border border-border focus:border-primary rounded-xl text-xs text-white outline-none placeholder:text-muted-foreground/60 pr-10"
+                      className="w-full px-3 py-2 bg-muted/40 border border-border focus:border-primary rounded-sm text-xs text-white outline-none placeholder:text-muted-foreground/60 pr-10"
                     />
                     {customTheme.bgImage && (
                       <button
@@ -460,7 +460,7 @@ export default function SettingsPage() {
                 </div>
               </div>
               {customTheme.bgImage && (
-                <p className="text-[10px] text-amber/80 bg-amber/5 border border-amber/15 p-2 rounded-xl">
+                <p className="text-[10px] text-amber/80 bg-amber/5 border border-amber/15 p-2 rounded-sm">
                   Nota: Um papel de parede físico ativo substituirá o gradiente de fundo padrão do dashboard.
                 </p>
               )}
@@ -473,12 +473,12 @@ export default function SettingsPage() {
           {/* Densidade de Espaçamento */}
           <div className="space-y-2.5">
             <label className="text-xs font-semibold text-muted-foreground block">Densidade do Layout</label>
-            <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
+            <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
               {(["compact", "normal", "spacious"] as const).map((d) => (
                 <button
                   key={d}
                   onClick={() => setDensity(d)}
-                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+                  className={`flex-1 py-1.5 rounded-sm text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                     density === d ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                   }`}
                 >
@@ -491,7 +491,7 @@ export default function SettingsPage() {
           {/* Micro-interações Switch */}
           <div className="space-y-2.5 flex flex-col justify-between">
             <label className="text-xs font-semibold text-muted-foreground">Animações Gerais</label>
-            <div className="flex items-center justify-between p-2.5 bg-muted/20 border border-border rounded-xl h-10">
+            <div className="flex items-center justify-between p-2.5 bg-muted/20 border border-border rounded-sm h-10">
               <span className="text-xs font-semibold text-white/95">Transições e micro-interações</span>
               <button
                 onClick={toggleAnimations}
@@ -511,13 +511,13 @@ export default function SettingsPage() {
       </div>
 
       {/* 2. Backup e Banco de Dados */}
-      <div className="bg-card/55 backdrop-blur-xl border border-border rounded-2xl p-5 space-y-5">
-        <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2 border-b border-border/60 pb-3">
+      <div className="glass-panel rounded-sm p-5 space-y-5">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2 border-b border-border/60 pb-3">
           <Database className="w-4 h-4 text-primary" />
           Operações de Banco de Dados
         </h2>
 
-        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-xl flex items-start gap-3">
+        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-sm flex items-start gap-3">
           <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-normal">
             O banco de dados do Nexus Vault reside inteiramente no seu sistema local SQLite. Exporte backups periodicamente para garantir a segurança dos seus dados em migrações ou reconfigurações do sistema.
@@ -526,15 +526,15 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Exportar */}
-          <div className="p-4 bg-muted/10 border border-border rounded-xl flex flex-col justify-between h-36">
+          <div className="p-4 bg-muted/10 border border-border rounded-sm flex flex-col justify-between h-36">
             <div>
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Exportar Dados</h3>
+              <h3 className="font-display text-xs tracking-widest text-white leading-tight">Exportar Dados</h3>
               <p className="text-[11px] text-muted-foreground mt-1 leading-normal">Baixe um arquivo JSON descriptografado contendo todos os registros de senhas, notas, torrents, softwares e dados cadastrados.</p>
             </div>
             <button
               onClick={handleExport}
               disabled={isExporting}
-              className="flex items-center justify-center gap-2 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-lg border border-border transition-colors cursor-pointer font-bold"
+              className="flex items-center justify-center gap-2 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold"
             >
               {isExporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
               Salvar Backup JSON
@@ -542,12 +542,12 @@ export default function SettingsPage() {
           </div>
 
           {/* Importar */}
-          <div className="p-4 bg-muted/10 border border-border rounded-xl flex flex-col justify-between h-36">
+          <div className="p-4 bg-muted/10 border border-border rounded-sm flex flex-col justify-between h-36">
             <div>
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Restaurar Banco</h3>
+              <h3 className="font-display text-xs tracking-widest text-white leading-tight">Restaurar Banco</h3>
               <p className="text-[11px] text-muted-foreground mt-1 leading-normal">Selecione um arquivo de backup do Nexus (.json) previamente baixado para restaurar todas as tabelas locais do banco.</p>
             </div>
-            <label className="flex items-center justify-center gap-2 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-lg border border-border transition-colors cursor-pointer font-bold">
+            <label className="flex items-center justify-center gap-2 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold">
               {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
               Selecionar Backup
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
@@ -557,15 +557,15 @@ export default function SettingsPage() {
       </div>
 
       {/* 3. Zona de Perigo */}
-      <div className="bg-card/55 backdrop-blur-xl border border-destructive/20 rounded-2xl p-5 space-y-4">
+      <div className="bg-card/55 backdrop-blur-xl border border-destructive/20 rounded-sm p-5 space-y-4">
         <h2 className="text-sm font-bold text-destructive uppercase tracking-wider flex items-center gap-2 border-b border-destructive/10 pb-3">
           <Trash2 className="w-4 h-4 text-destructive" />
           Zona de Perigo
         </h2>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-destructive/5 border border-destructive/10 rounded-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-destructive/5 border border-destructive/10 rounded-sm">
           <div className="min-w-0 flex-1">
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider">Destruir Dados do Cofre</h3>
+            <h3 className="font-display text-xs tracking-widest text-white leading-tight">Destruir Dados do Cofre</h3>
             <p className="text-[11px] text-muted-foreground mt-1 leading-normal">
               Limpe permanentemente todas as senhas, notas textuais, catálogos de softwares e índices locais do banco. Esta ação é irreversível.
             </p>
@@ -573,7 +573,7 @@ export default function SettingsPage() {
           <button
             onClick={handleWipeData}
             disabled={isWiping}
-            className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer shrink-0 shadow-lg shadow-destructive/10"
+            className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-white text-xs font-bold rounded-sm transition-colors cursor-pointer shrink-0 shadow-lg shadow-destructive/10"
           >
             {isWiping ? "Limpando Banco..." : "Apagar Tudo"}
           </button>

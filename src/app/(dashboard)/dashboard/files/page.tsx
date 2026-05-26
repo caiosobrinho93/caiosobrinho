@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Fragment } from "react";
+import { useStatsStore } from "@/stores/statsStore";
+import { useDataStore } from "@/stores/dataStore";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FolderOpen,
@@ -29,6 +31,9 @@ interface FolderItem {
   id: string;
   name: string;
   parentFolderId: string | null;
+  user?: {
+    username: string;
+  };
 }
 
 interface FileItem {
@@ -39,6 +44,9 @@ interface FileItem {
   mimeType: string;
   isFavorite: boolean;
   folderId: string | null;
+  user?: {
+    username: string;
+  };
 }
 
 export default function FilesPage() {
@@ -49,7 +57,6 @@ export default function FilesPage() {
   const [activeFolderId, setActiveFolderId] = useState<string>("root");
   const [folderPath, setFolderPath] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
   // Estados de arrastar e soltar
   const [isDragOver, setIsDragOver] = useState(false);
   const dragCounter = useRef(0);
@@ -62,16 +69,12 @@ export default function FilesPage() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchDirectory = async () => {
+  const fetchDirectory = async (force = false) => {
     try {
       setIsLoading(true);
-      const folderParam = activeFolderId === "root" ? "" : activeFolderId;
-      const res = await fetch(`/api/files?folderId=${folderParam}&search=${search}`);
-      if (res.ok) {
-        const data = await res.json();
-        setFolders(data.folders || []);
-        setFiles(data.files || []);
-      }
+      const result = await useDataStore.getState().fetchFiles(activeFolderId, search, force);
+      setFolders(result.folders);
+      setFiles(result.files);
     } catch (e) {
       console.error(e);
     } finally {
@@ -129,9 +132,12 @@ export default function FilesPage() {
       });
 
       if (res.ok) {
+        const newFolder = await res.json();
         setNewFolderName("");
         setIsNewFolderOpen(false);
-        fetchDirectory();
+        // Update cache and local state
+        useDataStore.getState().addFolder(activeFolderId, newFolder);
+        setFolders(prev => [newFolder, ...prev]);
       }
     } catch (e) {
       console.error(e);
@@ -162,7 +168,12 @@ export default function FilesPage() {
       });
 
       if (res.ok) {
-        fetchDirectory();
+        const newFile = await res.json();
+        
+        // Atualiza no cache, na state local e na store global
+        useDataStore.getState().addFile(activeFolderId, newFile);
+        setFiles(prev => [newFile, ...prev]);
+        useStatsStore.getState().addFile(newFile, newFile.user?.username || "caio");
       } else {
         const err = await res.json();
         alert(err.error || "Falha no envio do arquivo");
@@ -218,9 +229,14 @@ export default function FilesPage() {
         body: JSON.stringify({ isFavorite: !file.isFavorite }),
       });
       if (res.ok) {
+        const nextFav = !file.isFavorite;
+        useDataStore.getState().toggleFileFavorite(activeFolderId, file.id, nextFav);
         setFiles((prev) =>
-          prev.map((f) => (f.id === file.id ? { ...f, isFavorite: !f.isFavorite } : f))
+          prev.map((f) => (f.id === file.id ? { ...f, isFavorite: nextFav } : f))
         );
+
+        // Atualiza a store global localmente
+        useStatsStore.getState().toggleFileFavorite(file.id, nextFav, file.name, file.user?.username || "caio");
       }
     } catch (e) {
       console.error(e);
@@ -234,8 +250,15 @@ export default function FilesPage() {
       const res = await fetch(`/api/files/${id}?type=${type}`, { method: "DELETE" });
       if (res.ok) {
         if (type === "folder") {
+          useDataStore.getState().deleteFolder(activeFolderId, id);
           setFolders((prev) => prev.filter((f) => f.id !== id));
         } else {
+          const oldFile = files.find((f) => f.id === id);
+          if (oldFile) {
+            useDataStore.getState().deleteFile(activeFolderId, id);
+            // Atualiza a store global localmente
+            useStatsStore.getState().deleteFile(id, oldFile.size, oldFile.mimeType);
+          }
           setFiles((prev) => prev.filter((f) => f.id !== id));
         }
       }
@@ -284,156 +307,151 @@ export default function FilesPage() {
       </AnimatePresence>
 
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <FolderOpen className="w-6 h-6 text-primary" />
-            Cofre de Arquivos
+          <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-2">
+            <FolderOpen className="w-5 h-5 text-primary" />
+            COFRE DE ARQUIVOS
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Organize backups pessoais, imagens, documentos e logs em diretórios personalizados.
+          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+            Armazenamento de Backups, Logs e Mídias Pessoais
           </p>
         </div>
         
         {/* Controle de ações */}
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 ">
           <button
             onClick={() => setIsNewFolderOpen(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-muted border border-border text-white text-sm font-semibold rounded-xl hover:bg-muted/70 transition-all cursor-pointer"
+            className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] font-bold glass-btn cursor-pointer"
           >
-            <FolderPlus className="w-4 h-4 text-primary" />
-            Nova Pasta
+            <FolderPlus className="w-3.5 h-3.5" />
+            Novo Diretório
           </button>
-          
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer"
+          >
+            <Upload className="w-3.5 h-3.5" />
+            Subir Arquivo
+          </button>
           <input
             type="file"
             ref={fileInputRef}
             onChange={handleUploadFile}
             className="hidden"
           />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isUploading}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10"
-          >
-            {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            Enviar Arquivo
-          </button>
         </div>
       </div>
-
-      {/* Barra de Navegação Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 bg-card/40 border border-border/80 p-3 rounded-2xl">
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground flex-wrap">
+ 
+      {/* Barra de Ferramentas / Filtros */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        {/* Breadcrumbs de Navegação */}
+        <div className="flex items-center gap-1.5 text-[10px]  font-bold text-muted-foreground overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
-            onClick={() => handleBackClick()}
-            disabled={folderPath.length === 0}
-            className="p-1 rounded hover:bg-muted/60 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer mr-1"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-
-          <button
-            onClick={() => handleBreadcrumbClick("root", 0)}
-            className="hover:text-white font-medium cursor-pointer"
+            onClick={() => handleBreadcrumbClick("root", -1)}
+            className="hover:text-primary transition-colors cursor-pointer uppercase"
           >
             Raiz
           </button>
-          
-          {folderPath.map((folder, index) => (
-            <React.Fragment key={folder.id}>
-              <ChevronRight className="w-3.5 h-3.5 text-border shrink-0" />
+          {folderPath.map((path, idx) => (
+            <Fragment key={path.id}>
+              <ChevronRight className="w-3 h-3 shrink-0" />
               <button
-                onClick={() => handleBreadcrumbClick(folder.id, index)}
-                className={`hover:text-white font-medium cursor-pointer ${
-                  index === folderPath.length - 1 ? "text-white font-semibold" : ""
-                }`}
+                onClick={() => handleBreadcrumbClick(path.id, idx)}
+                className="hover:text-primary transition-colors cursor-pointer max-w-28 truncate uppercase"
               >
-                {folder.name}
+                {path.name}
               </button>
-            </React.Fragment>
+            </Fragment>
           ))}
         </div>
-
-        {/* Busca e Layout de Visualização */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="relative w-full sm:w-48">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-muted-foreground pointer-events-none">
-              <Search className="w-3.5 h-3.5" />
+ 
+        <div className="flex items-center gap-2 shrink-0 ">
+          <div className="relative w-full sm:w-56 ">
+            <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-muted-foreground pointer-events-none">
+              <Search className="w-3 h-3 text-primary" />
             </span>
             <input
               type="text"
-              placeholder="Buscar..."
+              placeholder="Buscar arquivos..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-muted/40 border border-border rounded-lg text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
+              className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground/60 text-[9px] focus:outline-none focus:border-primary transition-all"
             />
           </div>
-
-          <div className="flex items-center bg-muted/40 border border-border p-0.5 rounded-lg shrink-0">
+ 
+          <div className="flex bg-muted/20 border border-border/70 p-0.5 rounded-sm shrink-0">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded cursor-pointer ${viewMode === "grid" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
+              className={`p-1 rounded-sm cursor-pointer ${viewMode === "grid" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
             >
               <Grid className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-1.5 rounded cursor-pointer ${viewMode === "list" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
+              className={`p-1 rounded-sm cursor-pointer ${viewMode === "list" ? "bg-card text-primary" : "text-muted-foreground hover:text-white"}`}
             >
               <List className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </div>
-
       {/* Exibição Principal do Layout */}
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 animate-pulse">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 animate-pulse">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-28 bg-card/60 border border-border/80 rounded-2xl" />
+            <div key={i} className="h-24 bg-card/40 border border-border/80 rounded-sm" />
           ))}
         </div>
       ) : folders.length > 0 || files.length > 0 ? (
         viewMode === "grid" ? (
           /* Visualização em Grade */
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5">
             {/* Pastas */}
             {folders.map((folder) => (
               <motion.div
                 key={folder.id}
                 layoutId={folder.id}
                 onClick={() => handleFolderClick(folder)}
-                className="bg-card/55 border border-border hover:border-primary/40 p-4 rounded-2xl flex flex-col justify-between cursor-pointer group shadow-sm transition-all duration-300 relative"
+                className="glass-panel flex flex-col justify-between cursor-pointer group rounded-sm p-3 border border-border/75 hover:border-primary/45 transition-colors relative"
               >
-                <div className="flex justify-between items-start">
-                  <Folder className="w-10 h-10 text-primary fill-primary/10 group-hover:scale-105 transition-transform duration-300" />
+                <div className="flex justify-between items-start ">
+                  <Folder className="w-8 h-8 text-primary fill-primary/5 group-hover:scale-105 transition-transform duration-300" />
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteItem(folder.id, "folder");
                     }}
-                    className="p-1 rounded opacity-0 group-hover:opacity-100 hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer text-muted-foreground"
+                    className="p-1 rounded-sm opacity-0 group-hover:opacity-100 hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer text-muted-foreground"
                     title="Excluir Pasta"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </div>
-                <span className="text-xs font-semibold text-white/95 mt-4 truncate block leading-tight">
-                  {folder.name}
-                </span>
+                <div className="mt-3">
+                  <span className="text-[10px] font-bold text-white/95 truncate block leading-tight">
+                    {folder.name}
+                  </span>
+                  {folder.user?.username && (
+                    <div className="mt-1">
+                      <span className={`user-tag user-tag-${folder.user.username}`}>
+                        {folder.user.username === "caio" ? "Caio" : "Giselle"}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </motion.div>
             ))}
-
+ 
             {/* Arquivos */}
             {files.map((file) => (
               <motion.div
                 key={file.id}
                 layoutId={file.id}
                 onClick={() => setPreviewItem(file)}
-                className="bg-card/55 border border-border hover:border-primary/45 p-4 rounded-2xl flex flex-col justify-between cursor-pointer group shadow-sm transition-all duration-300 relative"
+                className="glass-panel flex flex-col justify-between cursor-pointer group rounded-sm p-3 border border-border/75 hover:border-primary/45 transition-colors relative"
               >
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start ">
                   {getFileIcon(file.mimeType)}
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
@@ -441,31 +459,38 @@ export default function FilesPage() {
                         e.stopPropagation();
                         handleToggleFavorite(file);
                       }}
-                      className={`p-1.5 rounded cursor-pointer hover:bg-muted ${
+                      className={`p-1 rounded-sm cursor-pointer hover:bg-muted ${
                         file.isFavorite ? "text-primary" : "text-muted-foreground"
                       }`}
                     >
-                      <Star className={`w-3.5 h-3.5 ${file.isFavorite ? "fill-current" : ""}`} />
+                      <Star className={`w-3 h-3 ${file.isFavorite ? "fill-current" : ""}`} />
                     </button>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteItem(file.id, "file");
                       }}
-                      className="p-1.5 rounded hover:text-destructive hover:bg-destructive/10 cursor-pointer text-muted-foreground"
+                      className="p-1 rounded-sm hover:text-destructive hover:bg-destructive/10 cursor-pointer text-muted-foreground"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3 h-3" />
                     </button>
                   </div>
                 </div>
-
-                <div className="mt-4">
-                  <span className="text-xs font-semibold text-white/95 truncate block leading-tight">
+ 
+                <div className="mt-3">
+                  <span className="text-[10px] font-bold text-white/95 truncate block leading-tight">
                     {file.name}
                   </span>
-                  <span className="text-[10px] text-muted-foreground block mt-1 leading-none font-medium font-mono">
-                    {formatSize(file.size)}
-                  </span>
+                  <div className="flex items-center justify-between gap-1 mt-1">
+                    <span className="text-[8px] text-muted-foreground block leading-none">
+                      {formatSize(file.size)}
+                    </span>
+                    {file.user?.username && (
+                      <span className={`user-tag user-tag-${file.user.username}`}>
+                        {file.user.username === "caio" ? "Caio" : "Giselle"}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -493,6 +518,11 @@ export default function FilesPage() {
                     <td className="p-4 flex items-center gap-3 font-semibold text-white">
                       <Folder className="w-4.5 h-4.5 text-primary fill-primary/5 shrink-0" />
                       <span className="truncate max-w-64">{folder.name}</span>
+                      {folder.user?.username && (
+                        <span className={`user-tag user-tag-${folder.user.username}`}>
+                          {folder.user.username === "caio" ? "Caio" : "Giselle"}
+                        </span>
+                      )}
                     </td>
                     <td className="p-4 text-muted-foreground hidden sm:table-cell">Pasta</td>
                     <td className="p-4 text-muted-foreground font-mono">--</td>
@@ -522,6 +552,11 @@ export default function FilesPage() {
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="shrink-0">{getFileIcon(file.mimeType)}</div>
                         <span className="truncate max-w-64">{file.name}</span>
+                        {file.user?.username && (
+                          <span className={`user-tag user-tag-${file.user.username}`}>
+                            {file.user.username === "caio" ? "Caio" : "Giselle"}
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td className="p-4 text-muted-foreground hidden sm:table-cell truncate max-w-40">

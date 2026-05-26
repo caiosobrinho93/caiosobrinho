@@ -25,6 +25,10 @@ model User {
   software     Software[]
   notes        Note[]
   goals        Goal[]
+  devComponents DevComponent[]
+  receipts      Receipt[]
+  bills         Bill[]
+  bankAccounts  BankAccount[]
 }
 
 model Video {
@@ -170,4 +174,80 @@ model Goal {
   
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DevComponent {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  htmlCode    String?
+  cssCode     String?
+  jsCode      String?
+  category    String?
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Receipt {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  fileUrl     String?  // URL ou caminho do comprovante
+  amount      Float?   // valor
+  paymentDate DateTime? // data do pagamento
+  category    String?  // categoria do comprovante
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Bill {
+  id           String    @id @default(uuid())
+  title        String
+  description  String?
+  amount       Float
+  dueDate      DateTime  // data de vencimento
+  type         String    // "pagar", "receber", "agendar"
+  status       String    @default("pendente") // "pendente", "pago", "recebido", "agendado"
+  paymentDate  DateTime? // data de pagamento real
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BankAccount {
+  id            String   @id @default(uuid())
+  provider      String   // e.g. "Mercado Pago", "Santander", "Nubank"
+  balance       Float    @default(0.0)
+  trend         String   @default("+0.0% este mês")
+  lastSync      DateTime @default(now())
+  accountNumber String?
+  apiKey        String?
+  apiSecret     String?
+  syncType      String   @default("manual") // manual, openfinance, ofx
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Reward {
+  id          String    @id @default(uuid())
+  title       String    // e.g. "Pix de R$ 10", "Pix de R$ 50"
+  costXp      Int       // custo em XP
+  amount      Float     // valor em R$
+  status      String    @default("disponivel") // disponivel, resgatado
+  claimedBy   String?   // username de quem resgatou
+  claimedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }

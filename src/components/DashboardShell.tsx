@@ -14,6 +14,7 @@ import {
   Cpu,
   FileText,
   Settings,
+  Code,
   Search,
   Menu,
   X,
@@ -22,7 +23,10 @@ import {
   ChevronRight,
   Database,
   Terminal,
-  User
+  User,
+  CreditCard,
+  FileCheck,
+  LayoutGrid
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
 import { useSettingsStore } from "@/stores/settingsStore";
@@ -39,6 +43,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const { accentColor, density, themePreset, customTheme } = useSettingsStore();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCentralOptionsOpen, setIsCentralOptionsOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -80,6 +85,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsCentralOptionsOpen(false);
   }, [pathname]);
 
   // Command Palette listener (Ctrl+K / Cmd+K)
@@ -115,6 +121,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
     { name: "Arquivos", href: "/dashboard/files", icon: FolderOpen },
     { name: "Softwares", href: "/dashboard/software", icon: Cpu },
     { name: "Notas", href: "/dashboard/notes", icon: FileText },
+    { name: "Contas", href: "/dashboard/bills", icon: CreditCard },
+    { name: "Comprovantes", href: "/dashboard/receipts", icon: FileCheck },
+    { name: "DEV Central", href: "/dashboard/dev", icon: Code },
     { name: "Configurações", href: "/dashboard/settings", icon: Settings },
   ];
 
@@ -215,7 +224,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
         </div>
 
         {/* Links */}
-        <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -223,26 +232,26 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             return (
               <Link key={item.name} href={item.href}>
                 <div
-                  className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group relative cursor-pointer ${
+                  className={`flex items-center gap-3 px-3 py-2 text-[10px] font-display tracking-wider transition-all group relative cursor-pointer border ${
                     isActive
-                      ? "bg-primary/10 text-primary border border-primary/20 shadow-sm"
-                      : "text-muted-foreground hover:text-white hover:bg-muted/40 border border-transparent"
+                      ? "bg-primary/5 text-primary border-primary/25 border-l-[3px] border-l-primary"
+                      : "text-muted-foreground hover:text-white hover:bg-muted/15 border-transparent hover:border-border/30"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 transition-transform ${isActive ? "scale-105" : "group-hover:scale-105"}`} />
+                  <Icon className={`w-4 h-4 transition-transform ${isActive ? "scale-105" : "group-hover:scale-105"}`} />
                   
                   {!isSidebarCollapsed && (
                     <motion.span
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="whitespace-nowrap"
+                      className="whitespace-nowrap font-medium"
                     >
                       {item.name}
                     </motion.span>
                   )}
                   
                   {isSidebarCollapsed && (
-                    <div className="absolute left-16 scale-0 group-hover:scale-100 px-3 py-1.5 rounded-lg bg-popover border border-border text-xs text-white shadow-lg pointer-events-none transition-transform origin-left whitespace-nowrap z-50">
+                    <div className="absolute left-16 scale-0 group-hover:scale-100 px-3 py-1.5 rounded-sm bg-popover border border-border text-[10px] text-white shadow-lg pointer-events-none transition-transform origin-left whitespace-nowrap z-50 font-display tracking-wider">
                       {item.name}
                     </div>
                   )}
@@ -253,36 +262,46 @@ export default function DashboardShell({ children, username }: DashboardShellPro
         </nav>
 
         {/* Footer info & Logout */}
-        <div className="p-3 border-t border-border flex flex-col gap-2 bg-muted/20">
-          <div className="flex items-center gap-3 px-2 py-1.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0">
-              <User className="w-4 h-4 text-primary" />
+        <div className="p-2 border-t border-border flex flex-col gap-1 bg-muted/10  text-[10px]">
+          <div className="flex items-center gap-2 px-1.5 py-1 overflow-hidden">
+            <div className={`w-7 h-7 rounded-sm overflow-hidden flex items-center justify-center border shrink-0 ${
+              username === "caio"
+                ? "border-cyan-500/50 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
+                : "border-fuchsia-500/50 shadow-[0_0_8px_rgba(217,70,239,0.3)]"
+            }`}>
+              <img 
+                src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
+                className="w-full h-full object-cover" 
+                alt={username} 
+              />
             </div>
             {!isSidebarCollapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-xs text-white font-semibold truncate leading-tight">Caio Sobrinho</span>
-                <span className="text-[10px] text-muted-foreground truncate leading-none">Cofre Pessoal</span>
+                <span className="text-[10px] text-white font-bold truncate leading-tight">
+                  {username === "caio" ? "Caio" : username === "giselle" ? "Giselle" : username}
+                </span>
+                <span className="text-[8px] text-muted-foreground truncate leading-none uppercase tracking-wide">Cofre Compartilhado</span>
               </div>
             )}
           </div>
           
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             <button
               onClick={handleLogout}
-              className={`flex items-center justify-center text-muted-foreground hover:text-destructive p-2.5 rounded-xl hover:bg-muted/40 transition-colors w-full cursor-pointer text-sm gap-2 ${
-                isSidebarCollapsed ? "" : "justify-start px-3"
+              className={`flex items-center justify-center text-muted-foreground hover:text-destructive p-2 rounded hover:bg-muted/20 transition-colors w-full cursor-pointer text-[10px] font-display tracking-wider gap-1.5 ${
+                isSidebarCollapsed ? "" : "justify-start px-2"
               }`}
             >
-              <LogOut className="w-4.5 h-4.5" />
-              {!isSidebarCollapsed && <span>Bloquear Cofre</span>}
+              <LogOut className="w-3.5 h-3.5" />
+              {!isSidebarCollapsed && <span className="font-semibold">Bloquear</span>}
             </button>
 
             {!isSidebarCollapsed && (
               <button
                 onClick={() => setIsSidebarCollapsed(true)}
-                className="p-2.5 rounded-xl hover:bg-muted/40 text-muted-foreground hover:text-white cursor-pointer ml-auto"
+                className="p-2 rounded hover:bg-muted/20 text-muted-foreground hover:text-white cursor-pointer ml-auto"
               >
-                <ChevronLeft className="w-4.5 h-4.5" />
+                <ChevronLeft className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
@@ -290,9 +309,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           {isSidebarCollapsed && (
             <button
               onClick={() => setIsSidebarCollapsed(false)}
-              className="p-2 flex items-center justify-center rounded-xl hover:bg-muted/40 text-muted-foreground hover:text-white cursor-pointer w-full mt-1 border border-border/50"
+              className="p-1.5 flex items-center justify-center rounded hover:bg-muted/20 text-muted-foreground hover:text-white cursor-pointer w-full mt-0.5 border border-border/50"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
@@ -325,82 +344,68 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             {/* Search Trigger */}
             <button
               onClick={() => setIsCommandPaletteOpen(true)}
-              className="flex items-center justify-between w-40 md:w-64 px-3.5 py-2 rounded-xl bg-muted/40 hover:bg-muted/70 border border-border/85 text-xs text-muted-foreground transition-all cursor-pointer"
+              className="flex items-center justify-between w-36 md:w-60 px-2.5 py-1.5 rounded-sm bg-muted/20 hover:bg-muted/40 border border-border/80 text-[10px] text-muted-foreground transition-all cursor-pointer "
             >
-              <span className="flex items-center gap-2">
-                <Search className="w-3.5 h-3.5" />
-                Buscar no cofre...
+              <span className="flex items-center gap-1.5">
+                <Search className="w-3 h-3 text-primary" />
+                Buscar...
               </span>
-              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded border border-border/70 bg-card text-[9px] font-mono leading-none">
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1 py-0.5 rounded-sm border border-border/70 bg-card text-[8px] font-mono leading-none">
                 <span>Ctrl</span>K
               </kbd>
             </button>
 
             {/* Storage indicator */}
-            <div className="hidden lg:flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-border/70 bg-card/40 text-xs">
-              <Database className="w-3.5 h-3.5 text-primary" />
-              <div className="flex flex-col min-w-16">
-                <div className="flex justify-between text-[10px] leading-tight font-medium">
-                  <span className="text-muted-foreground">Espaço Usado</span>
-                  <span className="text-white">42%</span>
+            <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-sm border border-border/80 bg-card/20 text-[10px] ">
+              <Database className="w-3 h-3 text-primary animate-pulse" />
+              <div className="flex flex-col min-w-14">
+                <div className="flex justify-between text-[9px] leading-tight font-medium">
+                  <span className="text-muted-foreground uppercase">Disk</span>
+                  <span className="text-white font-bold">42%</span>
                 </div>
-                <div className="w-20 h-1 bg-muted rounded-full mt-1 overflow-hidden">
+                <div className="w-16 h-0.5 bg-muted rounded-none mt-1 overflow-hidden">
                   <div className="h-full bg-primary" style={{ width: "42%" }} />
                 </div>
               </div>
             </div>
             
             {/* User Avatar */}
-            <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30 select-none">
-              <span className="text-sm font-bold text-primary uppercase">{username.charAt(0)}</span>
+            <div className={`w-7.5 h-7.5 rounded-sm overflow-hidden flex items-center justify-center border select-none ${
+              username === "caio" ? "border-cyan-400" : "border-fuchsia-400"
+            }`}>
+              <img 
+                src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
+                className="w-full h-full object-cover" 
+                alt={username} 
+              />
             </div>
           </div>
         </header>
-
-        {/* Contents */}
-        <main className="flex-1 overflow-y-auto bg-background/55 relative p-4 md:p-6 pb-20 md:pb-6">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="h-full"
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
-        </main>
-
-        {/* 3. BOTTOM NAV BAR MOBILE */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 border-t border-border bg-card/65 backdrop-blur-2xl flex items-center justify-around px-2 z-30">
-          {navItems.slice(0, 5).map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
-            return (
-              <Link key={item.name} href={item.href} className="flex flex-col items-center justify-center w-14 h-full select-none">
-                <motion.div
-                  whileTap={{ scale: 0.88 }}
-                  className="flex flex-col items-center justify-center w-full h-full"
-                >
-                  <Icon className={`w-5.5 h-5.5 ${isActive ? "text-primary scale-110" : "text-muted-foreground"}`} />
-                  <span className={`text-[10px] mt-1 font-medium ${isActive ? "text-white" : "text-muted-foreground"}`}>
-                    {item.name.split(" ")[0]}
-                  </span>
-                </motion.div>
-              </Link>
-            );
-          })}
-          <motion.button
-            onClick={() => setIsMobileMenuOpen(true)}
-            whileTap={{ scale: 0.88 }}
-            className="flex flex-col items-center justify-center w-14 h-full cursor-pointer select-none"
+ 
+        <main className="flex-1 overflow-y-auto bg-background/35 relative p-3 md:p-4 pb-20 md:pb-4">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.12 }}
+            className="h-full"
           >
-            <Menu className="w-5.5 h-5.5 text-muted-foreground" />
-            <span className="text-[10px] mt-1 font-medium text-muted-foreground">Menu</span>
-          </motion.button>
-        </nav>
+            {children}
+          </motion.div>
+        </main>
+ 
+        {/* 3. BOTTOM NAV BAR MOBILE (Single Floating Button) */}
+        <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 select-none pointer-events-none">
+          <div className="pointer-events-auto relative">
+            <motion.button
+              onClick={() => setIsCentralOptionsOpen(true)}
+              whileTap={{ scale: 0.9 }}
+              className="flex items-center justify-center w-12.5 h-12.5 rounded-full bg-primary text-black border-2 border-border shadow-2xl shadow-primary/25 cursor-pointer relative"
+            >
+              <LayoutGrid className="w-5 h-5 text-black" />
+            </motion.button>
+          </div>
+        </div>
       </div>
 
       {/* 4. SLIDEOUT MENU MOBILE */}
@@ -460,13 +465,23 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               </nav>
 
               <div className="pt-4 border-t border-border flex flex-col gap-3">
-                <div className="flex items-center gap-3 px-1">
-                  <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold">
-                    {username.charAt(0).toUpperCase()}
+                <div className="flex items-center gap-3 px-1 font-sans">
+                  <div className={`w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center border ${
+                    username === "caio"
+                      ? "border-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+                      : "border-fuchsia-400 shadow-[0_0_10px_rgba(217,70,239,0.2)]"
+                  }`}>
+                    <img 
+                      src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
+                      className="w-full h-full object-cover" 
+                      alt={username} 
+                    />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white leading-tight">Caio Sobrinho</p>
-                    <p className="text-xs text-muted-foreground">Sessão Ativa</p>
+                    <p className="text-sm font-bold text-white leading-tight">
+                      {username === "caio" ? "Caio" : username === "giselle" ? "Giselle" : username}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Sessão Compartilhada</p>
                   </div>
                 </div>
                 <button
@@ -483,6 +498,136 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       </AnimatePresence>
 
       <CommandPalette isOpen={isCommandPaletteOpen} onClose={() => setIsCommandPaletteOpen(false)} />
+
+      {/* 5. CENTRAL DE OPÇÕES BOTTOM SHEET */}
+      <AnimatePresence>
+        {isCentralOptionsOpen && (
+          <>
+            {/* Background escurecido */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.65 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCentralOptionsOpen(false)}
+              className="fixed inset-0 bg-black/90 z-45 md:hidden backdrop-blur-sm"
+            />
+
+            {/* Bottom Drawer */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 26, stiffness: 220 }}
+              className="fixed bottom-0 left-0 right-0 max-h-[82vh] bg-neutral-950 border-t border-border rounded-t-2xl z-50 md:hidden flex flex-col overflow-y-auto pb-10"
+            >
+              {/* Alça visual da gaveta */}
+              <div className="w-full flex justify-center py-3 shrink-0">
+                <div className="w-12 h-1 rounded-full bg-border" />
+              </div>
+
+              {/* Título e Fechar */}
+              <div className="flex items-center justify-between px-5 pb-3 border-b border-border/50 shrink-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="font-display text-xs font-bold text-white uppercase tracking-wider">Central de Opções</span>
+                </div>
+                <button
+                  onClick={() => setIsCentralOptionsOpen(false)}
+                  className="p-1 rounded-md bg-muted/20 hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Grid de Seções */}
+              <div className="flex-1 px-5 py-4 space-y-5">
+                {/* Seção Finanças */}
+                <div className="space-y-2">
+                  <h3 className="text-[10px] font-display font-semibold text-primary uppercase tracking-wider pl-1">Finanças</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/dashboard/bills" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <CreditCard className="w-4.5 h-4.5 text-emerald-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Contas</span>
+                      </div>
+                    </Link>
+                    <Link href="/dashboard/receipts" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <FileCheck className="w-4.5 h-4.5 text-primary shrink-0" />
+                        <span className="text-xs font-bold text-white">Comprovantes</span>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Seção Mídias & Arquivos */}
+                <div className="space-y-2">
+                  <h3 className="text-[10px] font-display font-semibold text-cyan-400 uppercase tracking-wider pl-1">Arquivos & Mídia</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/dashboard/files" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <FolderOpen className="w-4.5 h-4.5 text-sky-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Arquivos</span>
+                      </div>
+                    </Link>
+                    <Link href="/dashboard/videos" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <Video className="w-4.5 h-4.5 text-cyan-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Cine Vault</span>
+                      </div>
+                    </Link>
+                    <Link href="/dashboard/wallpapers" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <ImageIcon className="w-4.5 h-4.5 text-fuchsia-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Galeria UHD</span>
+                      </div>
+                    </Link>
+                    <Link href="/dashboard/torrents" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <DownloadCloud className="w-4.5 h-4.5 text-amber-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Torrents</span>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Seção Segurança & Produtividade */}
+                <div className="space-y-2">
+                  <h3 className="text-[10px] font-display font-semibold text-rose-400 uppercase tracking-wider pl-1">Segurança & Produtividade</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/dashboard/passwords" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <Key className="w-4.5 h-4.5 text-rose-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Chaveiro AES</span>
+                      </div>
+                    </Link>
+                    <Link href="/dashboard/notes" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <FileText className="w-4.5 h-4.5 text-emerald-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Notas</span>
+                      </div>
+                    </Link>
+                    <Link href="/dashboard/software" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <Cpu className="w-4.5 h-4.5 text-indigo-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Softwares</span>
+                      </div>
+                    </Link>
+                    <Link href="/dashboard/dev" onClick={() => setIsCentralOptionsOpen(false)}>
+                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
+                        <Code className="w-4.5 h-4.5 text-primary shrink-0" />
+                        <span className="text-xs font-bold text-white">DEV Central</span>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

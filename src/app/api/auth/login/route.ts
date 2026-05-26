@@ -15,23 +15,42 @@ export async function POST(request: Request) {
       );
     }
 
-    if (password !== "caio29382") {
+    let username = "";
+    if (password === "caio29382") {
+      username = "caio";
+    } else if (password === "esposa29382" || password === "giselle29382") {
+      username = "giselle";
+    } else {
       return NextResponse.json(
         { error: "Senha de acesso incorreta." },
         { status: 400 }
       );
     }
 
-    // Auto-create user 'caio' if missing
+    // Auto-create user if missing
     let user = await db.user.findUnique({
-      where: { username: "caio" },
+      where: { username },
     });
 
+    if (!user && username === "giselle") {
+      // If looking for "giselle", check if "esposa" exists and rename it
+      const oldEsposa = await db.user.findUnique({
+        where: { username: "esposa" },
+      });
+      if (oldEsposa) {
+        user = await db.user.update({
+          where: { username: "esposa" },
+          data: { username: "giselle" },
+        });
+        console.log("Migrated user 'esposa' to 'giselle'");
+      }
+    }
+
     if (!user) {
-      const passwordHash = await bcrypt.hash("caio29382", 10);
+      const passwordHash = await bcrypt.hash(password, 10);
       user = await db.user.create({
         data: {
-          username: "caio",
+          username,
           passwordHash,
           xp: 0,
           level: 1,

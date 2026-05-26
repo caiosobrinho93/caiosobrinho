@@ -17,7 +17,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     const body = document.body;
     
     // Remove old classes
-    body.classList.remove("theme-violet", "theme-cyan", "theme-emerald", "theme-rose", "theme-amber");
+    body.classList.remove("theme-violet", "theme-cyan", "theme-emerald", "theme-rose", "theme-amber", "theme-limon", "theme-carbon");
     body.classList.remove("density-compact", "density-normal", "density-spacious");
     
     // Add current classes

@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { awardXP } from "@/lib/gamification";
 
 export async function GET(request: Request) {
   const session = await getSession();
@@ -15,11 +16,17 @@ export async function GET(request: Request) {
   try {
     const videos = await db.video.findMany({
       where: {
-        userId: session.userId,
         AND: [
           search ? { title: { contains: search } } : {},
           category ? { category: { equals: category } } : {},
         ],
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -103,6 +110,9 @@ export async function POST(request: Request) {
         duration,
       },
     });
+
+    // Award +40 XP for video creation
+    await awardXP(session.userId, 40);
 
     return NextResponse.json(video);
   } catch (error) {

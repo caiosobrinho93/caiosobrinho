@@ -36,17 +36,17 @@ export interface SettingsState {
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
-      accentColor: "violet",
-      density: "normal",
+      accentColor: "limon",
+      density: "compact",
       animationsEnabled: true,
-      themePreset: "synth-violet",
+      themePreset: "cyber-limon",
       customTheme: {
-        bgGradient: "bg-preset-synth",
+        bgGradient: "bg-preset-limon",
         bgImage: "",
-        neonIntensity: "medium",
+        neonIntensity: "high",
         animationSpeed: "normal",
-        accentColor: "violet",
-        gridStyle: "fine",
+        accentColor: "limon",
+        gridStyle: "dots",
       },
       setAccentColor: (color) => set({ accentColor: color }),
       setDensity: (density) => set({ density: density }),

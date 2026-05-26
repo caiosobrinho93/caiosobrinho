@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useStatsStore } from "@/stores/statsStore";
+import { useDataStore } from "@/stores/dataStore";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Image as ImageIcon,
@@ -24,13 +26,15 @@ interface WallpaperItem {
   width: number | null;
   height: number | null;
   isFavorite: boolean;
+  user?: {
+    username: string;
+  };
 }
 
 export default function WallpapersPage() {
-  const [wallpapers, setWallpapers] = useState<WallpaperItem[]>([]);
+  const { data: wallpapers, isLoading } = useDataStore(s => s.wallpapers);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
-  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeWallpaper, setActiveWallpaper] = useState<WallpaperItem | null>(null);
 
@@ -41,23 +45,8 @@ export default function WallpapersPage() {
   const [formUrl, setFormUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchWallpapers = async () => {
-    try {
-      setIsLoading(true);
-      const res = await fetch("/api/wallpapers");
-      if (res.ok) {
-        const data = await res.json();
-        setWallpapers(data);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchWallpapers();
+    useDataStore.getState().fetchWallpapers();
   }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -83,11 +72,15 @@ export default function WallpapersPage() {
       });
 
       if (res.ok) {
+        const newWallpaper = await res.json();
         setFormTitle("");
         setFormUrl("");
         setFormFile(null);
         setIsModalOpen(false);
-        fetchWallpapers();
+        
+        // Atualiza a store global localmente
+        useStatsStore.getState().addWallpaper();
+        useDataStore.getState().addWallpaper(newWallpaper);
       } else {
         const err = await res.json();
         alert(err.error || "Erro ao adicionar wallpaper");
@@ -108,12 +101,14 @@ export default function WallpapersPage() {
         body: JSON.stringify({ isFavorite: !item.isFavorite }),
       });
       if (res.ok) {
-        setWallpapers((prev) =>
-          prev.map((w) => (w.id === item.id ? { ...w, isFavorite: !w.isFavorite } : w))
-        );
+        const nextFav = !item.isFavorite;
         if (activeWallpaper?.id === item.id) {
-          setActiveWallpaper((prev) => prev ? { ...prev, isFavorite: !prev.isFavorite } : null);
+          setActiveWallpaper((prev) => prev ? { ...prev, isFavorite: nextFav } : null);
         }
+
+        // Atualiza a store global localmente
+        useStatsStore.getState().toggleWallpaperFavorite(item.id, nextFav, item.title, item.user?.username || "caio");
+        useDataStore.getState().toggleWallpaperFavorite(item.id, !item.isFavorite);
       }
     } catch (err) {
       console.error(err);
@@ -127,10 +122,13 @@ export default function WallpapersPage() {
     try {
       const res = await fetch(`/api/wallpapers/${id}`, { method: "DELETE" });
       if (res.ok) {
-        setWallpapers((prev) => prev.filter((w) => w.id !== id));
         if (activeWallpaper?.id === id) {
           setActiveWallpaper(null);
         }
+
+        // Atualiza a store global localmente
+        useStatsStore.getState().deleteWallpaper(id);
+        useDataStore.getState().deleteWallpaper(id);
       }
     } catch (err) {
       console.error(err);
@@ -150,115 +148,120 @@ export default function WallpapersPage() {
     });
     return columns;
   };
-
   return (
     <div className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <ImageIcon className="w-6 h-6 text-primary" />
-            Galeria UHD
+          <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-2">
+            <ImageIcon className="w-5 h-5 text-primary" />
+            GALERIA UHD
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Selecione e baixe papéis de parede widescreen de alta definição para as suas telas.
+          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+            Papéis de Parede Widescreen de Alta Definição
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
+          className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer  shrink-0"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-3.5 h-3.5" />
           Adicionar Wallpaper
         </button>
       </div>
-
+ 
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center bg-card/40 border border-border p-0.5 rounded-lg shrink-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="flex items-center bg-card/25 border border-border p-0.5 rounded-sm shrink-0 ">
           <button
             onClick={() => setActiveTab("all")}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
+            className={`px-3 py-1.5 rounded-sm text-[9px] font-bold uppercase tracking-wider cursor-pointer transition-colors ${
               activeTab === "all" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
             }`}
           >
-            Todos os Wallpapers
+            Todos
           </button>
           <button
             onClick={() => setActiveTab("favorites")}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
+            className={`px-3 py-1.5 rounded-sm text-[9px] font-bold uppercase tracking-wider cursor-pointer transition-colors ${
               activeTab === "favorites" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
             }`}
           >
             Favoritos
           </button>
         </div>
-
-        <div className="relative w-full sm:w-72">
-          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-muted-foreground pointer-events-none">
-            <Search className="w-4 h-4" />
+ 
+        <div className="relative w-full sm:w-72 ">
+          <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-muted-foreground pointer-events-none">
+            <Search className="w-3 h-3 text-primary" />
           </span>
           <input
             type="text"
             placeholder="Buscar por título..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-card/40 border border-border/85 rounded-xl text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
+            className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground text-[9px] focus:outline-none focus:border-primary transition-all"
           />
         </div>
       </div>
 
       {/* Grid de Papéis de Parede */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 animate-pulse">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 animate-pulse">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-card/60 border border-border/80 rounded-2xl h-72" />
+            <div key={i} className="bg-card/30 border border-border/80 rounded-sm h-72" />
           ))}
         </div>
       ) : filteredWallpapers.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 items-start">
           {[0, 1, 2].map((colIndex) => (
-            <div key={colIndex} className="flex flex-col gap-4">
+            <div key={colIndex} className="flex flex-col gap-3.5 ">
               {getMasonryColumns(filteredWallpapers, 3)[colIndex]?.map((item) => (
                 <motion.div
                   key={item.id}
                   layoutId={item.id}
                   onClick={() => setActiveWallpaper(item)}
                   whileTap={{ scale: 0.97 }}
-                  className="bg-card/55 border border-border rounded-2xl overflow-hidden cursor-pointer shadow-sm group relative hover-card-effects"
+                  className="bg-card/25 border border-border rounded-sm overflow-hidden cursor-pointer shadow-sm group relative hover-card-effects"
                 >
-
                   <img
                     src={item.url}
                     alt={item.title}
                     className="w-full h-auto object-cover max-h-[420px]"
                     loading="lazy"
                   />
-
+ 
                   {/* Overlay escuro em foco */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-between duration-300 z-10">
-                    <div className="flex justify-end gap-1.5">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-between duration-300 z-10">
+                    <div className="flex justify-end gap-1 ">
                       <button
                         onClick={(e) => handleToggleFavorite(item, e)}
-                        className="p-1.5 rounded-lg bg-black/40 hover:bg-black/60 border border-white/5 text-white transition-colors cursor-pointer"
+                        className="p-1 rounded-sm bg-black/45 hover:bg-black/75 border border-white/5 text-white transition-colors cursor-pointer"
                       >
-                        <Star className={`w-3.5 h-3.5 ${item.isFavorite ? "text-primary fill-current" : ""}`} />
+                        <Star className={`w-3 h-3 ${item.isFavorite ? "text-primary fill-current" : ""}`} />
                       </button>
                       <button
                         onClick={(e) => handleDelete(item.id, e)}
-                        className="p-1.5 rounded-lg bg-black/40 hover:bg-black/60 border border-white/5 text-white hover:text-destructive transition-colors cursor-pointer"
+                        className="p-1 rounded-sm bg-black/45 hover:bg-black/75 border border-white/5 text-white hover:text-destructive transition-colors cursor-pointer"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
-
+ 
                     <div className="flex items-center justify-between">
-                      <div className="min-w-0">
-                        <span className="text-xs font-bold text-white truncate block">{item.title}</span>
-                        <span className="text-[10px] text-muted-foreground block mt-0.5">Widescreen UHD</span>
+                      <div className="min-w-0 ">
+                        <span className="text-[11px] font-bold text-white truncate block uppercase tracking-wide">{item.title}</span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-[8px] text-muted-foreground block">WIDESCREEN UHD</span>
+                          {item.user?.username && (
+                            <span className={`user-tag user-tag-${item.user.username}`}>
+                              {item.user.username === "caio" ? "Caio" : "Giselle"}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="p-1.5 rounded-lg bg-primary text-white shrink-0 shadow-md">
-                        <Maximize2 className="w-3.5 h-3.5" />
+                      <div className="p-1 rounded-sm bg-primary text-black shrink-0 shadow-md">
+                        <Maximize2 className="w-3 h-3" />
                       </div>
                     </div>
                   </div>

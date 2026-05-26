@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { uploadToSupabase } from "@/lib/storage";
+import { awardXP } from "@/lib/gamification";
 
 export async function GET() {
   const session = await getSession();
@@ -9,8 +10,14 @@ export async function GET() {
 
   try {
     const softwareList = await db.software.findMany({
-      where: { userId: session.userId },
       orderBy: { name: "asc" },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
     });
     return NextResponse.json(softwareList);
   } catch (error) {
@@ -87,6 +94,9 @@ export async function POST(request: Request) {
         notes,
       },
     });
+
+    // Award +30 XP for software creation
+    await awardXP(session.userId, 30);
 
     return NextResponse.json(software);
   } catch (error: any) {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { awardXP } from "@/lib/gamification";
 
 export async function GET() {
   const session = await getSession();
@@ -8,8 +9,14 @@ export async function GET() {
 
   try {
     const notes = await db.note.findMany({
-      where: { userId: session.userId },
       orderBy: { updatedAt: "desc" },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
     });
     return NextResponse.json(notes);
   } catch (error) {
@@ -37,6 +44,9 @@ export async function POST(request: Request) {
         tags: tags || "",
       },
     });
+
+    // Award +20 XP for note creation
+    await awardXP(session.userId, 20);
 
     return NextResponse.json(note);
   } catch (error) {
