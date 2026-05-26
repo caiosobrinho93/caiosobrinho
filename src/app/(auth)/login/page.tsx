@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Lock, Loader2, ChevronRight, ArrowLeft, Gamepad2, User, UserCheck } from "lucide-react";
+import { Eye, EyeOff, Lock, Loader2, ChevronRight, ArrowLeft, Gamepad2, Fingerprint } from "lucide-react";
+import { useStatsStore } from "@/stores/statsStore";
+import { useDataStore } from "@/stores/dataStore";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,6 +14,35 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
+
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [hasPasskey, setHasPasskey] = useState(false);
+  const [isAuthenticatingBiometric, setIsAuthenticatingBiometric] = useState(false);
+
+  useEffect(() => {
+    setIsBiometricSupported(!!window.PublicKeyCredential);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedUser) {
+      setHasPasskey(false);
+      return;
+    }
+
+    const checkPasskeyStatus = async () => {
+      try {
+        const response = await fetch(`/api/auth/webauthn/status?username=${selectedUser}`);
+        if (response.ok) {
+          const result = await response.json();
+          setHasPasskey(!!result.hasPasskey);
+        }
+      } catch (err) {
+        console.error("Erro ao verificar status de passkey:", err);
+      }
+    };
+
+    checkPasskeyStatus();
+  }, [selectedUser]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +58,7 @@ export default function LoginPage() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, username: selectedUser }),
       });
 
       const result = await response.json();
@@ -36,12 +67,92 @@ export default function LoginPage() {
         throw new Error(result.error || "Senha incorreta.");
       }
 
+      // Limpa os stores locais para evitar vazamento de estado entre sessões Caio/Giselle
+      useStatsStore.setState({ data: null, hasLoaded: false, isLoading: false, error: null });
+      useDataStore.setState({
+        bills: { data: [], hasLoaded: false, isLoading: false },
+        receipts: { data: [], hasLoaded: false, isLoading: false },
+        notes: { data: [], hasLoaded: false, isLoading: false },
+        passwords: { data: [], hasLoaded: false, isLoading: false },
+        videos: { data: [], hasLoaded: false, isLoading: false, lastQuery: "" },
+        wallpapers: { data: [], hasLoaded: false, isLoading: false },
+        software: { data: [], hasLoaded: false, isLoading: false },
+        torrents: { data: [], hasLoaded: false, isLoading: false },
+        filesCache: {},
+        dev: { data: [], hasLoaded: false, isLoading: false }
+      });
+
       router.push("/dashboard");
       router.refresh();
     } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleBiometricLogin = async () => {
+    if (!selectedUser) return;
+    setIsAuthenticatingBiometric(true);
+    setError(null);
+
+    try {
+      // 1. Obter opções de login (challenge) do backend
+      const optionsRes = await fetch("/api/auth/webauthn/login/options", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: selectedUser }),
+      });
+
+      const options = await optionsRes.json();
+
+      if (!optionsRes.ok) {
+        throw new Error(options.error || "Erro ao obter desafio de biometria.");
+      }
+
+      // 2. Chamar o navegador/dispositivo para autenticação
+      const { startAuthentication } = await import("@simplewebauthn/browser");
+      const assertion = await startAuthentication({ optionsJSON: options });
+
+      // 3. Enviar a asserção resultante para verificação no backend
+      const verifyRes = await fetch("/api/auth/webauthn/login/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(assertion),
+      });
+
+      const verifyResult = await verifyRes.json();
+
+      if (!verifyRes.ok) {
+        throw new Error(verifyResult.error || "Falha na verificação da biometria.");
+      }
+
+      // 4. Sucesso! Limpar stores locais para evitar vazamento de estado
+      useStatsStore.setState({ data: null, hasLoaded: false, isLoading: false, error: null });
+      useDataStore.setState({
+        bills: { data: [], hasLoaded: false, isLoading: false },
+        receipts: { data: [], hasLoaded: false, isLoading: false },
+        notes: { data: [], hasLoaded: false, isLoading: false },
+        passwords: { data: [], hasLoaded: false, isLoading: false },
+        videos: { data: [], hasLoaded: false, isLoading: false, lastQuery: "" },
+        wallpapers: { data: [], hasLoaded: false, isLoading: false },
+        software: { data: [], hasLoaded: false, isLoading: false },
+        torrents: { data: [], hasLoaded: false, isLoading: false },
+        filesCache: {},
+        dev: { data: [], hasLoaded: false, isLoading: false }
+      });
+
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err: any) {
+      console.error("Erro na biometria:", err);
+      if (err.name === "NotAllowedError") {
+        setError("Autenticação biométrica cancelada ou não autorizada.");
+      } else {
+        setError(err.message || "Erro na autenticação por biometria.");
+      }
+    } finally {
+      setIsAuthenticatingBiometric(false);
     }
   };
 
@@ -108,7 +219,7 @@ export default function LoginPage() {
                     onClick={() => handleSelectUser("caio")}
                     className="flex flex-col items-center justify-center p-6 bg-[#161b22]/50 border border-cyan-500/20 hover:border-cyan-400 rounded-2xl transition-all duration-300 group hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] cursor-pointer"
                   >
-                    <div className="w-16 h-16 rounded-full overflow-hidden bg-cyan-950/40 border border-cyan-400/40 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 relative shrink-0">
+                    <div className="w-16 h-16 rounded-full overflow-hidden bg-cyan-955/40 border border-cyan-400/40 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 relative shrink-0">
                       <img src="/avatar-caio.png" className="w-full h-full object-cover" alt="Caio" />
                       <span className="absolute -bottom-1 px-1.5 py-0.5 bg-cyan-500 text-[8px] font-black rounded uppercase text-black leading-none font-sans">
                         P1
@@ -127,7 +238,7 @@ export default function LoginPage() {
                     onClick={() => handleSelectUser("giselle")}
                     className="flex flex-col items-center justify-center p-6 bg-[#161b22]/50 border border-fuchsia-500/20 hover:border-fuchsia-400 rounded-2xl transition-all duration-300 group hover:shadow-[0_0_20px_rgba(217,70,239,0.15)] cursor-pointer"
                   >
-                    <div className="w-16 h-16 rounded-full overflow-hidden bg-fuchsia-950/40 border border-fuchsia-400/40 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 relative shrink-0">
+                    <div className="w-16 h-16 rounded-full overflow-hidden bg-fuchsia-955/40 border border-fuchsia-400/40 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 relative shrink-0">
                       <img src="/avatar-giselle.png" className="w-full h-full object-cover" alt="Giselle" />
                       <span className="absolute -bottom-1 px-1.5 py-0.5 bg-fuchsia-500 text-[8px] font-black rounded uppercase text-black leading-none font-sans">
                         P2
@@ -181,7 +292,7 @@ export default function LoginPage() {
                 </div>
 
                 {error && (
-                  <div className="p-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive text-xs font-semibold">
+                  <div className="p-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive text-xs font-semibold animate-pulse">
                     {error}
                   </div>
                 )}
@@ -216,7 +327,7 @@ export default function LoginPage() {
 
                   <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isLoading || isAuthenticatingBiometric}
                     className={`relative w-full py-2.5 rounded-lg text-black font-extrabold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-lg cursor-pointer ${
                       selectedUser === "caio" 
                         ? "bg-cyan-400 hover:bg-cyan-300 shadow-cyan-400/10" 
@@ -235,6 +346,39 @@ export default function LoginPage() {
                       </>
                     )}
                   </button>
+
+                  {isBiometricSupported && hasPasskey && (
+                    <>
+                      <div className="flex items-center my-4">
+                        <div className="flex-1 border-t border-border/10"></div>
+                        <span className="px-3 text-[8px] font-bold text-muted-foreground uppercase tracking-widest">OU</span>
+                        <div className="flex-1 border-t border-border/10"></div>
+                      </div>
+
+                      <button
+                        type="button"
+                        disabled={isLoading || isAuthenticatingBiometric}
+                        onClick={handleBiometricLogin}
+                        className={`relative w-full py-2.5 rounded-lg text-black font-extrabold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-lg cursor-pointer ${
+                          selectedUser === "caio" 
+                            ? "bg-cyan-500 hover:bg-cyan-400 shadow-cyan-500/20" 
+                            : "bg-fuchsia-500 hover:bg-fuchsia-400 shadow-fuchsia-500/20"
+                        }`}
+                      >
+                        {isAuthenticatingBiometric ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            Iniciando sensor...
+                          </>
+                        ) : (
+                          <>
+                            <Fingerprint className="w-3.5 h-3.5" />
+                            Acessar via Biometria
+                          </>
+                        )}
+                      </button>
+                    </>
+                  )}
                 </form>
               </motion.div>
             )}

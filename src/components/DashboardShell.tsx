@@ -32,6 +32,8 @@ import {
 import CommandPalette from "./CommandPalette";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { APP_VERSION } from "@/lib/version";
+import { useStatsStore } from "@/stores/statsStore";
+import { useDataStore } from "@/stores/dataStore";
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -141,6 +143,21 @@ export default function DashboardShell({ children, username }: DashboardShellPro
     try {
       const response = await fetch("/api/auth/logout", { method: "POST" });
       if (response.ok) {
+        // Reset stores to clear cached session data
+        useStatsStore.setState({ data: null, hasLoaded: false, isLoading: false, error: null });
+        useDataStore.setState({
+          bills: { data: [], hasLoaded: false, isLoading: false },
+          receipts: { data: [], hasLoaded: false, isLoading: false },
+          notes: { data: [], hasLoaded: false, isLoading: false },
+          passwords: { data: [], hasLoaded: false, isLoading: false },
+          videos: { data: [], hasLoaded: false, isLoading: false, lastQuery: "" },
+          wallpapers: { data: [], hasLoaded: false, isLoading: false },
+          software: { data: [], hasLoaded: false, isLoading: false },
+          torrents: { data: [], hasLoaded: false, isLoading: false },
+          filesCache: {},
+          dev: { data: [], hasLoaded: false, isLoading: false }
+        });
+        
         router.push("/login");
         router.refresh();
       }

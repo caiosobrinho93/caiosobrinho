@@ -180,7 +180,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchStats();
+    fetchStats(true);
     fetchRewards();
   }, []);
 

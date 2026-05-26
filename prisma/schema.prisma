@@ -29,6 +29,7 @@ model User {
   receipts      Receipt[]
   bills         Bill[]
   bankAccounts  BankAccount[]
+  authenticators Authenticator[]
 }
 
 model Video {
@@ -250,4 +251,18 @@ model Reward {
   claimedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+model Authenticator {
+  id                   String   @id @default(uuid())
+  credentialID         String   @unique
+  credentialPublicKey  String   // Armazenado como base64
+  counter              BigInt   @default(0)
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?  // lista de transportes separados por virgula
+  createdAt            DateTime @default(now())
+  
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

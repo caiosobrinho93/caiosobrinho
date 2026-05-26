@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSettingsStore } from "@/stores/settingsStore";
+import { useStatsStore } from "@/stores/statsStore";
 import {
   Settings,
   Palette,
@@ -13,7 +14,8 @@ import {
   Loader2,
   Sparkles,
   Info,
-  Database
+  Database,
+  Fingerprint
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -35,9 +37,86 @@ export default function SettingsPage() {
   const [isImporting, setIsImporting] = useState(false);
   const [isWiping, setIsWiping] = useState(false);
 
+  // Estados da Biometria WebAuthn
+  const [hasBiometrics, setHasBiometrics] = useState(false);
+  const [isBiometricsSupported, setIsBiometricsSupported] = useState(false);
+  const [isRegisteringBiometrics, setIsRegisteringBiometrics] = useState(false);
+  const [biometricsError, setBiometricsError] = useState<string | null>(null);
+  const [biometricsSuccess, setBiometricsSuccess] = useState(false);
+
+  const statsData = useStatsStore((s) => s.data);
+  const currentUser = statsData?.profile?.username || "";
+
   useEffect(() => {
     setMounted(true);
+    useStatsStore.getState().fetchStats();
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    setIsBiometricsSupported(!!window.PublicKeyCredential);
+    
+    if (!currentUser) return;
+
+    const checkBiometricStatus = async () => {
+      try {
+        const res = await fetch(`/api/auth/webauthn/status?username=${currentUser.toLowerCase()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setHasBiometrics(!!data.hasPasskey);
+        }
+      } catch (err) {
+        console.error("Erro ao verificar status biométrico:", err);
+      }
+    };
+
+    checkBiometricStatus();
+  }, [mounted, currentUser]);
+
+  const handleRegisterBiometrics = async () => {
+    setIsRegisteringBiometrics(true);
+    setBiometricsError(null);
+    setBiometricsSuccess(false);
+
+    try {
+      // 1. Obter opções de registro (challenge) do backend
+      const optionsRes = await fetch("/api/auth/webauthn/register/options");
+      const options = await optionsRes.json();
+
+      if (!optionsRes.ok) {
+        throw new Error(options.error || "Erro ao gerar opções de registro.");
+      }
+
+      // 2. Chamar o navegador/dispositivo para registrar
+      const { startRegistration } = await import("@simplewebauthn/browser");
+      const credential = await startRegistration({ optionsJSON: options });
+
+      // 3. Enviar o resultado da credencial para verificação no backend
+      const verifyRes = await fetch("/api/auth/webauthn/register/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credential),
+      });
+
+      const verifyResult = await verifyRes.json();
+
+      if (!verifyRes.ok) {
+        throw new Error(verifyResult.error || "Falha na verificação da biometria.");
+      }
+
+      setBiometricsSuccess(true);
+      setHasBiometrics(true);
+    } catch (err: any) {
+      console.error("Erro ao cadastrar biometria:", err);
+      if (err.name === "NotAllowedError") {
+        setBiometricsError("Cadastro biométrico cancelado ou não autorizado pelo usuário.");
+      } else {
+        setBiometricsError(err.message || "Erro desconhecido ao cadastrar biometria.");
+      }
+    } finally {
+      setIsRegisteringBiometrics(false);
+    }
+  };
 
   if (!mounted) {
     return (
@@ -510,7 +589,71 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* 2. Backup e Banco de Dados */}
+      {/* 2. Entrada por Biometria */}
+      <div className="glass-panel rounded-sm p-5 space-y-5">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2 border-b border-border/60 pb-3">
+          <Fingerprint className="w-4 h-4 text-primary" />
+          Segurança Biométrica (Passkeys)
+        </h2>
+
+        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-sm flex items-start gap-3">
+          <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+          <p className="text-xs text-muted-foreground leading-normal font-sans">
+            Cadastre a biometria (impressão digital, reconhecimento facial ou desbloqueio de tela) deste dispositivo para acessar o Nexus Vault de forma instantânea sem precisar digitar sua senha.
+          </p>
+        </div>
+
+        {biometricsError && (
+          <div className="p-3 text-[11px] rounded-sm border border-destructive/20 bg-destructive/10 text-destructive font-semibold">
+            {biometricsError}
+          </div>
+        )}
+
+        {biometricsSuccess && (
+          <div className="p-3 text-[11px] rounded-sm border border-primary/20 bg-primary/10 text-primary font-semibold">
+            Biometria cadastrada com sucesso! Agora você pode entrar com biometria na tela de login a partir deste dispositivo.
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-muted/10 border border-border rounded-sm">
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-xs tracking-widest text-white leading-tight">
+              Status da Biometria
+            </h3>
+            <p className="text-[11px] mt-1 leading-normal font-sans">
+              {!isBiometricsSupported ? (
+                <span className="text-destructive font-semibold">Este navegador ou dispositivo não suporta biometria/passkeys.</span>
+              ) : hasBiometrics ? (
+                <span className="text-primary font-semibold">Biometria registrada e ativa para sua conta neste dispositivo.</span>
+              ) : (
+                <span className="text-muted-foreground">Nenhuma biometria ativa registrada no momento.</span>
+              )}
+            </p>
+          </div>
+          
+          {isBiometricsSupported && (
+            <button
+              onClick={handleRegisterBiometrics}
+              disabled={isRegisteringBiometrics}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-black hover:bg-primary/90 text-xs font-bold rounded-sm transition-colors cursor-pointer shrink-0 disabled:opacity-50 font-sans"
+            >
+              {isRegisteringBiometrics ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Registrando...
+                </>
+              ) : (
+                <>
+                  <Fingerprint className="w-3.5 h-3.5" />
+                  {hasBiometrics ? "Registrar Outro Dispositivo" : "Cadastrar Biometria"}
+                </>
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 3. Backup e Banco de Dados */}
       <div className="glass-panel rounded-sm p-5 space-y-5">
         <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2 border-b border-border/60 pb-3">
           <Database className="w-4 h-4 text-primary" />
@@ -556,7 +699,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* 3. Zona de Perigo */}
+      {/* 4. Zona de Perigo */}
       <div className="bg-card/55 backdrop-blur-xl border border-destructive/20 rounded-sm p-5 space-y-4">
         <h2 className="text-sm font-bold text-destructive uppercase tracking-wider flex items-center gap-2 border-b border-destructive/10 pb-3">
           <Trash2 className="w-4 h-4 text-destructive" />

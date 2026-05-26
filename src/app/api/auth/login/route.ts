@@ -6,7 +6,7 @@ import { SESSION_COOKIE_NAME } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
-    const { password } = await request.json();
+    const { password, username: targetUsername } = await request.json();
 
     if (!password) {
       return NextResponse.json(
@@ -23,6 +23,14 @@ export async function POST(request: Request) {
     } else {
       return NextResponse.json(
         { error: "Senha de acesso incorreta." },
+        { status: 400 }
+      );
+    }
+
+    // Valida se a senha digitada corresponde ao jogador selecionado
+    if (targetUsername && targetUsername.toLowerCase() !== username) {
+      return NextResponse.json(
+        { error: `Senha incorreta para o jogador ${targetUsername === "caio" ? "Caio" : "Giselle"}.` },
         { status: 400 }
       );
     }
