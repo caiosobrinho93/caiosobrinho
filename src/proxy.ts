@@ -4,11 +4,12 @@ import { verifySessionToken } from "./lib/jwt";
 
 const SESSION_COOKIE_NAME = "nexus_vault_session";
 
-export async function middleware(request: NextRequest) {
+// Função do proxy conforme convenção do Next.js 16
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 
-  // Verify session
+  // Verificar sessão ativa
   let hasSession = false;
   if (token) {
     const session = await verifySessionToken(token);
@@ -17,7 +18,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Route protection rules
+  // Regras de proteção de rotas
   if (pathname.startsWith("/dashboard") || pathname === "/") {
     if (!hasSession) {
       const loginUrl = new URL("/login", request.url);
