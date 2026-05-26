@@ -334,7 +334,7 @@ export default function SoftwarePage() {
           </div>
         ) : (
           /* Visualização em Lista */
-          <div className="bg-card/55 border border-border rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-card/55 border border-border rounded-2xl overflow-x-auto shadow-sm">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-border text-muted-foreground font-semibold uppercase tracking-wider bg-muted/20">
@@ -360,7 +360,7 @@ export default function SoftwarePage() {
                           <span className="font-semibold text-white leading-tight group-hover:text-primary transition-colors">{item.name}</span>
                           <span className="text-[9px] font-mono text-primary font-semibold">v{item.version}</span>
                         </div>
-                        <span className="text-[10px] text-muted-foreground mt-0.5 block truncate max-w-72 font-medium">{item.description}</span>
+                        <span className="text-[10px] text-muted-foreground mt-0.5 block truncate max-w-[120px] xs:max-w-[180px] sm:max-w-72 font-medium">{item.description}</span>
                       </div>
                     </td>
                     <td className="p-4 text-white font-semibold">{item.platform}</td>

@@ -497,7 +497,7 @@ export default function FilesPage() {
           </div>
         ) : (
           /* Visualização em Lista */
-          <div className="bg-card/55 backdrop-blur-xl border border-border rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-card/55 backdrop-blur-xl border border-border rounded-2xl overflow-x-auto shadow-sm">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-border/80 text-muted-foreground font-semibold uppercase tracking-wider bg-muted/20">
@@ -517,7 +517,7 @@ export default function FilesPage() {
                   >
                     <td className="p-4 flex items-center gap-3 font-semibold text-white">
                       <Folder className="w-4.5 h-4.5 text-primary fill-primary/5 shrink-0" />
-                      <span className="truncate max-w-64">{folder.name}</span>
+                      <span className="truncate max-w-[120px] xs:max-w-[160px] sm:max-w-64">{folder.name}</span>
                       {folder.user?.username && (
                         <span className={`user-tag user-tag-${folder.user.username}`}>
                           {folder.user.username === "caio" ? "Caio" : "Giselle"}
@@ -551,7 +551,7 @@ export default function FilesPage() {
                     <td className="p-4 font-semibold text-white">
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="shrink-0">{getFileIcon(file.mimeType)}</div>
-                        <span className="truncate max-w-64">{file.name}</span>
+                        <span className="truncate max-w-[120px] xs:max-w-[160px] sm:max-w-64">{file.name}</span>
                         {file.user?.username && (
                           <span className={`user-tag user-tag-${file.user.username}`}>
                             {file.user.username === "caio" ? "Caio" : "Giselle"}

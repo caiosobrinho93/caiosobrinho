@@ -69,6 +69,9 @@ function NotesContent() {
   
   // Status de salvamento automático
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
+  
+  // Responsividade no mobile
+  const [showSidebarOnMobile, setShowSidebarOnMobile] = useState(true);
 
   useEffect(() => {
     const alreadyLoaded = useDataStore.getState().notes.hasLoaded;
@@ -95,6 +98,7 @@ function NotesContent() {
     setEditCategory(note.category || "Geral");
     setEditTags(note.tags || "");
     setSaveStatus("saved");
+    setShowSidebarOnMobile(false); // Esconde a lista de notas no celular ao selecionar uma nota
   };
 
   // Gravar edições via PATCH
@@ -176,6 +180,7 @@ function NotesContent() {
         useDataStore.getState().deleteNote(id);
         if (selectedNote?.id === id) {
           setSelectedNote(null);
+          setShowSidebarOnMobile(true);
         }
         
         // Atualiza a store global localmente
@@ -246,7 +251,7 @@ function NotesContent() {
     <div className="flex h-[calc(100vh-140px)] border border-border bg-card/45 backdrop-blur-xl rounded-sm overflow-hidden shadow-sm">
       
       {/* PAINEL LATERAL: Listagem de notas */}
-      <div className="w-80 border-r border-border flex flex-col h-full bg-card/30 shrink-0">
+      <div className={`w-full md:w-80 border-r border-border flex flex-col h-full bg-card/30 shrink-0 ${showSidebarOnMobile ? "flex" : "hidden md:flex"}`}>
         <div className="p-4 border-b border-border flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
@@ -328,14 +333,23 @@ function NotesContent() {
       </div>
 
       {/* ÁREA DO EDITOR */}
-      <div className="flex-1 flex flex-col h-full bg-card/10 overflow-hidden">
+      <div className={`flex-1 flex flex-col h-full bg-card/10 overflow-hidden ${!showSidebarOnMobile ? "flex" : "hidden md:flex"}`}>
         {selectedNote ? (
           <div className="flex-1 flex flex-col h-full overflow-hidden">
             
             {/* Cabeçalho do Editor */}
-            <div className="h-14 border-b border-border px-5 flex items-center justify-between shrink-0 bg-muted/10">
-              {/* Write/Preview toggle tab */}
-              <div className="flex bg-muted/40 border border-border p-0.5 rounded-sm shrink-0">
+            <div className="h-14 border-b border-border px-4 md:px-5 flex items-center justify-between shrink-0 bg-muted/10 gap-2">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <button
+                  type="button"
+                  onClick={() => setShowSidebarOnMobile(true)}
+                  className="md:hidden p-1.5 rounded-sm border border-border text-muted-foreground hover:text-white shrink-0"
+                  title="Voltar para lista"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                </button>
+                {/* Write/Preview toggle tab */}
+                <div className="flex bg-muted/40 border border-border p-0.5 rounded-sm shrink-0">
                 <button
                   onClick={() => setActiveTab("write")}
                   className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
@@ -355,6 +369,7 @@ function NotesContent() {
                   Visualizar
                 </button>
               </div>
+            </div>
 
               {/* Status e Ações */}
               <div className="flex items-center gap-3">

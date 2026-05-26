@@ -340,7 +340,7 @@ export default function TorrentsPage() {
                 <div className="flex justify-between items-start gap-2.5">
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[120px]">
+                      <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[120px] xs:max-w-[160px] sm:max-w-[200px] md:max-w-full">
                         {item.title}
                       </h3>
                       {item.user?.username && (
