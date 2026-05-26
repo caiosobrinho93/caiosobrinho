@@ -223,52 +223,80 @@ export default function TorrentsPage() {
           ))}
         </div>
       ) : filteredTorrents.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {filteredTorrents.map((item) => {
-            return (
+        <>
+          {/* MOBILE: compact list rows */}
+          <div className="sm:hidden flex flex-col gap-2">
+            {filteredTorrents.map((item) => (
               <motion.div
                 key={item.id}
                 onClick={() => setSelectedTorrent(item)}
-                whileTap={{ scale: 0.97 }}
-                className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-sm p-4.5 flex flex-col justify-between h-28 relative overflow-hidden hover-card-effects"
+                whileTap={{ scale: 0.99 }}
+                className="flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all"
+                style={{ maxHeight: 80 }}
               >
-                {/* Linha superior */}
-                <div className="flex justify-between items-start gap-2.5">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[120px] xs:max-w-[160px] sm:max-w-[200px] md:max-w-full">
-                        {item.title}
-                      </h3>
-                      {item.user?.username && (
-                        <span className={`user-tag user-tag-${item.user.username}`}>
-                          {item.user.username === "caio" ? "Caio" : "Giselle"}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[9px] text-muted-foreground font-mono bg-muted/60 border border-border/60 px-1.5 py-0.5 rounded inline-block mt-1 font-semibold">
-                      {item.size}
-                    </span>
-                  </div>
-                  {/* Ponto Neon de Status */}
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_8px_#10b981]" />
-                    <span className="text-[9px] font-bold text-emerald uppercase hide-mobile font-display tracking-wider">
-                      Disponível
-                    </span>
-                  </div>
+                <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                  <DownloadCloud className="w-4 h-4 text-primary" />
                 </div>
-
-                {/* Info do Arquivo */}
-                <div className="text-[10px] text-muted-foreground flex justify-between items-center mt-3">
-                  <span className="font-semibold text-white/50">Clique para gerenciar arquivo</span>
-                  <span className="font-mono text-emerald font-bold flex items-center gap-0.5">
-                    PC Link
-                  </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-white truncate leading-tight">{item.title}</p>
+                  <p className="text-[10px] text-muted-foreground leading-tight mt-0.5 font-mono">{item.size}</p>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]" />
+                  <span className="text-[9px] font-bold text-emerald-400 uppercase">OK</span>
                 </div>
               </motion.div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+
+          {/* DESKTOP: original card grid */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {filteredTorrents.map((item) => {
+              return (
+                <motion.div
+                  key={item.id}
+                  onClick={() => setSelectedTorrent(item)}
+                  whileTap={{ scale: 0.97 }}
+                  className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-sm p-4.5 flex flex-col justify-between h-28 relative overflow-hidden hover-card-effects"
+                >
+                  {/* Linha superior */}
+                  <div className="flex justify-between items-start gap-2.5">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[120px] xs:max-w-[160px] sm:max-w-[200px] md:max-w-full">
+                          {item.title}
+                        </h3>
+                        {item.user?.username && (
+                          <span className={`user-tag user-tag-${item.user.username}`}>
+                            {item.user.username === "caio" ? "Caio" : "Giselle"}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[9px] text-muted-foreground font-mono bg-muted/60 border border-border/60 px-1.5 py-0.5 rounded inline-block mt-1 font-semibold">
+                        {item.size}
+                      </span>
+                    </div>
+                    {/* Ponto Neon de Status */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_8px_#10b981]" />
+                      <span className="text-[9px] font-bold text-emerald uppercase hide-mobile font-display tracking-wider">
+                        Disponível
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Info do Arquivo */}
+                  <div className="text-[10px] text-muted-foreground flex justify-between items-center mt-3">
+                    <span className="font-semibold text-white/50">Clique para gerenciar arquivo</span>
+                    <span className="font-mono text-emerald font-bold flex items-center gap-0.5">
+                      PC Link
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </>
       ) : (
         <div className="py-24 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-sm">
           <DownloadCloud className="w-10 h-10 text-muted-foreground mb-3 animate-bounce" />

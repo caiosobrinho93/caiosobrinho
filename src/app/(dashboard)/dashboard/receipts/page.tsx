@@ -181,87 +181,120 @@ export default function ReceiptsPage() {
           <Loader2 className="w-6 h-6 text-primary animate-spin" />
         </div>
       ) : filteredReceipts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredReceipts.map((receipt) => (
-            <motion.div
-              key={receipt.id}
-              layout
-              onClick={() => {
-                setPreviewReceipt(receipt);
-                setActivePreviewIndex(0);
-              }}
-              className="glass-panel p-5 border border-border/60 hover:border-primary/35 hover:shadow-[0_0_15px_rgba(197,255,26,0.05)] cursor-pointer flex flex-col justify-between h-56 relative overflow-hidden transition-all duration-300 group"
-            >
-              <div className="space-y-2">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wide">
-                      {receipt.category || "Outros"}
-                    </span>
-                    <h3 className="font-semibold text-sm text-white mt-1.5 truncate" title={receipt.title}>
-                      {receipt.title}
-                    </h3>
-                  </div>
-                  <span className={`user-tag user-tag-${receipt.user.username} shrink-0`}>
-                    {receipt.user.username === "caio" ? "Caio" : "Giselle"}
-                  </span>
+        <>
+          {/* MOBILE: compact list rows (max ~80px each) */}
+          <div className="sm:hidden flex flex-col gap-2">
+            {filteredReceipts.map((receipt) => (
+              <motion.div
+                key={receipt.id}
+                layout
+                onClick={() => { setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
+                className="flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer active:scale-[0.99] transition-all"
+                style={{ maxHeight: 80 }}
+              >
+                {/* Icon */}
+                <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                  <FileCheck className="w-4 h-4 text-primary" />
                 </div>
 
-                {receipt.description && (
-                  <p className="text-xs text-muted-foreground line-clamp-2">{receipt.description}</p>
-                )}
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-white truncate leading-tight">{receipt.title}</p>
+                  <p className="text-[10px] text-muted-foreground truncate leading-tight mt-0.5">
+                    {receipt.category || "Outros"}
+                    {receipt.paymentDate ? ` · ${new Date(receipt.paymentDate).toLocaleDateString("pt-BR")}` : ""}
+                  </p>
+                </div>
 
-                <div className="pt-2 space-y-1 text-xs text-muted-foreground">
+                {/* Amount + actions */}
+                <div className="flex items-center gap-2 shrink-0">
                   {receipt.amount !== null && (
-                    <div className="flex items-center gap-1.5 text-white font-semibold">
-                      <DollarSign className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-[11px] font-bold text-primary whitespace-nowrap">
                       R$ {receipt.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </div>
-                  )}
-                  {receipt.paymentDate && (
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-primary" />
-                      Pago em: {new Date(receipt.paymentDate).toLocaleDateString("pt-BR")}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Card Footer Actions */}
-              <div className="flex items-center justify-between border-t border-border/40 pt-3 mt-4 shrink-0">
-                <span className="text-[10px] text-muted-foreground">
-                  {new Date(receipt.createdAt).toLocaleDateString("pt-BR")}
-                </span>
-                
-                <div className="flex items-center gap-2">
-                  {receipt.fileUrl && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPreviewReceipt(receipt);
-                        setActivePreviewIndex(0);
-                      }}
-                      className="p-2 rounded-xl bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 transition-all cursor-pointer flex items-center justify-center"
-                      title="Ver Comprovante"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                    </button>
+                    </span>
                   )}
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(receipt.id);
-                    }}
-                    className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all cursor-pointer flex items-center justify-center"
-                    title="Excluir Comprovante"
+                    onClick={(e) => { e.stopPropagation(); handleDelete(receipt.id); }}
+                    className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* DESKTOP: original card grid */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredReceipts.map((receipt) => (
+              <motion.div
+                key={receipt.id}
+                layout
+                onClick={() => { setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
+                className="glass-panel p-5 border border-border/60 hover:border-primary/35 hover:shadow-[0_0_15px_rgba(197,255,26,0.05)] cursor-pointer flex flex-col justify-between h-56 relative overflow-hidden transition-all duration-300 group"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wide">
+                        {receipt.category || "Outros"}
+                      </span>
+                      <h3 className="font-semibold text-sm text-white mt-1.5 truncate" title={receipt.title}>
+                        {receipt.title}
+                      </h3>
+                    </div>
+                    <span className={`user-tag user-tag-${receipt.user.username} shrink-0`}>
+                      {receipt.user.username === "caio" ? "Caio" : "Giselle"}
+                    </span>
+                  </div>
+
+                  {receipt.description && (
+                    <p className="text-xs text-muted-foreground line-clamp-2">{receipt.description}</p>
+                  )}
+
+                  <div className="pt-2 space-y-1 text-xs text-muted-foreground">
+                    {receipt.amount !== null && (
+                      <div className="flex items-center gap-1.5 text-white font-semibold">
+                        <DollarSign className="w-3.5 h-3.5 text-primary" />
+                        R$ {receipt.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </div>
+                    )}
+                    {receipt.paymentDate && (
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-primary" />
+                        Pago em: {new Date(receipt.paymentDate).toLocaleDateString("pt-BR")}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-border/40 pt-3 mt-4 shrink-0">
+                  <span className="text-[10px] text-muted-foreground">
+                    {new Date(receipt.createdAt).toLocaleDateString("pt-BR")}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {receipt.fileUrl && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
+                        className="p-2 rounded-xl bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 transition-all cursor-pointer flex items-center justify-center"
+                        title="Ver Comprovante"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDelete(receipt.id); }}
+                      className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all cursor-pointer flex items-center justify-center"
+                      title="Excluir Comprovante"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </>
       ) : (
         <div className="glass-panel p-10 text-center border border-border/50">
           <FileText className="w-10 h-10 text-muted-foreground/60 mx-auto mb-3" />

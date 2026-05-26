@@ -418,18 +418,14 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               </button>
             )}
 
-            {/* Search Trigger */}
+            {/* Search Trigger - Icon only */}
             <button
+              id="search-trigger-btn"
               onClick={() => setIsCommandPaletteOpen(true)}
-              className="flex items-center justify-between w-36 md:w-60 px-2.5 py-1.5 rounded-sm bg-muted/20 hover:bg-muted/40 border border-border/80 text-[10px] text-muted-foreground transition-all cursor-pointer "
+              title="Buscar (Ctrl+K)"
+              className="flex items-center justify-center w-8 h-8 rounded-lg bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary transition-all cursor-pointer shrink-0"
             >
-              <span className="flex items-center gap-1.5">
-                <Search className="w-3 h-3 text-primary" />
-                Buscar...
-              </span>
-              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1 py-0.5 rounded-sm border border-border/70 bg-card text-[8px] font-mono leading-none">
-                <span>Ctrl</span>K
-              </kbd>
+              <Search className="w-4 h-4" />
             </button>
 
             {/* Storage indicator */}
@@ -471,15 +467,22 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </motion.div>
         </main>
  
-        {/* 3. BOTTOM NAV BAR MOBILE (Single Floating Button) */}
+        {/* 3. BOTTOM NAV BAR MOBILE (Magic Floating Button) */}
         <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 select-none pointer-events-none">
           <div className="pointer-events-auto relative">
             <motion.button
-              onClick={() => setIsCentralOptionsOpen(true)}
-              whileTap={{ scale: 0.9 }}
-              className="flex items-center justify-center w-12.5 h-12.5 rounded-full bg-primary text-black border-2 border-border shadow-2xl shadow-primary/25 cursor-pointer relative"
+              id="magic-menu-btn"
+              onClick={() => setIsCentralOptionsOpen((v) => !v)}
+              animate={isCentralOptionsOpen ? { rotate: 45, scale: 1.1 } : { rotate: 0, scale: 1 }}
+              whileTap={{ scale: 0.88 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className={`flex items-center justify-center w-13 h-13 rounded-full border-2 shadow-2xl cursor-pointer relative transition-colors duration-300 ${
+                isCentralOptionsOpen
+                  ? "bg-white text-black border-white shadow-white/20"
+                  : "bg-primary text-black border-primary shadow-primary/30"
+              }`}
             >
-              <LayoutGrid className="w-5 h-5 text-black" />
+              {isCentralOptionsOpen ? <X className="w-5 h-5" /> : <LayoutGrid className="w-5 h-5" />}
             </motion.button>
           </div>
         </div>
@@ -587,128 +590,122 @@ export default function DashboardShell({ children, username }: DashboardShellPro
 
       <CommandPalette isOpen={isCommandPaletteOpen} onClose={() => setIsCommandPaletteOpen(false)} />
 
-      {/* 5. CENTRAL DE OPÇÕES BOTTOM SHEET */}
+      {/* 5. CENTRAL DE OPÇÕES BOTTOM SHEET - Magic Drawer */}
       <AnimatePresence>
         {isCentralOptionsOpen && (
           <>
-            {/* Background escurecido */}
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.65 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsCentralOptionsOpen(false)}
-              className="fixed inset-0 bg-black/90 z-45 md:hidden backdrop-blur-sm"
+              className="fixed inset-0 bg-black/75 z-40 md:hidden backdrop-blur-md"
             />
 
             {/* Bottom Drawer */}
             <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 26, stiffness: 220 }}
-              className="fixed bottom-0 left-0 right-0 max-h-[82vh] bg-neutral-950 border-t border-border rounded-t-2xl z-50 md:hidden flex flex-col overflow-y-auto pb-10"
+              initial={{ y: "100%", borderRadius: "32px 32px 0 0" }}
+              animate={{ y: 0, borderRadius: "24px 24px 0 0" }}
+              exit={{ y: "110%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 260, mass: 0.8 }}
+              className="fixed bottom-0 left-0 right-0 max-h-[80vh] z-50 md:hidden flex flex-col overflow-y-auto"
+              style={{ background: "linear-gradient(180deg, #0d0f11 0%, #09090b 100%)", borderTop: "1px solid rgba(255,255,255,0.06)" }}
             >
-              {/* Alça visual da gaveta */}
-              <div className="w-full flex justify-center py-3 shrink-0">
-                <div className="w-12 h-1 rounded-full bg-border" />
+              {/* Handle */}
+              <div className="w-full flex justify-center pt-3 pb-1 shrink-0">
+                <div className="w-10 h-0.5 rounded-full bg-white/10" />
               </div>
 
-              {/* Título e Fechar */}
-              <div className="flex items-center justify-between px-5 pb-3 border-b border-border/50 shrink-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-                    <LayoutGrid className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="font-display text-xs font-bold text-white uppercase tracking-wider">Central de Opções</span>
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 pt-2 pb-4 shrink-0">
+                <div>
+                  <span className="text-[11px] font-bold text-white/90 uppercase tracking-[0.15em]">Navegação</span>
                 </div>
                 <button
                   onClick={() => setIsCentralOptionsOpen(false)}
-                  className="p-1 rounded-md bg-muted/20 hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                  className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white cursor-pointer transition-colors"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* Grid de Seções */}
-              <div className="flex-1 px-5 py-4 space-y-5">
-                {/* Seção Finanças */}
-                <div className="space-y-2">
-                  <h3 className="text-[10px] font-display font-semibold text-primary uppercase tracking-wider pl-1">Finanças</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/dashboard/bills" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <CreditCard className="w-4.5 h-4.5 text-emerald-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Contas</span>
-                      </div>
-                    </Link>
-                    <Link href="/dashboard/receipts" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <FileCheck className="w-4.5 h-4.5 text-primary shrink-0" />
-                        <span className="text-xs font-bold text-white">Comprovantes</span>
-                      </div>
-                    </Link>
+              {/* Sections */}
+              <div className="flex-1 px-4 pb-8 space-y-4">
+                {[
+                  {
+                    label: "Finanças",
+                    items: [
+                      { href: "/dashboard/bills", icon: CreditCard, name: "Contas" },
+                      { href: "/dashboard/receipts", icon: FileCheck, name: "Comprovantes" },
+                    ],
+                  },
+                  {
+                    label: "Arquivos & Mídia",
+                    items: [
+                      { href: "/dashboard/files", icon: FolderOpen, name: "Arquivos" },
+                      { href: "/dashboard/videos", icon: Video, name: "Cine Vault" },
+                      { href: "/dashboard/wallpapers", icon: ImageIcon, name: "Imagens" },
+                      { href: "/dashboard/torrents", icon: DownloadCloud, name: "Torrents" },
+                    ],
+                  },
+                  {
+                    label: "Segurança & Produtividade",
+                    items: [
+                      { href: "/dashboard/passwords", icon: Key, name: "Senhas" },
+                      { href: "/dashboard/notes", icon: FileText, name: "Notas" },
+                      { href: "/dashboard/software", icon: Cpu, name: "Softwares" },
+                      { href: "/dashboard/dev", icon: Code, name: "DEV Central" },
+                    ],
+                  },
+                ].map((section, sIdx) => (
+                  <div key={section.label}>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/30 mb-2 px-1">{section.label}</p>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {section.items.map((item, iIdx) => {
+                        const Icon = item.icon;
+                        const isActive = pathname === item.href;
+                        return (
+                          <motion.div
+                            key={item.name}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: (sIdx * section.items.length + iIdx) * 0.03 + 0.05, type: "spring", stiffness: 300, damping: 24 }}
+                          >
+                            <Link href={item.href} onClick={() => setIsCentralOptionsOpen(false)}>
+                              <div className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border transition-all cursor-pointer select-none active:scale-95 ${
+                                isActive
+                                  ? "bg-white/8 border-white/15 text-white"
+                                  : "bg-white/3 border-white/5 text-white/60 hover:text-white hover:bg-white/6 hover:border-white/10"
+                              }`}>
+                                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-white/40"}`} />
+                                <span className="text-[11px] font-semibold truncate">{item.name}</span>
+                              </div>
+                            </Link>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                ))}
 
-                {/* Seção Mídias & Arquivos */}
-                <div className="space-y-2">
-                  <h3 className="text-[10px] font-display font-semibold text-cyan-400 uppercase tracking-wider pl-1">Arquivos & Mídia</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/dashboard/files" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <FolderOpen className="w-4.5 h-4.5 text-sky-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Arquivos</span>
-                      </div>
-                    </Link>
-                    <Link href="/dashboard/videos" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <Video className="w-4.5 h-4.5 text-cyan-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Cine Vault</span>
-                      </div>
-                    </Link>
-                    <Link href="/dashboard/wallpapers" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <ImageIcon className="w-4.5 h-4.5 text-fuchsia-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Imagens</span>
-                      </div>
-                    </Link>
-                    <Link href="/dashboard/torrents" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <DownloadCloud className="w-4.5 h-4.5 text-amber-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Torrents</span>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Seção Segurança & Produtividade */}
-                <div className="space-y-2">
-                  <h3 className="text-[10px] font-display font-semibold text-rose-400 uppercase tracking-wider pl-1">Segurança & Produtividade</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/dashboard/passwords" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <Key className="w-4.5 h-4.5 text-rose-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Senhas</span>
-                      </div>
-                    </Link>
-                    <Link href="/dashboard/notes" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <FileText className="w-4.5 h-4.5 text-emerald-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Notas</span>
-                      </div>
-                    </Link>
-                    <Link href="/dashboard/software" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <Cpu className="w-4.5 h-4.5 text-indigo-400 shrink-0" />
-                        <span className="text-xs font-bold text-white">Softwares</span>
-                      </div>
-                    </Link>
-                    <Link href="/dashboard/dev" onClick={() => setIsCentralOptionsOpen(false)}>
-                      <div className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-card/40 hover:bg-card active:bg-primary/5 transition-colors cursor-pointer select-none">
-                        <Code className="w-4.5 h-4.5 text-primary shrink-0" />
-                        <span className="text-xs font-bold text-white">DEV Central</span>
-                      </div>
-                    </Link>
+                {/* Quick actions row */}
+                <div className="pt-2 border-t border-white/5">
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <button
+                      onClick={() => { setIsCentralOptionsOpen(false); setIsCommandPaletteOpen(true); }}
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl border border-white/5 bg-white/3 text-white/50 hover:text-white hover:bg-white/6 transition-all cursor-pointer"
+                    >
+                      <Search className="w-4 h-4 shrink-0 text-white/30" />
+                      <span className="text-[11px] font-semibold">Buscar</span>
+                    </button>
+                    <button
+                      onClick={() => { setIsCentralOptionsOpen(false); handleLogout(); }}
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl border border-white/5 bg-white/3 text-white/50 hover:text-destructive hover:bg-destructive/5 hover:border-destructive/20 transition-all cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4 shrink-0 text-white/30" />
+                      <span className="text-[11px] font-semibold">Sair</span>
+                    </button>
                   </div>
                 </div>
               </div>

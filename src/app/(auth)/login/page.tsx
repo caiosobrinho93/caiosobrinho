@@ -350,7 +350,6 @@ export default function LoginPage() {
                       <input
                         type={showPassword ? "text" : "password"}
                         required
-                        autoFocus
                         placeholder="Digite sua senha de acesso"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -392,34 +391,48 @@ export default function LoginPage() {
 
                   {isBiometricSupported && hasPasskey && (
                     <>
-                      <div className="flex items-center my-4 select-none">
+                      <div className="flex items-center my-3 select-none">
                         <div className="flex-1 border-t border-border/10"></div>
-                        <span className="px-3 text-[8px] font-bold text-muted-foreground/60 uppercase tracking-widest font-mono">OU</span>
+                        <span className="px-3 text-[8px] font-bold text-muted-foreground/50 uppercase tracking-widest font-mono">OU</span>
                         <div className="flex-1 border-t border-border/10"></div>
                       </div>
 
-                      <button
-                        type="button"
-                        disabled={isLoading || isAuthenticatingBiometric}
-                        onClick={handleBiometricLogin}
-                        className={`relative w-full py-2.5 rounded-xl text-white border font-extrabold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-lg cursor-pointer bg-transparent hover:bg-white/5 ${
-                          selectedUser === "caio"
-                            ? "border-cyan-500/30 hover:border-cyan-400 text-cyan-400 shadow-cyan-500/5"
-                            : "border-fuchsia-500/30 hover:border-fuchsia-400 text-fuchsia-400 shadow-fuchsia-500/5"
-                        }`}
-                      >
-                        {isAuthenticatingBiometric ? (
-                          <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Iniciando sensor...
-                          </>
-                        ) : (
-                          <>
-                            <Fingerprint className="w-3.5 h-3.5 animate-pulse" />
-                            Acessar via Biometria
-                          </>
-                        )}
-                      </button>
+                      {/* Fingerprint Icon Button */}
+                      <div className="flex justify-center">
+                        <motion.button
+                          type="button"
+                          disabled={isLoading || isAuthenticatingBiometric}
+                          onClick={handleBiometricLogin}
+                          whileTap={{ scale: 0.9 }}
+                          whileHover={{ scale: 1.05 }}
+                          className={`relative flex flex-col items-center gap-2 cursor-pointer select-none disabled:opacity-50 group`}
+                        >
+                          <div className={`relative flex items-center justify-center w-16 h-16 rounded-2xl border-2 transition-all duration-300 ${
+                            isAuthenticatingBiometric
+                              ? "bg-white/5 border-white/30 animate-pulse"
+                              : selectedUser === "caio"
+                              ? "bg-cyan-500/5 border-cyan-500/30 group-hover:border-cyan-400 group-hover:bg-cyan-500/10 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+                              : "bg-fuchsia-500/5 border-fuchsia-500/30 group-hover:border-fuchsia-400 group-hover:bg-fuchsia-500/10 group-hover:shadow-[0_0_20px_rgba(217,70,239,0.2)]"
+                          }`}>
+                            {isAuthenticatingBiometric ? (
+                              <Loader2 className="w-8 h-8 text-white/60 animate-spin" />
+                            ) : (
+                              <Fingerprint className={`w-8 h-8 transition-colors ${
+                                selectedUser === "caio" ? "text-cyan-400" : "text-fuchsia-400"
+                              }`} />
+                            )}
+                          </div>
+                          <span className={`text-[9px] font-bold uppercase tracking-[0.15em] transition-colors ${
+                            isAuthenticatingBiometric
+                              ? "text-white/40"
+                              : selectedUser === "caio"
+                              ? "text-cyan-500/70 group-hover:text-cyan-400"
+                              : "text-fuchsia-500/70 group-hover:text-fuchsia-400"
+                          }`}>
+                            {isAuthenticatingBiometric ? "Verificando..." : "Biometria"}
+                          </span>
+                        </motion.button>
+                      </div>
                     </>
                   )}
                 </form>
