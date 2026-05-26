@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Seu dashboard pessoal de senhas, vídeos, torrents e arquivos",
     start_url: "/?pwa=1",
     display: "standalone",
-    background_color: "#110b1c", // Fundo escura na inicialização (preto/roxo)
-    theme_color: "#110b1c", // Cor das barras superior (status) e inferior do celular
+    background_color: "#000000", // Fundo preto puro na inicialização
+    theme_color: "#000000", // Cor das barras do celular preta
     orientation: "portrait",
     icons: [
       {

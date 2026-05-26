@@ -104,27 +104,11 @@ export default function DashboardShell({ children, username }: DashboardShellPro
     }
   };
 
-  // Sincroniza dinamicamente a cor das barras do celular Android/iOS (PWA) com a cor do tema ativo
+  // Sincroniza a cor das barras do celular Android/iOS (PWA) para preto puro
   useEffect(() => {
     if (!mounted) return;
 
-    let metaColor = "#110b1c"; // Fallback padrão
-    if (themePreset === "synth-violet") metaColor = "#0b0713";
-    else if (themePreset === "cyber-cyan") metaColor = "#03070b";
-    else if (themePreset === "matrix-green") metaColor = "#020503";
-    else if (themePreset === "sunset-horizon") metaColor = "#0a0604";
-    else if (themePreset === "tokyo-neon") metaColor = "#080308";
-    else if (themePreset === "carbon-stealth") metaColor = "#070708";
-    else if (themePreset === "cyber-limon") metaColor = "#050805"; // Cor escura do novo tema Limon
-    else if (themePreset === "custom") {
-      if (customTheme.bgGradient === "bg-preset-synth") metaColor = "#0b0713";
-      else if (customTheme.bgGradient === "bg-preset-cyber") metaColor = "#03070b";
-      else if (customTheme.bgGradient === "bg-preset-matrix") metaColor = "#020503";
-      else if (customTheme.bgGradient === "bg-preset-sunset") metaColor = "#0a0604";
-      else if (customTheme.bgGradient === "bg-preset-tokyo") metaColor = "#080308";
-      else if (customTheme.bgGradient === "bg-preset-carbon") metaColor = "#070708";
-      else if (customTheme.bgGradient === "bg-preset-limon") metaColor = "#050805";
-    }
+    const metaColor = "#000000"; // Sempre preto conforme solicitação
 
     let meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) {
@@ -133,7 +117,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       document.head.appendChild(meta);
     }
     meta.setAttribute("content", metaColor);
-  }, [themePreset, customTheme, mounted]);
+  }, [mounted]);
 
   
   useEffect(() => {
@@ -226,11 +210,11 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       animationSpeedClass = "animation-speed-normal";
       gridStyleClass = "grid-style-dots";
     } else if (themePreset === "custom") {
-      neonIntensityClass = `neon-intensity-${customTheme.neonIntensity}`;
-      animationSpeedClass = `animation-speed-${customTheme.animationSpeed}`;
-      gridStyleClass = `grid-style-${customTheme.gridStyle}`;
+      neonIntensityClass = `neon-intensity-${customTheme?.neonIntensity || "medium"}`;
+      animationSpeedClass = `animation-speed-${customTheme?.animationSpeed || "normal"}`;
+      gridStyleClass = `grid-style-${customTheme?.gridStyle || "dots"}`;
       
-      if (customTheme.bgImage) {
+      if (customTheme?.bgImage) {
         customStyle = {
           backgroundImage: `url(${customTheme.bgImage})`,
           backgroundSize: "cover",
@@ -238,7 +222,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           backgroundAttachment: "fixed",
         };
       } else {
-        themeBgClass = customTheme.bgGradient || "bg-preset-synth";
+        themeBgClass = customTheme?.bgGradient || "bg-preset-synth";
       }
     }
 

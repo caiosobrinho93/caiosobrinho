@@ -115,9 +115,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = sessionStorage.getItem("activeMobileTab");
-      if (saved && (saved === "general" || saved === "goals" || saved === "finance")) {
-        setActiveMobileTab(saved as any);
+      try {
+        const saved = sessionStorage.getItem("activeMobileTab");
+        if (saved && (saved === "general" || saved === "goals" || saved === "finance")) {
+          setActiveMobileTab(saved as any);
+        }
+      } catch (err) {
+        console.warn("sessionStorage is not available:", err);
       }
     }
   }, []);
@@ -125,7 +129,11 @@ export default function DashboardPage() {
   const changeMobileTab = (tab: "general" | "goals" | "finance") => {
     setActiveMobileTab(tab);
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("activeMobileTab", tab);
+      try {
+        sessionStorage.setItem("activeMobileTab", tab);
+      } catch (err) {
+        console.warn("sessionStorage is not available:", err);
+      }
     }
   };
 
