@@ -29,10 +29,77 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30">
         <ThemeProvider>{children}</ThemeProvider>
         
-        {/* Script para registro do Service Worker do PWA */}
+        {/* Script para PWA Service Worker e auto-recuperação de erros de carregamento (ChunkLoadError) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              // Intercepta erros de carregamento de scripts/links estáticos (ex: chunks antigos deletados no deploy)
+              window.addEventListener('error', function(e) {
+                const target = e.target;
+                if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
+                  const url = target.src || target.href;
+                  if (url && url.indexOf('/_next/static/') !== -1) {
+                    console.warn('Next.js static asset failed to load. Clearing cache and reloading...', url);
+                    
+                    // Armazena no sessionStorage para evitar reloads infinitos se o problema persistir
+                    const now = Date.now();
+                    const lastReload = sessionStorage.getItem('last_auto_reload');
+                    if (!lastReload || now - parseInt(lastReload, 10) > 8000) {
+                      sessionStorage.setItem('last_auto_reload', now.toString());
+                      
+                      // Desregistra Service Worker e limpa cache para recomeçar limpo
+                      if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                          for (let reg of registrations) {
+                            reg.unregister();
+                          }
+                        });
+                      }
+                      if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                          for (let name of names) caches.delete(name);
+                        });
+                      }
+                      
+                      setTimeout(function() {
+                        window.location.reload();
+                      }, 400);
+                    }
+                  }
+                }
+              }, true);
+
+              // Intercepta erros não tratados (ChunkLoadError de Promises de importação dinâmica)
+              window.addEventListener('unhandledrejection', function(e) {
+                if (e.reason && (e.reason.name === 'ChunkLoadError' || (e.reason.message && e.reason.message.indexOf('Loading chunk') !== -1))) {
+                  console.warn('ChunkLoadError detectado. Limpando cache e recarregando...');
+                  
+                  const now = Date.now();
+                  const lastReload = sessionStorage.getItem('last_auto_reload');
+                  if (!lastReload || now - parseInt(lastReload, 10) > 8000) {
+                    sessionStorage.setItem('last_auto_reload', now.toString());
+                    
+                    if ('serviceWorker' in navigator) {
+                      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                        for (let reg of registrations) {
+                          reg.unregister();
+                        }
+                      });
+                    }
+                    if ('caches' in window) {
+                      caches.keys().then(function(names) {
+                        for (let name of names) caches.delete(name);
+                      });
+                    }
+                    
+                    setTimeout(function() {
+                      window.location.reload();
+                    }, 400);
+                  }
+                }
+              });
+
+              // Registro do Service Worker
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js').then(
