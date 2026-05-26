@@ -23,7 +23,28 @@ export default function RootLayout({
     <html lang="en" className={`${outfit.variable} dark h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30">
         <ThemeProvider>{children}</ThemeProvider>
+        
+        {/* Script para registro do Service Worker do PWA */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(
+                    function(reg) {
+                      console.log('Nexus Vault PWA ServiceWorker registrado com escopo: ', reg.scope);
+                    },
+                    function(err) {
+                      console.log('Falha ao registrar ServiceWorker: ', err);
+                    }
+                  );
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
 }
+
