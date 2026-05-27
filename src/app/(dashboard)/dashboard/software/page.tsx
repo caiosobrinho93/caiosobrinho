@@ -520,7 +520,7 @@ export default function SoftwarePage() {
 
               <form onSubmit={handleCreate} className="space-y-3.5">
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                     Nome do App *
                   </label>
                   <input
@@ -534,7 +534,7 @@ export default function SoftwarePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                     Plataformas *
                   </label>
                   <input
@@ -569,7 +569,7 @@ export default function SoftwarePage() {
                     >
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                             Versão *
                           </label>
                           <input
@@ -583,7 +583,7 @@ export default function SoftwarePage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                             Categoria
                           </label>
                           <select
@@ -602,7 +602,7 @@ export default function SoftwarePage() {
 
                       {/* Seletores de abas do instalador (Upload vs URL) */}
                       <div className="space-y-1.5">
-                        <label className="block text-sm font-bold text-muted-foreground uppercase">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase">
                           Instalador do Software *
                         </label>
                         <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
@@ -631,7 +631,7 @@ export default function SoftwarePage() {
 
                       {installerUploadType === "file" ? (
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             Selecionar Instalador (.exe, .dmg, .zip, etc.)
                           </label>
                           <input
@@ -643,7 +643,7 @@ export default function SoftwarePage() {
                         </div>
                       ) : (
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             URL de Download do Instalador
                           </label>
                           <input
@@ -659,7 +659,7 @@ export default function SoftwarePage() {
 
                       {/* Seletores de abas do ícone (Upload vs URL) */}
                       <div className="space-y-1.5">
-                        <label className="block text-sm font-bold text-muted-foreground uppercase">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase">
                           Ícone do Aplicativo
                         </label>
                         <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
@@ -688,7 +688,7 @@ export default function SoftwarePage() {
 
                       {iconUploadType === "file" ? (
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             Selecionar Arquivo de Ícone
                           </label>
                           <input
@@ -700,7 +700,7 @@ export default function SoftwarePage() {
                         </div>
                       ) : (
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             URL da Imagem do Ícone
                           </label>
                           <input
@@ -714,7 +714,7 @@ export default function SoftwarePage() {
                       )}
 
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                           Descrição
                         </label>
                         <textarea
@@ -727,7 +727,7 @@ export default function SoftwarePage() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                           Notas da Plataforma (Chaves de licença, etc.)
                         </label>
                         <input

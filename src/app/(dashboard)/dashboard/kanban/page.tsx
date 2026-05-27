@@ -152,6 +152,69 @@ function SortableCard({ goal }: { goal: Goal }) {
   );
 }
 
+// Mobile Kanban Section (Simple List with buttons)
+function MobileKanbanSection({
+  title,
+  goals,
+  icon,
+  colorClass,
+  onMove
+}: {
+  title: string;
+  goals: Goal[];
+  icon: React.ReactNode;
+  colorClass: string;
+  onMove: (goalId: string, destCol: 'todo' | 'doing' | 'done', isCurrentlyCompleted: boolean) => void;
+}) {
+  return (
+    <div className="flex flex-col bg-slate-950/45 border border-border/80 rounded-sm p-4">
+      <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-4">
+        <div className="flex items-center gap-4">
+          <span className={colorClass}>{icon}</span>
+          <h3 className="text-xs font-black uppercase text-white tracking-widest font-display">{title}</h3>
+        </div>
+        <span className="text-sm font-mono px-2 py-1 bg-white/5 border border-border text-muted-foreground rounded-sm">
+          {goals.length}
+        </span>
+      </div>
+      
+      <div className="flex flex-col gap-3">
+        {goals.map((goal) => (
+          <div key={goal.id} className={`p-3.5 rounded-sm border bg-slate-950/60 shadow-sm flex flex-col gap-3 relative overflow-hidden ${goal.isCompleted ? "border-emerald-500/20 bg-emerald-950/5 opacity-70" : "border-border"}`}>
+            <div className="flex justify-between items-start gap-3">
+              <p className={`text-xs font-semibold leading-snug ${goal.isCompleted ? "line-through text-muted-foreground" : "text-white"}`}>
+                {goal.title}
+              </p>
+            </div>
+            <div className="flex justify-between items-center text-xs mt-1">
+              <span className={`px-2 py-1 rounded font-black tracking-wider uppercase ${goal.isCompleted ? "bg-emerald-500/10 text-emerald-400" : "bg-primary/10 text-primary border border-primary/20"}`}>
+                +{goal.xpReward} XP
+              </span>
+            </div>
+            {/* Move Buttons */}
+            <div className="flex gap-2 mt-2 pt-2 border-t border-border/50">
+              {title !== "A Fazer" && (
+                 <button onClick={() => onMove(goal.id, 'todo', goal.isCompleted)} className="flex-1 py-1.5 text-[10px] uppercase tracking-wider font-bold bg-muted/40 hover:bg-muted rounded text-muted-foreground hover:text-[#8fe319] transition-colors">A Fazer</button>
+              )}
+              {title !== "Fazendo" && (
+                 <button onClick={() => onMove(goal.id, 'doing', goal.isCompleted)} className="flex-1 py-1.5 text-[10px] uppercase tracking-wider font-bold bg-amber-500/10 hover:bg-amber-500/20 rounded text-amber-500 transition-colors">Fazendo</button>
+              )}
+              {title !== "Concluído" && (
+                 <button onClick={() => onMove(goal.id, 'done', goal.isCompleted)} className="flex-1 py-1.5 text-[10px] uppercase tracking-wider font-bold bg-emerald-500/10 hover:bg-emerald-500/20 rounded text-emerald-500 transition-colors">Concluído</button>
+              )}
+            </div>
+          </div>
+        ))}
+        {goals.length === 0 && (
+          <div className="py-6 text-center text-sm text-muted-foreground uppercase font-bold tracking-wider">
+            Vazio
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function KanbanPage() {
   const { data, fetchStats, isLoading } = useStatsStore();
   const [isMounted, setIsMounted] = useState(false);
@@ -224,6 +287,28 @@ export default function KanbanPage() {
       saveDoingToLocalStorage(doingIds.filter(id => id !== goalId));
       // Mark complete in DB if not completed
       if (!goal.isCompleted) {
+        await updateGoalStatus(goalId, true);
+        triggerConfetti();
+      }
+    }
+  };
+
+  const moveGoalMobile = async (goalId: string, destCol: 'todo' | 'doing' | 'done', isCurrentlyCompleted: boolean) => {
+    if (destCol === "todo") {
+      saveDoingToLocalStorage(doingIds.filter(id => id !== goalId));
+      if (isCurrentlyCompleted) {
+        await updateGoalStatus(goalId, false);
+      }
+    } else if (destCol === "doing") {
+      if (!doingIds.includes(goalId)) {
+        saveDoingToLocalStorage([...doingIds, goalId]);
+      }
+      if (isCurrentlyCompleted) {
+        await updateGoalStatus(goalId, false);
+      }
+    } else if (destCol === "done") {
+      saveDoingToLocalStorage(doingIds.filter(id => id !== goalId));
+      if (!isCurrentlyCompleted) {
         await updateGoalStatus(goalId, true);
         triggerConfetti();
       }
@@ -330,32 +415,59 @@ export default function KanbanPage() {
         </form>
       </div>
 
-      {/* DndContext Wrapping Kanban Grid */}
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4.5 overflow-x-auto pb-6">
-          <KanbanColumn 
-            id="todo" 
-            title="A Fazer" 
-            goals={todoGoals} 
-            colorClass="text-rose-400" 
-            icon={<ListTodo className="w-4 h-4" />} 
-          />
-          <KanbanColumn 
-            id="doing" 
-            title="Fazendo" 
-            goals={doingGoals} 
-            colorClass="text-amber-400" 
-            icon={<Play className="w-4 h-4 fill-current rotate-0" />} 
-          />
-          <KanbanColumn 
-            id="done" 
-            title="Concluído" 
-            goals={doneGoals} 
-            colorClass="text-emerald-400" 
-            icon={<Sparkles className="w-4 h-4" />} 
-          />
-        </div>
-      </DndContext>
+      {/* Mobile Kanban (sm:hidden) */}
+      <div className="sm:hidden flex flex-col gap-6 pb-6">
+        <MobileKanbanSection 
+          title="A Fazer" 
+          goals={todoGoals} 
+          colorClass="text-rose-400" 
+          icon={<ListTodo className="w-4 h-4" />} 
+          onMove={moveGoalMobile}
+        />
+        <MobileKanbanSection 
+          title="Fazendo" 
+          goals={doingGoals} 
+          colorClass="text-amber-400" 
+          icon={<Play className="w-4 h-4 fill-current rotate-0" />} 
+          onMove={moveGoalMobile}
+        />
+        <MobileKanbanSection 
+          title="Concluído" 
+          goals={doneGoals} 
+          colorClass="text-emerald-400" 
+          icon={<Sparkles className="w-4 h-4" />} 
+          onMove={moveGoalMobile}
+        />
+      </div>
+
+      {/* DndContext Wrapping Kanban Grid (Desktop Only) */}
+      <div className="hidden sm:block">
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4.5 overflow-x-auto pb-6">
+            <KanbanColumn 
+              id="todo" 
+              title="A Fazer" 
+              goals={todoGoals} 
+              colorClass="text-rose-400" 
+              icon={<ListTodo className="w-4 h-4" />} 
+            />
+            <KanbanColumn 
+              id="doing" 
+              title="Fazendo" 
+              goals={doingGoals} 
+              colorClass="text-amber-400" 
+              icon={<Play className="w-4 h-4 fill-current rotate-0" />} 
+            />
+            <KanbanColumn 
+              id="done" 
+              title="Concluído" 
+              goals={doneGoals} 
+              colorClass="text-emerald-400" 
+              icon={<Sparkles className="w-4 h-4" />} 
+            />
+          </div>
+        </DndContext>
+      </div>
     </div>
   );
 }

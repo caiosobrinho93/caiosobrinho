@@ -252,48 +252,29 @@ export default function BillsPage() {
       ) : filteredBills.length > 0 ? (
         <>
           {/* Mobile compact rows */}
-          <div className="flex flex-col gap-5 sm:hidden">
+          <div className="flex flex-col gap-3 sm:hidden">
             {filteredBills.map((bill) => {
               const isCompleted = bill.status === "pago" || bill.status === "recebido";
               return (
                 <motion.div
                   key={bill.id}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border cursor-pointer active:scale-[0.99] transition-all ${
+                  className={`flex items-center justify-between gap-3 px-4 py-3 rounded-xl border cursor-pointer active:scale-[0.99] transition-all ${
                     isCompleted
                       ? 'border-border/30 bg-card/20 opacity-70'
-                      : bill.type === 'pagar'
-                      ? 'border-red-500/20 bg-card/30 hover:border-red-500/35'
-                      : bill.type === 'receber'
-                      ? 'border-emerald-500/20 bg-card/30 hover:border-emerald-500/35'
-                      : 'border-amber-500/20 bg-card/30 hover:border-amber-500/35'
+                      : 'border-border/50 bg-card/30 hover:border-border/70'
                   }`}
-                  
                   onClick={() => setSelectedBill(bill)}
                 >
-                  <div className={`w-1 self-stretch rounded-full shrink-0 ${
-                    bill.type === 'pagar' ? 'bg-red-400' : bill.type === 'receber' ? 'bg-emerald-400' : 'bg-amber-400'
-                  }`} />
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-xs font-semibold truncate leading-tight ${isCompleted ? 'line-through text-muted-foreground' : 'text-white'}`}>{bill.title}</p>
-                    <p className="text-sm text-muted-foreground leading-tight mt-0.5">
-                      {bill.type === 'pagar' ? 'A Pagar' : bill.type === 'receber' ? 'A Receber' : 'Agendado'}
-                      {' · '}{new Date(bill.dueDate).toLocaleDateString('pt-BR')}
-                    </p>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`w-2 h-2 rounded-full shrink-0 ${
+                      bill.type === 'pagar' ? 'bg-red-400' : bill.type === 'receber' ? 'bg-emerald-400' : 'bg-amber-400'
+                    }`} />
+                    <p className={`text-sm font-semibold truncate ${isCompleted ? 'line-through text-muted-foreground' : 'text-white'}`}>{bill.title}</p>
                   </div>
-                  <div className="flex items-center gap-5 shrink-0">
+                  <div className="shrink-0">
                     <span className={`text-sm font-bold ${
                       bill.type === 'pagar' ? 'text-red-400' : bill.type === 'receber' ? 'text-emerald-400' : 'text-amber-400'
                     }`}>R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    <button onClick={(e) => { e.stopPropagation(); handleToggleStatus(bill.id, bill.status, bill.type); }}
-                      className={`p-4 rounded-lg border transition-colors ${
-                        isCompleted ? 'bg-muted/20 border-border text-muted-foreground' : 'bg-primary/10 border-primary/20 text-primary'
-                      }`}>
-                      <Check className="w-3.5 h-3.5" />
-                    </button>
-                    <button onClick={(e) => { e.stopPropagation(); handleDelete(bill.id); }}
-                      className="p-4 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors">
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
                   </div>
                 </motion.div>
               );
@@ -437,7 +418,7 @@ export default function BillsPage() {
 
               <form onSubmit={handleCreate} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Título *
                   </label>
                   <input
@@ -452,7 +433,7 @@ export default function BillsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Valor (R$) *
                     </label>
                     <input
@@ -467,7 +448,7 @@ export default function BillsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Data de Vencimento *
                     </label>
                     <input
@@ -482,7 +463,7 @@ export default function BillsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Tipo *
                     </label>
                     <select
@@ -504,7 +485,7 @@ export default function BillsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Status Inicial *
                     </label>
                     <select
@@ -546,7 +527,7 @@ export default function BillsPage() {
                       className="space-y-3.5 overflow-hidden pt-1.5 border-t border-border/30"
                     >
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                           Descrição
                         </label>
                         <textarea
@@ -575,7 +556,7 @@ export default function BillsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-sm text-xs bg-[#8fe319] hover:bg-[#8fe319]/90 text-black font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-[#8fe319]/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -676,23 +657,23 @@ export default function BillsPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-5 pt-2 border-t border-border/40">
+              <div className="flex items-center gap-3 pt-4 mt-2 border-t border-border/40">
                 <button
                   onClick={() => { handleToggleStatus(selectedBill.id, selectedBill.status, selectedBill.type); setSelectedBill(null); }}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-4 border transition-colors cursor-pointer ${
+                  className={`flex-1 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition-colors cursor-pointer ${
                     selectedBill.status === 'pago' || selectedBill.status === 'recebido'
                       ? 'bg-muted/20 border-border text-muted-foreground'
-                      : 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20'
+                      : 'bg-[#8fe319]/10 border-[#8fe319]/20 text-[#8fe319] hover:bg-[#8fe319]/20'
                   }`}
                 >
-                  <Check className="w-3.5 h-3.5" />
+                  <Check className="w-4 h-4" />
                   {selectedBill.status === 'pago' || selectedBill.status === 'recebido' ? 'Marcar Pendente' : 'Marcar Concluída'}
                 </button>
                 <button
                   onClick={() => { handleDelete(selectedBill.id); setSelectedBill(null); }}
-                  className="flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-4 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
+                  className="flex-1 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-4 h-4" />
                   Excluir
                 </button>
               </div>

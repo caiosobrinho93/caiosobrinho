@@ -336,7 +336,7 @@ export default function ReceiptsPage() {
               <form onSubmit={handleCreate} className="space-y-4">
                 {/* Campos Primários */}
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Título do Comprovante *
                   </label>
                   <input
@@ -350,7 +350,7 @@ export default function ReceiptsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Valor Pago (R$ - Opcional)
                   </label>
                   <input
@@ -364,7 +364,7 @@ export default function ReceiptsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Arquivo(s) do Comprovante * (Máx 2 arquivos)
                   </label>
                   <div className="relative">
@@ -416,7 +416,7 @@ export default function ReceiptsPage() {
                       className="space-y-3.5 overflow-hidden pt-1.5 border-t border-border/30"
                     >
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                           Descrição
                         </label>
                         <textarea
@@ -430,7 +430,7 @@ export default function ReceiptsPage() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex justify-between items-center">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4 flex justify-between items-center">
                             <span>Data de Pagamento</span>
                             <button
                               type="button"
@@ -449,7 +449,7 @@ export default function ReceiptsPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider mb-4">
                             Categoria
                           </label>
                           <select
@@ -485,7 +485,7 @@ export default function ReceiptsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-black font-bold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10 transition-colors"
+                    className="px-4 py-2 rounded-xl text-xs bg-[#8fe319] hover:bg-[#8fe319]/90 text-black font-bold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-[#8fe319]/10 transition-colors"
                   >
                     {isSubmitting ? (
                       <>
@@ -519,17 +519,19 @@ export default function ReceiptsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="w-full max-w-3xl bg-[#12161a] border border-border rounded-2xl flex flex-col relative z-10 overflow-hidden shadow-2xl max-h-[85vh] glass-panel-solid"
+              className="w-full max-w-3xl bg-card border border-border rounded-2xl flex flex-col relative z-10 overflow-hidden shadow-2xl max-h-[85vh]"
             >
               {/* Header */}
-              <div className="h-14 border-b border-border/80 bg-muted/20 flex items-center justify-between px-5 shrink-0 z-20">
-                <div className="flex items-center gap-3 min-w-0">
-                  <FileCheck className="w-5 h-5 text-primary animate-pulse shrink-0" />
+              <div className="h-16 border-b border-border/40 bg-card flex items-center justify-between px-5 shrink-0 z-20">
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-[#8fe319]/10 border border-[#8fe319]/20 flex items-center justify-center shrink-0">
+                    <FileCheck className="w-4 h-4 text-[#8fe319]" />
+                  </div>
                   <div className="min-w-0">
                     <span className="text-sm font-semibold text-white truncate block max-w-md">
                       {previewReceipt.title}
                     </span>
-                    <span className="text-sm text-muted-foreground leading-none mt-0.5 block font-mono">
+                    <span className="text-xs text-muted-foreground mt-0.5 block">
                       {previewReceipt.category || "Outros"} &bull; {previewReceipt.amount ? `R$ ${previewReceipt.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` : ""}
                     </span>
                   </div>
@@ -571,7 +573,7 @@ export default function ReceiptsPage() {
                       onClick={() => setActivePreviewIndex(idx)}
                       className={`px-3 py-1.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all cursor-pointer ${
                         activePreviewIndex === idx
-                          ? "bg-primary text-black"
+                          ? "bg-[#8fe319] text-black"
                           : "bg-muted/40 text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -623,7 +625,7 @@ export default function ReceiptsPage() {
                           download
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-5 px-4 py-2 bg-primary text-black font-bold rounded-xl text-xs hover:bg-primary/95 transition-all shadow-md cursor-pointer flex items-center gap-4"
+                          className="mt-5 px-4 py-2 bg-[#8fe319] text-black font-bold rounded-xl text-xs hover:bg-[#8fe319]/90 transition-all shadow-md cursor-pointer flex items-center gap-4"
                         >
                           <Download className="w-3.5 h-3.5" />
                           Baixar para Visualizar

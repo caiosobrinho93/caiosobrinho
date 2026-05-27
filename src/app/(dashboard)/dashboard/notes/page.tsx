@@ -23,7 +23,12 @@ import {
   Lock,
   Fingerprint,
   Expand,
-  Minimize
+  Minimize,
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Code
 } from "lucide-react";
 
 interface NoteItem {
@@ -208,6 +213,24 @@ function NotesContent() {
 
     setSaveStatus("unsaved");
     debouncedSave(selectedNote.id, { [field]: value });
+  };
+
+  const insertFormatting = (prefix: string, suffix: string = "") => {
+    const textarea = document.getElementById("note-editor-textarea") as HTMLTextAreaElement;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = editContent;
+    const before = text.substring(0, start);
+    const selected = text.substring(start, end);
+    const after = text.substring(end, text.length);
+    const newText = before + prefix + selected + suffix + after;
+    handleFieldChange("content", newText);
+    
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, end + prefix.length);
+    }, 0);
   };
 
   const handleCreateNote = async () => {
@@ -513,19 +536,46 @@ function NotesContent() {
               </div>
 
               {/* Conteúdo do Editor / Visualizador */}
-              <div className="flex-1 overflow-y-auto p-5 relative">
+              <div className="flex-1 flex flex-col min-h-0 relative">
                 {activeTab === "write" ? (
-                  <textarea
-                    value={editContent}
-                    onChange={(e) => handleFieldChange("content", e.target.value)}
-                    placeholder="# Título&#10;&#10;Escreva as anotações do cofre usando formatação Markdown..."
-                    className="w-full h-full bg-transparent border-0 resize-none text-white/90 placeholder-muted-foreground/60 text-sm focus:outline-none focus:ring-0 p-0 leading-relaxed font-mono"
-                  />
+                  <>
+                    {/* Formatting Toolbar */}
+                    <div className="flex items-center gap-2 px-4 py-2 border-b border-border/60 bg-muted/10 overflow-x-auto whitespace-nowrap scrollbar-hide shrink-0">
+                      <button onClick={() => insertFormatting("**", "**")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                        <Bold className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => insertFormatting("*", "*")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                        <Italic className="w-4 h-4" />
+                      </button>
+                      <div className="w-px h-4 bg-border mx-1 shrink-0" />
+                      <button onClick={() => insertFormatting("- ")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                        <List className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => insertFormatting("1. ")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                        <ListOrdered className="w-4 h-4" />
+                      </button>
+                      <div className="w-px h-4 bg-border mx-1 shrink-0" />
+                      <button onClick={() => insertFormatting("`", "`")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                        <Code className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto p-5">
+                      <textarea
+                        id="note-editor-textarea"
+                        value={editContent}
+                        onChange={(e) => handleFieldChange("content", e.target.value)}
+                        placeholder="# Título&#10;&#10;Escreva as anotações do cofre usando formatação Markdown..."
+                        className="w-full h-full min-h-[200px] bg-transparent border-0 resize-none text-white/90 placeholder-muted-foreground/60 text-sm focus:outline-none focus:ring-0 p-0 leading-relaxed font-mono"
+                      />
+                    </div>
+                  </>
                 ) : (
-                  <div
-                    className="prose prose-invert max-w-none text-sm leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: renderMarkdown(editContent) }}
-                  />
+                  <div className="flex-1 overflow-y-auto p-5">
+                    <div
+                      className="prose prose-invert max-w-none text-sm leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: renderMarkdown(editContent) }}
+                    />
+                  </div>
                 )}
               </div>
 

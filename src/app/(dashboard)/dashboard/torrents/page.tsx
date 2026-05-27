@@ -482,7 +482,7 @@ export default function TorrentsPage() {
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                     Nome do Arquivo / Título *
                   </label>
                   <input
@@ -497,7 +497,7 @@ export default function TorrentsPage() {
 
                 {/* Seletores de abas do torrent (Upload vs Magnet) */}
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-bold text-muted-foreground uppercase">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase">
                     Origem do Torrent *
                   </label>
                   <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
@@ -526,7 +526,7 @@ export default function TorrentsPage() {
 
                 {torrentSourceType === "file" ? (
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       Selecionar Arquivo .torrent
                     </label>
                     <input
@@ -539,7 +539,7 @@ export default function TorrentsPage() {
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       Link Magnet *
                     </label>
                     <input
@@ -555,7 +555,7 @@ export default function TorrentsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       Tamanho
                     </label>
                     <input
@@ -568,7 +568,7 @@ export default function TorrentsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       Categoria
                     </label>
                     <input
@@ -580,7 +580,7 @@ export default function TorrentsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                     Anotações Extras
                   </label>
                   <textarea

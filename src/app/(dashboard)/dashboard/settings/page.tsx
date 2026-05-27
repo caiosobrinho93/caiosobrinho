@@ -368,7 +368,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 px-1 sm:px-0">
       {/* Cabeçalho */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-5.5">
@@ -381,9 +381,9 @@ export default function SettingsPage() {
       </div>
 
       {/* 1. Visual e Temas do Painel */}
-      <div className="glass-panel rounded-sm p-5 space-y-6">
-        <div className="border-b border-border/60 pb-3 flex items-center justify-between">
-          <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
+      <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-6">
+        <div className="border-b border-border/60 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+          <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5">
             <Palette className="w-4 h-4 text-primary" />
             Temas do Dashboard
           </h2>
@@ -394,7 +394,7 @@ export default function SettingsPage() {
 
         {/* Grade de Presets Rápidos */}
         <div className="space-y-3">
-          <label className="text-xs font-semibold text-muted-foreground block">Selecione um Preset de Luxo</label>
+          <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold text-muted-foreground block">Selecione um Preset de Luxo</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {themePresets.map((preset) => {
               const isSelected = themePreset === preset.id;
@@ -445,7 +445,7 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 {/* Cor de Realce */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Cor de Destaque (Accent)</label>
+                  <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider">Cor de Destaque (Accent)</label>
                   <div className="flex flex-wrap gap-5">
                     {colors.map((color) => (
                       <button
@@ -464,7 +464,7 @@ export default function SettingsPage() {
 
                 {/* Estilo do Grid */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Padrão da Grade Cyber</label>
+                  <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider">Padrão da Grade Cyber</label>
                   <div className="grid grid-cols-2 gap-4">
                     {[
                       { id: "fine", name: "Grade Fina" },
@@ -493,7 +493,7 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 {/* Intensidade Neon */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Intensidade do Brilho Neon</label>
+                  <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider">Intensidade do Brilho Neon</label>
                   <div className="grid grid-cols-2 gap-4">
                     {[
                       { id: "none", name: "Desativado" },
@@ -519,7 +519,7 @@ export default function SettingsPage() {
 
                 {/* Velocidade de Animação */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Velocidade de Pulsar/Glow</label>
+                  <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider">Velocidade de Pulsar/Glow</label>
                   <div className="grid grid-cols-2 gap-4">
                     {[
                       { id: "disabled", name: "Estática" },
@@ -550,7 +550,7 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Seletor de Gradiente */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider block">Gradiente Cyber de Fundo</label>
+                  <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider block">Gradiente Cyber de Fundo</label>
                   <select
                     value={customTheme.bgGradient}
                     disabled={!!customTheme.bgImage}
@@ -569,7 +569,7 @@ export default function SettingsPage() {
 
                 {/* Imagem de Fundo (Wallpaper) */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider block">Papel de Parede Físico (URL)</label>
+                  <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase tracking-wider block">Papel de Parede Físico (URL)</label>
                   <div className="relative">
                     <input
                       type="text"
@@ -603,7 +603,7 @@ export default function SettingsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-3 border-t border-border/60">
           {/* Densidade de Espaçamento */}
           <div className="space-y-2.5">
-            <label className="text-xs font-semibold text-muted-foreground block">Densidade do Layout</label>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold text-muted-foreground block">Densidade do Layout</label>
             <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
               {(["compact", "normal", "spacious"] as const).map((d) => (
                 <button
@@ -621,13 +621,13 @@ export default function SettingsPage() {
 
           {/* Micro-interações Switch */}
           <div className="space-y-2.5 flex flex-col justify-between">
-            <label className="text-xs font-semibold text-muted-foreground">Animações Gerais</label>
+            <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold text-muted-foreground">Animações Gerais</label>
             <div className="flex items-center justify-between p-5.5 bg-muted/20 border border-border rounded-sm h-10">
               <span className="text-xs font-semibold text-white/95">Transições e micro-interações</span>
               <button
                 onClick={toggleAnimations}
                 className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  animationsEnabled ? "bg-primary" : "bg-muted"
+                  animationsEnabled ? "bg-[#8fe319]" : "bg-muted"
                 }`}
               >
                 <span
@@ -642,9 +642,9 @@ export default function SettingsPage() {
       </div>
 
       {/* 2. Entrada por Biometria */}
-      <div className="glass-panel rounded-sm p-5 space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5 border-b border-border/60 pb-3">
-          <Fingerprint className="w-4 h-4 text-primary" />
+      <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
+          <Fingerprint className="w-4 h-4 text-[#8fe319]" />
           Segurança Biométrica (Passkeys)
         </h2>
 
@@ -706,9 +706,9 @@ export default function SettingsPage() {
       </div>
 
       {/* 3. Backup e Banco de Dados */}
-      <div className="glass-panel rounded-sm p-5 space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5 border-b border-border/60 pb-3">
-          <Database className="w-4 h-4 text-primary" />
+      <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
+          <Database className="w-4 h-4 text-[#8fe319]" />
           Operações de Banco de Dados
         </h2>
 
@@ -742,7 +742,7 @@ export default function SettingsPage() {
               <h3 className="font-display text-xs tracking-widest text-white leading-tight">Restaurar Banco</h3>
               <p className="text-sm text-muted-foreground mt-1 leading-normal">Selecione um arquivo de backup do Nexus (.json) previamente baixado para restaurar todas as tabelas locais do banco.</p>
             </div>
-            <label className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold">
+            <label className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-[10px] uppercase tracking-wider text-muted-foreground font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold">
               {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
               Selecionar Backup
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
@@ -752,9 +752,9 @@ export default function SettingsPage() {
       </div>
 
       {/* 3.5. Integração de Lembretes & Alertas */}
-      <div className="glass-panel rounded-sm p-5 space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5 border-b border-border/60 pb-3">
-          <Bell className="w-4 h-4 text-primary" />
+      <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
+          <Bell className="w-4 h-4 text-[#8fe319]" />
           Integração de Lembretes (Telegram & Email)
         </h2>
 
@@ -838,8 +838,8 @@ export default function SettingsPage() {
       </div>
 
             {/* 4. Zona de Perigo */}
-      <div className="bg-card/55 backdrop-blur-xl border border-destructive/20 rounded-sm p-5 space-y-4">
-        <h2 className="text-sm font-bold text-destructive uppercase tracking-wider flex items-center gap-5 border-b border-destructive/10 pb-3">
+      <div className="bg-card/55 backdrop-blur-xl border border-destructive/20 rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4">
+        <h2 className="text-sm font-bold text-destructive uppercase tracking-wider flex items-center gap-4 sm:gap-5 border-b border-destructive/10 pb-3">
           <Trash2 className="w-4 h-4 text-destructive" />
           Zona de Perigo
         </h2>

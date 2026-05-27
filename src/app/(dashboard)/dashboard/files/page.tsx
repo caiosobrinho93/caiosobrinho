@@ -416,16 +416,16 @@ export default function FilesPage() {
                 className="glass-panel flex flex-col justify-between cursor-pointer group rounded-sm p-3 border border-border/75 hover:border-primary/45 transition-colors relative"
               >
                 <div className="flex justify-between items-start ">
-                  <Folder className="w-8 h-8 text-primary fill-primary/5 group-hover:scale-105 transition-transform duration-300" />
+                  <Folder className="w-8 h-8 text-[#8fe319] fill-[#8fe319]/10 group-hover:scale-105 transition-transform duration-300" />
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteItem(folder.id, "folder");
                     }}
-                    className="p-1 rounded-sm opacity-0 group-hover:opacity-100 hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer text-muted-foreground"
+                    className="p-2 md:p-1 rounded-md opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer text-muted-foreground bg-card md:bg-transparent shadow-sm md:shadow-none border border-border md:border-transparent"
                     title="Excluir Pasta"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
                   </button>
                 </div>
                 <div className="mt-3">
@@ -453,26 +453,26 @@ export default function FilesPage() {
               >
                 <div className="flex justify-between items-start ">
                   {getFileIcon(file.mimeType)}
-                  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1 sm:gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleToggleFavorite(file);
                       }}
-                      className={`p-1 rounded-sm cursor-pointer hover:bg-muted ${
-                        file.isFavorite ? "text-primary" : "text-muted-foreground"
+                      className={`p-2 md:p-1 rounded-md cursor-pointer hover:bg-muted bg-card md:bg-transparent border border-border md:border-transparent shadow-sm md:shadow-none ${
+                        file.isFavorite ? "text-[#8fe319]" : "text-muted-foreground"
                       }`}
                     >
-                      <Star className={`w-3 h-3 ${file.isFavorite ? "fill-current" : ""}`} />
+                      <Star className={`w-4 h-4 md:w-3 md:h-3 ${file.isFavorite ? "fill-current" : ""}`} />
                     </button>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteItem(file.id, "file");
                       }}
-                      className="p-1 rounded-sm hover:text-destructive hover:bg-destructive/10 cursor-pointer text-muted-foreground"
+                      className="p-2 md:p-1 rounded-md hover:text-destructive hover:bg-destructive/10 cursor-pointer text-muted-foreground bg-card md:bg-transparent border border-border md:border-transparent shadow-sm md:shadow-none"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
                     </button>
                   </div>
                 </div>
@@ -639,7 +639,7 @@ export default function FilesPage() {
 
               <form onSubmit={handleCreateFolder} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                     Nome da Pasta
                   </label>
                   <input
@@ -694,41 +694,41 @@ export default function FilesPage() {
               className="w-full max-w-3xl bg-card border border-border rounded-2xl flex flex-col relative z-10 overflow-hidden shadow-2xl max-h-[85vh]"
             >
               {/* Header */}
-              <div className="h-14 border-b border-border bg-muted/20 flex items-center justify-between px-5 shrink-0 z-20">
-                <div className="flex items-center gap-3 min-w-0">
-                  {getFileIcon(previewItem.mimeType)}
-                  <div className="min-w-0">
-                    <span className="text-sm font-semibold text-white truncate block max-w-md">
+              <div className="h-auto min-h-[4rem] border-b border-border bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:px-6 shrink-0 z-20 gap-4">
+                <div className="flex items-center gap-3 min-w-0 w-full">
+                  <div className="shrink-0">{getFileIcon(previewItem.mimeType)}</div>
+                  <div className="min-w-0 pr-2">
+                    <span className="text-sm font-semibold text-white truncate block">
                       {previewItem.name}
                     </span>
-                    <span className="text-sm text-muted-foreground leading-none mt-0.5 block font-mono">
+                    <span className="text-xs text-muted-foreground leading-relaxed mt-1 block font-mono break-words">
                       {previewItem.mimeType} &bull; {formatSize(previewItem.size)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-5">
+                <div className="flex items-center gap-3 sm:gap-5 w-full sm:w-auto">
                   <a
                     href={previewItem.path}
                     download={previewItem.name}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-5 rounded-xl bg-muted/60 hover:bg-muted border border-border/80 text-white cursor-pointer flex items-center justify-center gap-4 text-xs font-semibold transition-colors"
+                    className="flex-1 sm:flex-none py-3 px-4 sm:p-3 sm:px-6 rounded-xl bg-[#8fe319] hover:bg-[#8fe319]/90 text-black cursor-pointer flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold transition-colors shadow-lg shadow-[#8fe319]/10"
                   >
-                    <Download className="w-3.5 h-3.5" />
+                    <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                     Baixar Arquivo
                   </a>
                   <button
                     onClick={() => setPreviewItem(null)}
-                    className="p-5 rounded-xl hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                    className="p-3 sm:p-3.5 rounded-xl bg-muted/60 hover:bg-muted text-muted-foreground hover:text-white cursor-pointer shrink-0"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
               {/* Moldura de Visualização */}
-              <div className="flex-1 w-full bg-black/80 flex items-center justify-center overflow-auto p-4 min-h-[300px]">
+              <div className="flex-1 w-full bg-black/80 flex items-center justify-center overflow-auto p-6 sm:p-8 min-h-[300px]">
                 {previewItem.mimeType.startsWith("image/") ? (
                   <img
                     src={previewItem.path}

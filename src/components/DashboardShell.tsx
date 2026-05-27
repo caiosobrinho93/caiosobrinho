@@ -449,10 +449,10 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               onClick={() => { playClickSound(); setIsCalculatorOpen(prev => !prev); }}
               onMouseEnter={playHoverSound}
               title="Calculadora HUD"
-              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isCalculatorOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
+                  ? "bg-[#8fe319]/20 border-[#8fe319]/45 text-[#8fe319] " 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319]"
               }`}
             >
               <Calculator className="w-4 h-4" />
@@ -463,10 +463,10 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               onClick={() => { playClickSound(); setIsStickyNotesOpen(prev => !prev); }}
               onMouseEnter={playHoverSound}
               title="Notas HUD"
-              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isStickyNotesOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
+                  ? "bg-[#8fe319]/20 border-[#8fe319]/45 text-[#8fe319] " 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319]"
               }`}
             >
               <Pin className="w-4 h-4" />
@@ -477,13 +477,24 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               onClick={() => { playClickSound(); setIsRadioOpen(prev => !prev); }}
               onMouseEnter={playHoverSound}
               title="Rádio Synthwave"
-              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isRadioOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
+                  ? "bg-[#8fe319]/20 border-[#8fe319]/45 text-[#8fe319] " 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319]"
               }`}
             >
               <Music className="w-4 h-4" />
+            </button>
+
+            {/* Notification Bell */}
+            <button
+              title="Notificações"
+              className="relative flex items-center justify-center w-8 h-8 rounded-full bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319] transition-all cursor-pointer shrink-0"
+            >
+              <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-[#8fe319] text-[8px] font-bold text-black">
+                2
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
             </button>
 
             {/* Storage indicator */}

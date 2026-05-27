@@ -362,7 +362,7 @@ export default function ProfilePage() {
 
               <form onSubmit={handleCreateGoal} className="p-4 bg-card/25 border border-border rounded-sm space-y-4">
                 <div>
-                  <label className="block text-xs font-black text-muted-foreground uppercase tracking-wider mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-black text-muted-foreground uppercase tracking-wider mb-4">
                     Título da Meta
                   </label>
                   <input
@@ -376,7 +376,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-black text-muted-foreground uppercase tracking-wider mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-black text-muted-foreground uppercase tracking-wider mb-4">
                     Recompensa de XP
                   </label>
                   <select

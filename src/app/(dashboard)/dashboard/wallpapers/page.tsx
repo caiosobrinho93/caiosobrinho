@@ -207,15 +207,15 @@ export default function WallpapersPage() {
 
       {/* Grid de Papéis de Parede */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 animate-pulse">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-card/30 border border-border/80 rounded-sm h-72" />
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 animate-pulse">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-card/30 border border-border/80 rounded-sm h-24 sm:h-72 aspect-square sm:aspect-auto" />
           ))}
         </div>
       ) : filteredWallpapers.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 items-start">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3.5 items-start">
           {[0, 1, 2].map((colIndex) => (
-            <div key={colIndex} className="flex flex-col gap-3.5 ">
+            <div key={colIndex} className="flex flex-col gap-2 sm:gap-3.5">
               {getMasonryColumns(filteredWallpapers, 3)[colIndex]?.map((item) => (
                 <motion.div
                   key={item.id}
@@ -227,30 +227,30 @@ export default function WallpapersPage() {
                   <img
                     src={item.url}
                     alt={item.title}
-                    className="w-full h-auto object-cover max-h-[420px]"
+                    className="w-full object-cover aspect-square sm:aspect-auto sm:max-h-[420px]"
                     loading="lazy"
                   />
  
                   {/* Overlay escuro em foco */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-between duration-300 z-10">
-                    <div className="flex justify-end gap-2 ">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-2 sm:p-3 flex flex-col justify-between duration-300 z-10">
+                    <div className="flex justify-end gap-1.5 sm:gap-2 ">
                       <button
                         onClick={(e) => handleToggleFavorite(item, e)}
-                        className="p-1 rounded-sm bg-black/45 hover:bg-black/75 border border-white/5 text-white transition-colors cursor-pointer"
+                        className="p-1.5 sm:p-2 rounded-md bg-black/60 hover:bg-black/80 border border-white/10 text-white transition-colors cursor-pointer backdrop-blur-sm"
                       >
-                        <Star className={`w-3 h-3 ${item.isFavorite ? "text-primary fill-current" : ""}`} />
+                        <Star className={`w-3 h-3 sm:w-4 sm:h-4 ${item.isFavorite ? "text-[#8fe319] fill-[#8fe319]" : ""}`} />
                       </button>
                       <button
                         onClick={(e) => handleDelete(item.id, e)}
-                        className="p-1 rounded-sm bg-black/45 hover:bg-black/75 border border-white/5 text-white hover:text-destructive transition-colors cursor-pointer"
+                        className="p-1.5 sm:p-2 rounded-md bg-black/60 hover:bg-black/80 border border-white/10 text-white hover:text-destructive transition-colors cursor-pointer backdrop-blur-sm"
                       >
-                        <Trash2 className="w-3 h-3" />
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                       </button>
                     </div>
  
                     <div className="flex items-center justify-between">
-                      <div className="min-w-0 ">
-                        <span className="text-sm font-bold text-white truncate block uppercase tracking-wide">{item.title}</span>
+                      <div className="min-w-0">
+                        <span className="text-xs sm:text-sm font-bold text-white truncate block uppercase tracking-wide">{item.title}</span>
                         <div className="flex items-center gap-4 mt-0.5">
                           <span className="text-xs text-muted-foreground block">WIDESCREEN</span>
                           {item.user?.username && (
@@ -319,7 +319,7 @@ export default function WallpapersPage() {
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                     Título do Wallpaper *
                   </label>
                   <input
@@ -334,7 +334,7 @@ export default function WallpapersPage() {
 
                 {/* Seletores de abas (Arquivo ou URL) */}
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-bold text-muted-foreground uppercase">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase">
                     Origem da Imagem *
                   </label>
                   <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
@@ -364,7 +364,7 @@ export default function WallpapersPage() {
                 {/* Área dinâmica das abas */}
                 {uploadType === "file" ? (
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       Selecionar Arquivo de Imagem
                     </label>
                     <input
@@ -377,7 +377,7 @@ export default function WallpapersPage() {
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       URL da Imagem
                     </label>
                     <input
@@ -442,33 +442,41 @@ export default function WallpapersPage() {
                 className="max-w-full max-h-[80vh] object-contain"
               />
 
-              <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between px-6 pointer-events-none z-20">
-                <span className="text-sm font-semibold text-white shadow-sm truncate max-w-md">
+              <div className="absolute top-0 inset-x-0 p-4 sm:p-6 flex items-start justify-between pointer-events-none z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+                <span className="text-sm sm:text-base font-semibold text-white shadow-sm truncate max-w-[70%] mt-1">
                   {activeWallpaper.title}
                 </span>
+                <button
+                  onClick={() => setActiveWallpaper(null)}
+                  className="p-2 sm:p-3 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/10 cursor-pointer flex items-center justify-center transition-colors pointer-events-auto backdrop-blur-sm"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-                <div className="flex gap-5 pointer-events-auto">
+              <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex justify-center items-end pointer-events-none z-20">
+                <div className="flex gap-3 sm:gap-5 pointer-events-auto w-full sm:w-auto justify-center">
                   <a
                     href={activeWallpaper.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     download={activeWallpaper.title}
-                    className="p-5.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center gap-4 text-xs font-semibold transition-colors"
+                    className="flex-1 sm:flex-none px-4 py-3.5 sm:px-6 sm:py-4 rounded-xl bg-[#8fe319] hover:bg-[#8fe319]/90 text-black cursor-pointer flex items-center justify-center gap-2 sm:gap-3 text-sm font-bold transition-colors shadow-lg shadow-[#8fe319]/20"
                   >
-                    <Download className="w-4.5 h-4.5" />
+                    <Download className="w-5 h-5" />
                     Baixar
                   </a>
                   <button
                     onClick={(e) => handleToggleFavorite(activeWallpaper, e)}
-                    className="p-5.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center transition-colors"
+                    className="p-3.5 sm:p-4 rounded-xl bg-black/60 hover:bg-black/80 text-white border border-white/10 cursor-pointer flex items-center justify-center transition-colors backdrop-blur-sm"
                   >
-                    <Star className={`w-4.5 h-4.5 ${activeWallpaper.isFavorite ? "text-primary fill-current" : ""}`} />
+                    <Star className={`w-5 h-5 ${activeWallpaper.isFavorite ? "text-[#8fe319] fill-[#8fe319]" : ""}`} />
                   </button>
                   <button
-                    onClick={() => setActiveWallpaper(null)}
-                    className="p-5.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center transition-colors"
+                    onClick={(e) => handleDelete(activeWallpaper.id, e)}
+                    className="p-3.5 sm:p-4 rounded-xl bg-black/60 hover:bg-black/80 text-white border border-white/10 hover:text-destructive cursor-pointer flex items-center justify-center transition-colors backdrop-blur-sm"
                   >
-                    <X className="w-4.5 h-4.5" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
               </div>

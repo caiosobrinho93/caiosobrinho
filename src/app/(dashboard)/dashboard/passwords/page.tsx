@@ -261,9 +261,9 @@ function PasswordsContent() {
               handleGenerate();
               setIsGeneratorOpen(true);
             }}
-            className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold glass-btn cursor-pointer"
+            className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold bg-[#8fe319] text-black hover:bg-[#8fe319]/90 transition-colors cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
+            <Sparkles className="w-3.5 h-3.5 text-black animate-pulse" />
             Gerador
           </button>
           <button
@@ -609,7 +609,7 @@ function PasswordsContent() {
 
               <form onSubmit={handleCreate} className="space-y-3.5">
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                     Nome do Serviço / Site *
                   </label>
                   <input
@@ -624,7 +624,7 @@ function PasswordsContent() {
 
                 <div className="grid grid-cols-1 gap-3.5">
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                       Nome de Usuário
                     </label>
                     <input
@@ -638,7 +638,7 @@ function PasswordsContent() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                     Senha *
                   </label>
                   <div className="relative">
@@ -689,7 +689,7 @@ function PasswordsContent() {
                       className="space-y-3.5 overflow-hidden pt-1.5 border-t border-border/30"
                     >
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                           E-mail
                         </label>
                         <input
@@ -703,7 +703,7 @@ function PasswordsContent() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                             URL do Site
                           </label>
                           <input
@@ -716,7 +716,7 @@ function PasswordsContent() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                             Categoria
                           </label>
                           <select
@@ -734,7 +734,7 @@ function PasswordsContent() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                           URL da Imagem / Logo (Capa)
                         </label>
                         <input
@@ -747,7 +747,7 @@ function PasswordsContent() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-1">
                           Anotações
                         </label>
                         <textarea
@@ -878,7 +878,7 @@ function PasswordsContent() {
                 </div>
 
                 <div className="space-y-2.5 pt-2">
-                  <label className="flex items-center gap-3 cursor-pointer text-xs font-semibold select-none">
+                  <label className="flex items-center gap-3 cursor-pointer text-[10px] uppercase tracking-wider text-muted-foreground font-semibold select-none">
                     <input
                       type="checkbox"
                       checked={genUppercase}
@@ -887,7 +887,7 @@ function PasswordsContent() {
                     />
                     <span className="text-white/80">Maiúsculas (A-Z)</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer text-xs font-semibold select-none">
+                  <label className="flex items-center gap-3 cursor-pointer text-[10px] uppercase tracking-wider text-muted-foreground font-semibold select-none">
                     <input
                       type="checkbox"
                       checked={genLowercase}
@@ -896,7 +896,7 @@ function PasswordsContent() {
                     />
                     <span className="text-white/80">Minúsculas (a-z)</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer text-xs font-semibold select-none">
+                  <label className="flex items-center gap-3 cursor-pointer text-[10px] uppercase tracking-wider text-muted-foreground font-semibold select-none">
                     <input
                       type="checkbox"
                       checked={genNumbers}
@@ -905,7 +905,7 @@ function PasswordsContent() {
                     />
                     <span className="text-white/80">Números (0-9)</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer text-xs font-semibold select-none">
+                  <label className="flex items-center gap-3 cursor-pointer text-[10px] uppercase tracking-wider text-muted-foreground font-semibold select-none">
                     <input
                       type="checkbox"
                       checked={genSymbols}

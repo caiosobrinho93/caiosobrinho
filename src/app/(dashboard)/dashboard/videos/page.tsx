@@ -403,7 +403,7 @@ export default function VideosPage() {
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                     Título do Vídeo *
                   </label>
                   <input
@@ -418,7 +418,7 @@ export default function VideosPage() {
 
                 {/* Seletores de abas do vídeo (Upload vs URL) */}
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-bold text-muted-foreground uppercase">
+                  <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase">
                     Origem do Vídeo *
                   </label>
                   <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
@@ -447,7 +447,7 @@ export default function VideosPage() {
 
                 {videoUploadType === "file" ? (
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       Selecionar Arquivo de Vídeo
                     </label>
                     <input
@@ -460,7 +460,7 @@ export default function VideosPage() {
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                    <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                       URL de Origem
                     </label>
                     <input
@@ -496,7 +496,7 @@ export default function VideosPage() {
                     >
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             Categoria
                           </label>
                           <select
@@ -513,7 +513,7 @@ export default function VideosPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             Duração (segundos)
                           </label>
                           <input
@@ -528,7 +528,7 @@ export default function VideosPage() {
 
                       {/* Seletores de abas da imagem de capa (Upload vs URL) */}
                       <div className="space-y-1.5">
-                        <label className="block text-sm font-bold text-muted-foreground uppercase">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase">
                           Capa do Vídeo
                         </label>
                         <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
@@ -557,7 +557,7 @@ export default function VideosPage() {
 
                       {thumbUploadType === "file" ? (
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             Selecionar Arquivo de Capa
                           </label>
                           <input
@@ -569,7 +569,7 @@ export default function VideosPage() {
                         </div>
                       ) : (
                         <div>
-                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                             URL da Imagem de Capa
                           </label>
                           <input
@@ -583,7 +583,7 @@ export default function VideosPage() {
                       )}
 
                       <div>
-                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
+                        <label className="block text-[10px] uppercase tracking-wider text-muted-foreground font-bold text-muted-foreground uppercase mb-4">
                           Tags (separadas por vírgula)
                         </label>
                         <div className="relative">

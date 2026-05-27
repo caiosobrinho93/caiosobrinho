@@ -37,7 +37,7 @@
   --popover: hsl(240 6% 10%);
   --popover-foreground: hsl(0 0% 98%);
   
-  --primary: hsl(0 0% 98%);          /* White for primary accents */
+  --primary: #8fe319;          /* White for primary accents */
   --primary-foreground: hsl(240 6% 10%);
   
   --secondary: hsl(240 6% 15%);
@@ -61,7 +61,7 @@
 
 /* Force everything to use the same sleek theme regardless of preset chosen previously */
 .theme-limon, .theme-violet, .theme-cyan, .theme-emerald, .theme-rose, .theme-amber, .theme-carbon {
-  --primary: hsl(0 0% 98%);
+  --primary: #8fe319;
   --primary-foreground: hsl(240 6% 10%);
   --border: hsl(240 6% 16%);
 }

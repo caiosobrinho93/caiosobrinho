@@ -1360,7 +1360,7 @@ export default function DashboardPage() {
               <form onSubmit={handleCreateBankAccount} className="space-y-3.5 text-sm flex-1">
                 {/* Provedor / Instituição */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs text-muted-foreground uppercase font-bold tracking-wide">Instituição Financeira</label>
+                  <label className="text-[10px] uppercase tracking-wider text-muted-foreground text-muted-foreground uppercase font-bold tracking-wide">Instituição Financeira</label>
                   <select
                     value={accountProvider}
                     onChange={(e) => setAccountProvider(e.target.value)}
@@ -1380,7 +1380,7 @@ export default function DashboardPage() {
                 {/* Titularidade / Identificação de User */}
                 <div className="grid grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs text-muted-foreground uppercase font-bold tracking-wide">Saldo Inicial (R$)</label>
+                    <label className="text-[10px] uppercase tracking-wider text-muted-foreground text-muted-foreground uppercase font-bold tracking-wide">Saldo Inicial (R$)</label>
                     <input
                       type="number"
                       step="0.01"
@@ -1392,7 +1392,7 @@ export default function DashboardPage() {
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs text-muted-foreground uppercase font-bold tracking-wide">Número da Conta</label>
+                    <label className="text-[10px] uppercase tracking-wider text-muted-foreground text-muted-foreground uppercase font-bold tracking-wide">Número da Conta</label>
                     <input
                       type="text"
                       required
@@ -1429,7 +1429,7 @@ export default function DashboardPage() {
                         Credenciais Open Finance (API)
                       </div>
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs text-muted-foreground uppercase">Client ID / App Key (Público)</label>
+                        <label className="text-[10px] uppercase tracking-wider text-muted-foreground text-muted-foreground uppercase">Client ID / App Key (Público)</label>
                         <input
                           type="text"
                           placeholder="Chave pública do banco ou token Pix de leitura"
@@ -1439,7 +1439,7 @@ export default function DashboardPage() {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs text-muted-foreground uppercase">Client Secret / API Token (Privado)</label>
+                        <label className="text-[10px] uppercase tracking-wider text-muted-foreground text-muted-foreground uppercase">Client Secret / API Token (Privado)</label>
                         <input
                           type="password"
                           placeholder="Chave secreta ou certificado digital do banco"
