@@ -203,7 +203,7 @@ export default function DashboardPage() {
         return <FileText className="w-4 h-4 text-emerald" />;
       case "vídeo":
       case "video":
-        return <Video className="w-4 h-4 text-cyan" />;
+        return <Video className="w-4 h-4 text-primary" />;
       case "senha":
       case "password":
         return <Key className="w-4 h-4 text-rose" />;
@@ -476,15 +476,15 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="h-10 w-64 bg-muted/60 animate-pulse rounded-xl" />
+        <div className="h-10 w-64 bg-muted/60  rounded-xl" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-card/60 border border-border/80 rounded-2xl animate-pulse" />
+            <div key={i} className="h-28 bg-card/60 border border-border/80 rounded-2xl " />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 h-96 bg-card/60 border border-border/80 rounded-2xl animate-pulse" />
-          <div className="h-96 bg-card/60 border border-border/80 rounded-2xl animate-pulse" />
+          <div className="lg:col-span-2 h-96 bg-card/60 border border-border/80 rounded-2xl " />
+          <div className="h-96 bg-card/60 border border-border/80 rounded-2xl " />
         </div>
       </div>
     );
@@ -510,7 +510,7 @@ export default function DashboardPage() {
     { name: "Senhas", count: data.counts.passwords, details: "Credenciais seguras", icon: Key, color: "text-rose bg-rose/10 border-rose/20", href: "/dashboard/passwords" },
     { name: "Cofre de Arquivos", count: data.counts.files, details: "Arquivos locais", icon: FolderOpen, color: "text-amber bg-amber/10 border-amber/20", href: "/dashboard/files" },
     { name: "Contas Ativas", count: data.counts.bills, details: "Pagar & Receber", icon: CreditCard, color: "text-emerald bg-emerald/10 border-emerald/20", href: "/dashboard/bills" },
-    { name: "Comprovantes", count: data.counts.receipts, details: "Recibos salvos", icon: FileCheck, color: "text-cyan bg-cyan/10 border-cyan/20", href: "/dashboard/receipts" },
+    { name: "Comprovantes", count: data.counts.receipts, details: "Recibos salvos", icon: FileCheck, color: "text-primary bg-cyan/10 border-cyan/20", href: "/dashboard/receipts" },
   ];
 
   // Cálculo da barra de XP (cada nível tem 1000 XP)
@@ -631,9 +631,9 @@ export default function DashboardPage() {
               let nameTag = acc.provider.substring(0, 3).toUpperCase();
 
               if (prov.includes("nubank")) {
-                borderColor = "border-fuchsia-500/25";
+                borderColor = "border-border/25";
                 bgHoverColor = "hover:bg-fuchsia-950/5";
-                tagBg = "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/25";
+                tagBg = "bg-fuchsia-500/10 text-primary-400 border-border/25";
               } else if (prov.includes("santander")) {
                 borderColor = "border-red-500/25";
                 bgHoverColor = "hover:bg-red-950/5";
@@ -750,7 +750,7 @@ export default function DashboardPage() {
         variants={itemVariants}
         className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
       >
-        {renderWidgetHeader(`Central de Metas`, <Trophy className="w-3.5 h-3.5 text-primary animate-pulse" />, idx, (
+        {renderWidgetHeader(`Central de Metas`, <Trophy className="w-3.5 h-3.5 text-primary " />, idx, (
           <span className="text-xs text-primary bg-primary/10 border border-primary/20 px-4 py-2 rounded-sm font-bold font-mono">
             {currentLevelXp}/1000 XP
           </span>
@@ -1083,15 +1083,15 @@ export default function DashboardPage() {
       {/* Gamer HUD Header */}
       <div className={`p-4 rounded-xl border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl ${
         data.profile.username === "Giselle"
-          ? "border-fuchsia-500/25 bg-fuchsia-950/5 shadow-fuchsia-950/10"
+          ? "border-border/25 bg-fuchsia-950/5 shadow-fuchsia-950/10"
           : "border-[#c5ff1a]/25 bg-slate-950/40 shadow-slate-950/20"
       }`}>
         <div className="flex items-center gap-4">
           {/* Avatar com Borda Neon Gamer */}
           <div className={`relative w-12 h-12 rounded-full border-2 overflow-hidden flex items-center justify-center shrink-0 ${
             data.profile.username === "Giselle"
-              ? "border-fuchsia-400 bg-fuchsia-950/30 shadow-[0_0_15px_rgba(217,70,239,0.3)]"
-              : "border-cyan-400 bg-cyan-950/30 shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+              ? "border-border bg-fuchsia-950/30 "
+              : "border-border bg-cyan-950/30 "
           }`}>
             <img 
               src={data.profile.username === "Giselle" ? "/avatar-giselle.png" : "/avatar-caio.png"} 
@@ -1112,8 +1112,8 @@ export default function DashboardPage() {
               </h2>
               <span className={`text-xs font-black px-4 py-2 rounded uppercase ${
                 data.profile.username === "Giselle" 
-                  ? "bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400" 
-                  : "bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"
+                  ? "bg-fuchsia-500/10 border border-border/20 text-primary-400" 
+                  : "bg-cyan-500/10 border border-border/20 text-primary-400"
               }`}>
                 {data.profile.username === "Giselle" ? "Giselle" : "Caio"}
               </span>
@@ -1242,7 +1242,7 @@ export default function DashboardPage() {
             >
               <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-4">
                 <div className="flex items-center gap-5">
-                  <CreditCard className="w-4.5 h-4.5 text-primary animate-pulse" />
+                  <CreditCard className="w-4.5 h-4.5 text-primary " />
                   <span className="font-display text-xs font-bold text-white uppercase tracking-wider">Gerenciar Contas Bancárias</span>
                 </div>
                 <button

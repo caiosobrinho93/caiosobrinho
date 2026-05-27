@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
-  variable: "--font-outfit",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -39,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} dark h-full antialiased`}>
-      <body className="min-h-[100dvh] flex flex-col bg-background text-foreground selection:bg-primary/30 overscroll-none">
+    <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
+      <body className="min-h-[100dvh] flex flex-col bg-background text-foreground selection:bg-primary/30 overscroll-none font-sans">
         <ThemeProvider>{children}</ThemeProvider>
         
         {/* Script para PWA Service Worker e auto-recuperação de erros de carregamento (ChunkLoadError) */}

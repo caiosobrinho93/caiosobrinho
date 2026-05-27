@@ -33,7 +33,7 @@ import {
   Music
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
-import NeonParticles from "./NeonParticles";
+
 import { useSettingsStore } from "@/stores/settingsStore";
 import { APP_VERSION } from "@/lib/version";
 import { useStatsStore } from "@/stores/statsStore";
@@ -262,7 +262,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       style={customStyle}
       className={`theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${themeBgClass} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
     >
-      <NeonParticles />
+      
       {/* Background Cyber Grid Layer */}
       <div className={`absolute inset-0 pointer-events-none z-0 ${gridStyleClass}`} />
       
@@ -276,7 +276,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
         <div className="h-14 flex items-center justify-between px-3 border-b border-border/80 bg-background/40">
           <Link href="/dashboard" className="flex items-center gap-5 overflow-hidden select-none">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/30 shrink-0">
-              <Terminal className="w-4.5 h-4.5 text-primary animate-pulse" />
+              <Terminal className="w-4.5 h-4.5 text-primary " />
             </div>
             {!isSidebarCollapsed && (
               <motion.span
@@ -336,7 +336,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             <button
               onClick={handleUpdateApp}
               disabled={isUpdating}
-              className="w-full flex items-center justify-center gap-4 py-1.5 rounded bg-primary text-black font-bold border border-primary text-xs cursor-pointer animate-pulse disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-4 py-1.5 rounded bg-primary text-black font-bold border border-primary text-xs cursor-pointer  disabled:opacity-50"
             >
               <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
               <span>{isUpdating ? "Instalando..." : "Nova Versão - Atualizar"}</span>
@@ -346,8 +346,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           <Link href="/dashboard/profile" className="flex items-center gap-5 px-4 py-1 overflow-hidden hover:bg-muted/10 border border-transparent hover:border-border/30 transition-all rounded cursor-pointer w-full">
             <div className={`w-7 h-7 rounded-sm overflow-hidden flex items-center justify-center border shrink-0 ${
               username === "caio"
-                ? "border-cyan-500/50 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
-                : "border-fuchsia-500/50 shadow-[0_0_8px_rgba(217,70,239,0.3)]"
+                ? "border-border/50 "
+                : "border-border/50 "
             }`}>
               <img 
                 src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
@@ -425,7 +425,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               <button
                 onClick={handleUpdateApp}
                 disabled={isUpdating}
-                className="flex items-center gap-4 px-2.5 py-1 rounded bg-primary text-black font-bold text-xs animate-pulse border border-primary/20 shadow-[0_0_10px_rgba(215,254,0,0.4)] cursor-pointer disabled:opacity-50 shrink-0"
+                className="flex items-center gap-4 px-2.5 py-1 rounded bg-primary text-black font-bold text-xs  border border-primary/20  cursor-pointer disabled:opacity-50 shrink-0"
               >
                 <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
                 <span className="hidden xs:inline">{isUpdating ? "Atualizando..." : "Atualizar App"}</span>
@@ -451,7 +451,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               title="Calculadora HUD"
               className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isCalculatorOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary shadow-[0_0_10px_rgba(197,254,0,0.25)]" 
+                  ? "bg-primary/20 border-primary/45 text-primary " 
                   : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
               }`}
             >
@@ -465,7 +465,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               title="Notas HUD"
               className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isStickyNotesOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary shadow-[0_0_10px_rgba(197,254,0,0.25)]" 
+                  ? "bg-primary/20 border-primary/45 text-primary " 
                   : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
               }`}
             >
@@ -479,7 +479,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               title="Rádio Synthwave"
               className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isRadioOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary shadow-[0_0_10px_rgba(197,254,0,0.25)]" 
+                  ? "bg-primary/20 border-primary/45 text-primary " 
                   : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
               }`}
             >
@@ -488,7 +488,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
 
             {/* Storage indicator */}
             <div className="hidden lg:flex items-center gap-5 px-2.5 py-1 rounded-sm border border-border/80 bg-card/20 text-sm ">
-              <Database className="w-3 h-3 text-primary animate-pulse" />
+              <Database className="w-3 h-3 text-primary " />
               <div className="flex flex-col min-w-14">
                 <div className="flex justify-between text-xs leading-tight font-medium">
                   <span className="text-muted-foreground uppercase">Disk</span>
@@ -502,7 +502,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             
             {/* User Avatar */}
             <Link href="/dashboard/profile" className={`w-7.5 h-7.5 rounded-sm overflow-hidden flex items-center justify-center border select-none hover:opacity-85 transition-opacity cursor-pointer ${
-              username === "caio" ? "border-cyan-400" : "border-fuchsia-400"
+              username === "caio" ? "border-border" : "border-border"
             }`}>
               <img 
                 src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
@@ -608,7 +608,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                   <button
                     onClick={handleUpdateApp}
                     disabled={isUpdating}
-                    className="flex items-center justify-center gap-5 p-3 w-full bg-primary text-black font-bold rounded-xl text-sm transition-colors cursor-pointer animate-pulse disabled:opacity-50"
+                    className="flex items-center justify-center gap-5 p-3 w-full bg-primary text-black font-bold rounded-xl text-sm transition-colors cursor-pointer  disabled:opacity-50"
                   >
                     <RefreshCw className={`w-4 h-4 ${isUpdating ? 'animate-spin' : ''}`} />
                     <span>{isUpdating ? "Instalando..." : "Atualizar Nexus Vault"}</span>
@@ -618,8 +618,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                 <div className="flex items-center gap-3 px-1 font-sans">
                   <div className={`w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center border ${
                     username === "caio"
-                      ? "border-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)]"
-                      : "border-fuchsia-400 shadow-[0_0_10px_rgba(217,70,239,0.2)]"
+                      ? "border-border "
+                      : "border-border "
                   }`}>
                     <img 
                       src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
