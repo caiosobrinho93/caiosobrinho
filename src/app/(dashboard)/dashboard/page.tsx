@@ -523,13 +523,13 @@ export default function DashboardPage() {
 
   const renderWidgetHeader = (title: string, icon: React.ReactNode, idx: number, extraActions?: React.ReactNode) => {
     return (
-      <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-border/40 font-display">
-        <div className="flex items-center gap-1.5">
+      <div className="flex items-center justify-between mb-4 pb-4 border-b border-border/40 font-display">
+        <div className="flex items-center gap-4">
           {icon}
-          <h2 className="text-[10px] font-display font-bold text-white uppercase tracking-wider">{title}</h2>
+          <h2 className="text-sm font-display font-bold text-white uppercase tracking-wider">{title}</h2>
         </div>
         
-        <div className="flex items-center gap-2 pointer-events-auto">
+        <div className="flex items-center gap-5 pointer-events-auto">
           {extraActions}
         </div>
       </div>
@@ -546,7 +546,7 @@ export default function DashboardPage() {
         className={`glass-panel lg:col-span-2 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
       >
         {renderWidgetHeader("Atividades Recentes", <Clock className="w-3.5 h-3.5 text-primary" />, idx, (
-          <span className="text-[8px] text-muted-foreground bg-muted/15 border border-border px-1.5 py-0.5 rounded-sm font-bold uppercase tracking-wider font-display">
+          <span className="text-xs text-muted-foreground bg-muted/15 border border-border px-4 py-2 rounded-sm font-bold uppercase tracking-wider font-display">
             Console Ativo
           </span>
         ))}
@@ -555,15 +555,15 @@ export default function DashboardPage() {
             <div
               key={item.id}
               onClick={() => router.push(getModuleLink(item.type))}
-              className="flex items-center justify-between p-1.5 rounded-sm hover:bg-muted/15 transition-all cursor-pointer group border border-transparent hover:border-border/30"
+              className="flex items-center justify-between p-4 rounded-sm hover:bg-muted/15 transition-all cursor-pointer group border border-transparent hover:border-border/30"
             >
-              <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex items-center gap-5.5 min-w-0">
                 <div className="w-6.5 h-6.5 rounded-sm bg-card border border-border flex items-center justify-center shrink-0">
                   {getModuleIcon(item.type)}
                 </div>
                 <div className="min-w-0 ">
-                  <div className="flex items-center gap-2">
-                    <p className="text-[11px] font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
+                  <div className="flex items-center gap-5">
+                    <p className="text-sm font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
                       {item.title}
                     </p>
                     {item.createdBy && (
@@ -572,12 +572,12 @@ export default function DashboardPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-[9px] text-muted-foreground truncate leading-none mt-0.5 uppercase tracking-wide font-mono">
+                  <p className="text-xs text-muted-foreground truncate leading-none mt-0.5 uppercase tracking-wide font-mono">
                     {item.type} // {item.details}
                   </p>
                 </div>
               </div>
-              <span className="text-[9px] text-muted-foreground font-semibold whitespace-nowrap ml-4 shrink-0 flex items-center gap-0.5 font-mono">
+              <span className="text-xs text-muted-foreground font-semibold whitespace-nowrap ml-4 shrink-0 flex items-center gap-0.5 font-mono">
                 {new Date(item.date).toLocaleDateString("pt-BR", {month: "short", day: "numeric"})}
                 <ArrowUpRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
               </span>
@@ -600,7 +600,7 @@ export default function DashboardPage() {
         {renderWidgetHeader("Sincronização Bancária", <CreditCard className="w-3.5 h-3.5 text-primary" />, idx, (
           <button
             onClick={() => setIsAccountsModalOpen(true)}
-            className="flex items-center gap-1 px-2 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 rounded-sm text-[8px] font-bold cursor-pointer transition-colors"
+            className="flex items-center gap-2 px-2 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 rounded-sm text-xs font-bold cursor-pointer transition-colors"
           >
             <Settings className="w-2.5 h-2.5" />
             Gerenciar Contas
@@ -613,7 +613,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="mb-2 p-1.5 bg-primary/5 border border-primary/20 rounded-sm flex items-center gap-2 text-[9px] text-primary"
+              className="mb-2 p-4 bg-primary/5 border border-primary/20 rounded-sm flex items-center gap-5 text-xs text-primary"
             >
               <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
               <span>{syncMessage}</span>
@@ -621,7 +621,7 @@ export default function DashboardPage() {
           )}
         </AnimatePresence>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {data.financialAccounts && data.financialAccounts.length > 0 ? (
             data.financialAccounts.map((acc) => {
               const prov = acc.provider.toLowerCase();
@@ -663,10 +663,10 @@ export default function DashboardPage() {
                     setSyncFileContent("");
                     setIsSyncModalOpen(true);
                   }}
-                  className={`relative overflow-hidden p-2 rounded-sm border ${borderColor} bg-card/45 ${bgHoverColor} transition-all flex items-center justify-between h-12 cursor-pointer group`}
+                  className={`relative overflow-hidden p-5 rounded-sm border ${borderColor} bg-card/45 ${bgHoverColor} transition-all flex items-center justify-between h-12 cursor-pointer group`}
                 >
-                  <div className="flex items-center gap-2">
-                    <div className={`px-1 py-0.5 border rounded-sm text-[8px] font-bold uppercase tracking-wider ${tagBg}`}>
+                  <div className="flex items-center gap-5">
+                    <div className={`px-1 py-2 border rounded-sm text-xs font-bold uppercase tracking-wider ${tagBg}`}>
                       {nameTag}
                     </div>
                     <div className="flex flex-col">
@@ -677,10 +677,10 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
-                    <span className="text-[8px] text-muted-foreground block leading-tight group-hover:text-primary transition-colors font-mono">
+                    <span className="text-xs text-muted-foreground block leading-tight group-hover:text-primary transition-colors font-mono">
                       {acc.lastSync || "Pendente"}
                     </span>
-                    <span className="text-[8px] text-emerald-400 font-semibold leading-tight mt-0.5 font-mono">
+                    <span className="text-xs text-emerald-400 font-semibold leading-tight mt-0.5 font-mono">
                       {acc.trend}
                     </span>
                   </div>
@@ -688,7 +688,7 @@ export default function DashboardPage() {
               );
             })
           ) : (
-            <div className="p-3 border border-dashed border-border/60 rounded-sm text-center col-span-2 text-[9px] text-muted-foreground">
+            <div className="p-3 border border-dashed border-border/60 rounded-sm text-center col-span-2 text-xs text-muted-foreground">
               Nenhuma conta cadastrada. Clique em "Gerenciar Contas" para começar.
             </div>
           )}
@@ -707,7 +707,7 @@ export default function DashboardPage() {
         className={`glass-panel lg:col-span-2 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
       >
         {renderWidgetHeader("Armazenamento", <HardDrive className="w-3.5 h-3.5 text-primary" />, idx, (
-          <span className="text-muted-foreground text-[10px] font-mono">
+          <span className="text-muted-foreground text-sm font-mono">
             <span className="text-white font-bold">{data.storageStats.usedSize}</span> / {data.storageStats.totalSize}
           </span>
         ))}
@@ -719,21 +719,21 @@ export default function DashboardPage() {
           />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 ">
-          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Cine Vault</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 ">
+          <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Cine Vault</span>
             <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.videosSize || "0 B"}</span>
           </div>
-          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Arquivos</span>
+          <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Arquivos</span>
             <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.docsSize || "0 B"}</span>
           </div>
-          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Imagens</span>
+          <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Imagens</span>
             <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.imagesSize || "0 B"}</span>
           </div>
-          <div className="p-1.5 bg-muted/10 border border-border/40 rounded-sm text-center">
-            <span className="text-[8px] text-muted-foreground block leading-tight uppercase font-display">Outros</span>
+          <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Outros</span>
             <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.othersSize || "0 B"}</span>
           </div>
         </div>
@@ -751,7 +751,7 @@ export default function DashboardPage() {
         className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
       >
         {renderWidgetHeader(`Central de Metas`, <Trophy className="w-3.5 h-3.5 text-primary animate-pulse" />, idx, (
-          <span className="text-[8px] text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded-sm font-bold font-mono">
+          <span className="text-xs text-primary bg-primary/10 border border-primary/20 px-4 py-2 rounded-sm font-bold font-mono">
             {currentLevelXp}/1000 XP
           </span>
         ))}
@@ -765,7 +765,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Listagem de Metas Compacta */}
-        <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
+        <div className="space-y-1 max-h-64 overflow-y-auto pr-1">
           <AnimatePresence initial={false}>
             {data.goals.map((goal) => (
               <motion.div
@@ -773,13 +773,13 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className={`flex items-center justify-between p-1.5 rounded-sm border transition-all ${
+                className={`flex items-center justify-between p-4 rounded-sm border transition-all ${
                   goal.isCompleted
                     ? "bg-emerald-500/5 border-emerald-500/10 text-emerald-100/50"
                     : "bg-muted/10 border-border/40 text-white/90"
                 }`}
               >
-                <div className="flex items-center gap-2 min-w-0">
+                <div className="flex items-center gap-5 min-w-0">
                   <button
                     type="button"
                     onClick={() => handleToggleGoal(goal.id, goal.isCompleted)}
@@ -791,13 +791,13 @@ export default function DashboardPage() {
                       <Circle className="w-3.5 h-3.5" />
                     )}
                   </button>
-                  <span className={`text-[10px] font-bold truncate ${goal.isCompleted ? "line-through opacity-50" : ""}`}>
+                  <span className={`text-sm font-bold truncate ${goal.isCompleted ? "line-through opacity-50" : ""}`}>
                     {goal.title}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0 ml-1.5">
-                  <span className={`text-[7px] px-1 py-0.5 rounded-sm font-bold ${
+                <div className="flex items-center gap-2 shrink-0 ml-1.5">
+                  <span className={`text-[7px] px-1 py-2 rounded-sm font-bold ${
                     goal.isCompleted ? "bg-emerald-500/10 text-emerald-400" : "bg-primary/10 text-primary"
                   }`}>
                     +{goal.xpReward} XP
@@ -814,24 +814,24 @@ export default function DashboardPage() {
             ))}
           </AnimatePresence>
           {data.goals.length === 0 && (
-            <p className="text-[9px] text-muted-foreground text-center py-3">Sem metas pendentes.</p>
+            <p className="text-xs text-muted-foreground text-center py-3">Sem metas pendentes.</p>
           )}
         </div>
 
         {/* Formulário para Nova Meta Compacto */}
-        <form onSubmit={handleAddGoal} className="mt-2.5 pt-2 border-t border-border/40 flex gap-1">
+        <form onSubmit={handleAddGoal} className="mt-2.5 pt-2 border-t border-border/40 flex gap-2">
           <input
             type="text"
             placeholder="Nova meta..."
             value={newGoalTitle}
             onChange={(e) => setNewGoalTitle(e.target.value)}
-            className="flex-1 px-2 py-1 text-[9px] bg-muted/20 border border-border/80 focus:border-primary rounded-sm text-white outline-none transition-all"
+            className="flex-1 px-2 py-1 text-xs bg-muted/20 border border-border/80 focus:border-primary rounded-sm text-white outline-none transition-all"
             required
           />
           <select
             value={newGoalXp}
             onChange={(e) => setNewGoalXp(Number(e.target.value))}
-            className="px-1 py-1 text-[9px] bg-muted/20 border border-border/80 rounded-sm text-white outline-none cursor-pointer font-mono"
+            className="px-1 py-1 text-xs bg-muted/20 border border-border/80 rounded-sm text-white outline-none cursor-pointer font-mono"
           >
             <option value={50}>50 XP</option>
             <option value={100}>100 XP</option>
@@ -841,7 +841,7 @@ export default function DashboardPage() {
           <button
             type="submit"
             disabled={isAddingGoal}
-            className="px-2 bg-primary hover:bg-primary/95 text-black rounded-sm flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 text-[9px] glass-btn glass-btn-primary font-bold"
+            className="px-2 bg-primary hover:bg-primary/95 text-black rounded-sm flex items-center justify-center transition-all cursor-pointer disabled:opacity-50 text-xs glass-btn glass-btn-primary font-bold"
           >
             {isAddingGoal ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3 h-3" />}
           </button>
@@ -860,7 +860,7 @@ export default function DashboardPage() {
         className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
       >
         {renderWidgetHeader("Baú de Prêmios Pix", <Trophy className="w-3.5 h-3.5 text-primary" />, idx, (
-          <span className="text-[8px] text-muted-foreground uppercase font-bold font-display">
+          <span className="text-xs text-muted-foreground uppercase font-bold font-display">
             Co-op Shop
           </span>
         ))}
@@ -877,7 +877,7 @@ export default function DashboardPage() {
             return (
               <div
                 key={reward.id}
-                className={`p-2 border rounded-sm flex items-center justify-between gap-3 transition-colors ${
+                className={`p-5 border rounded-sm flex items-center justify-between gap-3 transition-colors ${
                   isClaimed
                     ? "bg-muted/5 border-border/20 opacity-60"
                     : canClaim
@@ -886,7 +886,7 @@ export default function DashboardPage() {
                 }`}
               >
                 <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-4">
                     <span className="text-xs font-extrabold text-white leading-tight">{reward.title}</span>
                     {isClaimed && (
                       <span className="text-[7px] px-1 py-0.2 bg-primary/10 border border-primary/20 text-primary rounded-sm font-mono uppercase shrink-0">
@@ -894,7 +894,7 @@ export default function DashboardPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 mt-0.5 text-[8.5px] text-muted-foreground leading-none">
+                  <div className="flex items-center gap-5 mt-0.5 text-[8.5px] text-muted-foreground leading-none">
                     <span>Valor: <strong className="text-emerald-400 font-mono font-bold">R$ {reward.amount.toFixed(2)}</strong></span>
                     <span>•</span>
                     <span>Custo: <strong className="text-primary font-mono font-bold">{reward.costXp} XP</strong></span>
@@ -906,7 +906,7 @@ export default function DashboardPage() {
                     type="button"
                     onClick={() => handleClaimReward(reward.id)}
                     disabled={!canClaim || isClaimingReward !== null}
-                    className={`px-2.5 py-1 rounded-sm text-[8px] font-black uppercase tracking-wider shrink-0 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-sm text-xs font-black uppercase tracking-wider shrink-0 cursor-pointer transition-colors ${
                       canClaim
                         ? "bg-primary text-black hover:bg-primary/90"
                         : "bg-muted/20 border border-border text-muted-foreground cursor-not-allowed"
@@ -938,11 +938,11 @@ export default function DashboardPage() {
       >
         {renderWidgetHeader("Atalhos Rápidos", <Zap className="w-3 h-3 text-primary" />, idx)}
         
-        <div className="grid grid-cols-2 gap-1.5">
+        <div className="grid grid-cols-2 gap-4">
           <button
             type="button"
             onClick={() => router.push("/dashboard/notes?new=true")}
-            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
           >
             <Plus className="w-2.5 h-2.5 text-primary shrink-0" />
             Criar Nota
@@ -950,7 +950,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/dashboard/passwords?generate=true")}
-            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
           >
             <Key className="w-2.5 h-2.5 text-secondary shrink-0" />
             Nova Senha
@@ -958,7 +958,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/dashboard/torrents")}
-            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
           >
             <RefreshCw className="w-2.5 h-2.5 text-amber shrink-0" />
             Torrent
@@ -966,7 +966,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/dashboard/files")}
-            className="flex items-center gap-1 p-1.5 bg-muted/15 border border-border rounded-sm text-[8px] font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
           >
             <FolderOpen className="w-2.5 h-2.5 text-emerald shrink-0" />
             Upload
@@ -987,15 +987,15 @@ export default function DashboardPage() {
       >
         {renderWidgetHeader("Operações Recentes", <Activity className="w-3 h-3 text-primary" />, idx)}
 
-        <div className="space-y-1.5 relative before:absolute before:inset-y-0.5 before:left-1.5 before:w-[1px] before:bg-border/40 text-[9px]">
+        <div className="space-y-1.5 relative before:absolute before:inset-y-0.5 before:left-1.5 before:w-[1px] before:bg-border/40 text-xs">
           {data.activityLog.slice(0, 3).map((log) => (
-            <div key={log.id} className="flex items-start gap-2.5 pl-3.5 relative">
+            <div key={log.id} className="flex items-start gap-5.5 pl-3.5 relative">
               <div className={`absolute left-[3px] w-1.5 h-1.5 border border-card mt-1 ${
                 log.status === "success" ? "bg-emerald-500" : log.status === "warning" ? "bg-amber-400" : "bg-primary"
               }`} />
               <div className="min-w-0">
-                <p className="text-[10px] text-white/95 leading-tight font-bold">{log.text}</p>
-                <span className="text-[8px] text-muted-foreground block mt-0.5 font-mono">{log.time}</span>
+                <p className="text-sm text-white/95 leading-tight font-bold">{log.text}</p>
+                <span className="text-xs text-muted-foreground block mt-0.5 font-mono">{log.time}</span>
               </div>
             </div>
           ))}
@@ -1015,16 +1015,16 @@ export default function DashboardPage() {
       >
         {renderWidgetHeader(`Favoritos (${data.favorites.length})`, <Star className="w-3 h-3 text-primary fill-primary/10" />, idx)}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {data.favorites.length > 0 ? (
             data.favorites.map((fav) => (
               <div
                 key={fav.id}
                 onClick={() => router.push(getModuleLink(fav.type))}
-                className="flex items-center gap-1.5 p-1.5 bg-muted/10 hover:bg-muted/20 rounded-sm cursor-pointer transition-colors border border-border/40 min-w-0"
+                className="flex items-center gap-4 p-4 bg-muted/10 hover:bg-muted/20 rounded-sm cursor-pointer transition-colors border border-border/40 min-w-0"
               >
                 {getModuleIcon(fav.type)}
-                <span className="text-[9px] font-bold text-white/95 truncate flex-1 leading-tight flex items-center justify-between gap-1.5">
+                <span className="text-xs font-bold text-white/95 truncate flex-1 leading-tight flex items-center justify-between gap-4">
                   <span className="truncate">{fav.title}</span>
                   {fav.createdBy && (
                     <span className={`user-tag user-tag-${fav.createdBy} shrink-0`}>
@@ -1035,7 +1035,7 @@ export default function DashboardPage() {
               </div>
             ))
           ) : (
-            <p className="text-[8px] text-muted-foreground text-center py-2 col-span-2">Sem favoritos.</p>
+            <p className="text-xs text-muted-foreground text-center py-2 col-span-2">Sem favoritos.</p>
           )}
         </div>
       </motion.div>
@@ -1052,7 +1052,7 @@ export default function DashboardPage() {
       {/* Alertas de Contas Próximas do Vencimento */}
       {data.upcomingBills && data.upcomingBills.length > 0 && (
         <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-300 space-y-2 fade-in">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-5">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
             <h3 className="text-sm font-semibold text-white">Atenção: Contas Próximas do Vencimento</h3>
           </div>
@@ -1098,7 +1098,7 @@ export default function DashboardPage() {
               className="w-full h-full object-cover" 
               alt={data.profile.username} 
             />
-            <span className={`absolute -bottom-1 px-1.5 py-0.5 text-[8px] font-black rounded uppercase text-black leading-none ${
+            <span className={`absolute -bottom-1 px-4 py-2 text-xs font-black rounded uppercase text-black leading-none ${
               data.profile.username === "Giselle" ? "bg-fuchsia-400" : "bg-cyan-400"
             }`}>
               {data.profile.username === "Giselle" ? "P2" : "P1"}
@@ -1106,11 +1106,11 @@ export default function DashboardPage() {
           </div>
 
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-5">
               <h2 className="text-base font-extrabold text-white tracking-wide uppercase">
                 {data.profile.username}
               </h2>
-              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase ${
+              <span className={`text-xs font-black px-4 py-2 rounded uppercase ${
                 data.profile.username === "Giselle" 
                   ? "bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400" 
                   : "bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"
@@ -1118,7 +1118,7 @@ export default function DashboardPage() {
                 {data.profile.username === "Giselle" ? "Giselle" : "Caio"}
               </span>
             </div>
-            <p className="text-[9px] text-muted-foreground uppercase mt-0.5 tracking-wider font-semibold">
+            <p className="text-xs text-muted-foreground uppercase mt-0.5 tracking-wider font-semibold">
               Classe: {data.profile.username === "Giselle" ? "Co-op Player" : "Admin / Developer"} // Status: Online
             </p>
           </div>
@@ -1126,7 +1126,7 @@ export default function DashboardPage() {
 
         {/* Level and XP progress HUD */}
         <div className="flex-1 max-w-sm space-y-1.5 md:ml-4">
-          <div className="flex justify-between items-end text-[10px] font-bold uppercase tracking-wider">
+          <div className="flex justify-between items-end text-sm font-bold uppercase tracking-wider">
             <span className="text-white">Nível {data.profile.level}</span>
             <span className="text-muted-foreground">{currentLevelXp} / 1000 XP</span>
           </div>
@@ -1147,7 +1147,7 @@ export default function DashboardPage() {
         <motion.button
           onClick={() => changeMobileTab("general")}
           whileTap={{ scale: 0.94 }}
-          className={`flex-1 py-1 text-[9px] font-display font-semibold rounded-sm transition-all cursor-pointer ${
+          className={`flex-1 py-1 text-xs font-display font-semibold rounded-sm transition-all cursor-pointer ${
             activeMobileTab === "general" ? "bg-primary text-black shadow-sm" : "text-muted-foreground"
           }`}
         >
@@ -1156,7 +1156,7 @@ export default function DashboardPage() {
         <motion.button
           onClick={() => changeMobileTab("goals")}
           whileTap={{ scale: 0.94 }}
-          className={`flex-1 py-1 text-[9px] font-display font-semibold rounded-sm transition-all cursor-pointer ${
+          className={`flex-1 py-1 text-xs font-display font-semibold rounded-sm transition-all cursor-pointer ${
             activeMobileTab === "goals" ? "bg-primary text-black shadow-sm" : "text-muted-foreground"
           }`}
         >
@@ -1165,7 +1165,7 @@ export default function DashboardPage() {
         <motion.button
           onClick={() => changeMobileTab("finance")}
           whileTap={{ scale: 0.94 }}
-          className={`flex-1 py-1 text-[9px] font-display font-semibold rounded-sm transition-all cursor-pointer ${
+          className={`flex-1 py-1 text-xs font-display font-semibold rounded-sm transition-all cursor-pointer ${
             activeMobileTab === "finance" ? "bg-primary text-black shadow-sm" : "text-muted-foreground"
           }`}
         >
@@ -1174,7 +1174,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Grade de Métricas Compacta (Horizontal) */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 ${activeMobileTab === "general" ? "grid" : "hidden md:grid"}`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5.5 ${activeMobileTab === "general" ? "grid" : "hidden md:grid"}`}>
         {moduleStats.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -1183,15 +1183,15 @@ export default function DashboardPage() {
               variants={itemVariants}
               onClick={() => router.push(stat.href)}
               whileTap={{ scale: 0.97 }}
-              className="group cursor-pointer relative overflow-hidden p-2.5 glass-panel flex items-center justify-between border border-primary/10 rounded-sm hover:border-primary/45 transition-colors"
+              className="group cursor-pointer relative overflow-hidden p-5.5 glass-panel flex items-center justify-between border border-primary/10 rounded-sm hover:border-primary/45 transition-colors"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <div className={`p-1.5 rounded-sm border ${stat.color} shrink-0`}>
+              <div className="flex items-center gap-5 min-w-0">
+                <div className={`p-4 rounded-sm border ${stat.color} shrink-0`}>
                   <Icon className="w-3.5 h-3.5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-[10px] font-display font-semibold text-white/95 group-hover:text-primary transition-colors leading-tight truncate">{stat.name}</h3>
-                  <p className="text-[9px]  text-muted-foreground leading-tight mt-0.5 truncate">{stat.details}</p>
+                  <h3 className="text-sm font-display font-semibold text-white/95 group-hover:text-primary transition-colors leading-tight truncate">{stat.name}</h3>
+                  <p className="text-xs  text-muted-foreground leading-tight mt-0.5 truncate">{stat.details}</p>
                 </div>
               </div>
               <div className="text-right shrink-0 ml-2">
@@ -1241,7 +1241,7 @@ export default function DashboardPage() {
               className="w-full max-w-lg bg-neutral-950 border border-border p-5 rounded-lg text-foreground flex flex-col max-h-[90vh]"
             >
               <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-4">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-5">
                   <CreditCard className="w-4.5 h-4.5 text-primary animate-pulse" />
                   <span className="font-display text-xs font-bold text-white uppercase tracking-wider">Gerenciar Contas Bancárias</span>
                 </div>
@@ -1262,23 +1262,23 @@ export default function DashboardPage() {
                       className="p-3 border border-border/80 bg-card/25 rounded-sm flex items-center justify-between gap-4"
                     >
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-5">
                           <span className="text-xs font-bold text-white leading-tight">{acc.provider}</span>
                           <span className="text-[7px] px-1 py-0.2 bg-primary/10 border border-primary/20 text-primary rounded-sm font-mono uppercase">
                             {acc.syncType}
                           </span>
                         </div>
                         {acc.accountNumber && (
-                          <span className="text-[9px] text-muted-foreground block mt-0.5 font-mono">Conta: {acc.accountNumber}</span>
+                          <span className="text-xs text-muted-foreground block mt-0.5 font-mono">Conta: {acc.accountNumber}</span>
                         )}
-                        <span className="text-[10px] text-emerald-400 font-bold block mt-1">Saldo: {acc.balance}</span>
+                        <span className="text-sm text-emerald-400 font-bold block mt-1">Saldo: {acc.balance}</span>
                       </div>
                       
-                      <div className="flex items-center gap-1.5 shrink-0">
+                      <div className="flex items-center gap-4 shrink-0">
                         <button
                           disabled={isDeletingAccount !== null}
                           onClick={() => handleDeleteBankAccount(acc.id)}
-                          className="p-1.5 rounded-sm bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 cursor-pointer disabled:opacity-50 transition-colors"
+                          className="p-4 rounded-sm bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive/20 cursor-pointer disabled:opacity-50 transition-colors"
                           title="Excluir Conta"
                         >
                           {isDeletingAccount === acc.id ? (
@@ -1291,14 +1291,14 @@ export default function DashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-[10px] text-muted-foreground text-center py-6">Nenhuma conta bancária conectada.</p>
+                  <p className="text-sm text-muted-foreground text-center py-6">Nenhuma conta bancária conectada.</p>
                 )}
               </div>
 
               <div className="pt-4 border-t border-border/60 mt-4 flex justify-between gap-3 shrink-0">
                 <button
                   onClick={() => setIsAccountsModalOpen(false)}
-                  className="px-3 py-1.5 bg-muted/20 border border-border text-muted-foreground hover:text-white rounded-sm text-[10px] font-bold cursor-pointer transition-colors"
+                  className="px-3 py-1.5 bg-muted/20 border border-border text-muted-foreground hover:text-white rounded-sm text-sm font-bold cursor-pointer transition-colors"
                 >
                   Fechar
                 </button>
@@ -1306,7 +1306,7 @@ export default function DashboardPage() {
                   onClick={() => {
                     setIsNewAccountModalOpen(true);
                   }}
-                  className="px-3 py-1.5 bg-primary text-black rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer flex items-center gap-1 transition-colors"
+                  className="px-3 py-1.5 bg-primary text-black rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer flex items-center gap-2 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Cadastrar Conta
@@ -1328,7 +1328,7 @@ export default function DashboardPage() {
               className="w-full max-w-md bg-neutral-950 border border-border p-5 rounded-lg text-foreground flex flex-col max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-4 shrink-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-5">
                   <Plus className="w-4.5 h-4.5 text-primary" />
                   <span className="font-display text-xs font-bold text-white uppercase tracking-wider">Cadastrar Conta Bancária (Open Finance)</span>
                 </div>
@@ -1345,7 +1345,7 @@ export default function DashboardPage() {
 
               {/* TUTORIAL OPEN FINANCE */}
               <div className="p-3 bg-primary/5 border border-primary/20 rounded-sm mb-3.5 text-[9.5px]">
-                <div className="flex items-center gap-1.5 text-primary font-bold uppercase mb-1.5">
+                <div className="flex items-center gap-4 text-primary font-bold uppercase mb-4">
                   <Info className="w-3.5 h-3.5" />
                   Como conectar sua conta?
                 </div>
@@ -1357,14 +1357,14 @@ export default function DashboardPage() {
                 </ol>
               </div>
 
-              <form onSubmit={handleCreateBankAccount} className="space-y-3.5 text-[10px] flex-1">
+              <form onSubmit={handleCreateBankAccount} className="space-y-3.5 text-sm flex-1">
                 {/* Provedor / Instituição */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[9px] text-muted-foreground uppercase font-bold tracking-wide">Instituição Financeira</label>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs text-muted-foreground uppercase font-bold tracking-wide">Instituição Financeira</label>
                   <select
                     value={accountProvider}
                     onChange={(e) => setAccountProvider(e.target.value)}
-                    className="w-full p-2 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none cursor-pointer"
+                    className="w-full p-5 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none cursor-pointer"
                   >
                     <option value="Nubank">Nubank</option>
                     <option value="Santander">Santander</option>
@@ -1378,9 +1378,9 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Titularidade / Identificação de User */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[9px] text-muted-foreground uppercase font-bold tracking-wide">Saldo Inicial (R$)</label>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs text-muted-foreground uppercase font-bold tracking-wide">Saldo Inicial (R$)</label>
                     <input
                       type="number"
                       step="0.01"
@@ -1388,18 +1388,18 @@ export default function DashboardPage() {
                       required
                       value={accountBalance}
                       onChange={(e) => setAccountBalance(e.target.value)}
-                      className="w-full p-2 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none"
+                      className="w-full p-5 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none"
                     />
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[9px] text-muted-foreground uppercase font-bold tracking-wide">Número da Conta</label>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs text-muted-foreground uppercase font-bold tracking-wide">Número da Conta</label>
                     <input
                       type="text"
                       required
                       placeholder="Ex: 12345-6"
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
-                      className="w-full p-2 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none"
+                      className="w-full p-5 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none"
                     />
                   </div>
                 </div>
@@ -1409,7 +1409,7 @@ export default function DashboardPage() {
                   <button
                     type="button"
                     onClick={() => setShowAdvancedNewAccount(!showAdvancedNewAccount)}
-                    className="text-[9px] text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                    className="text-xs text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer"
                   >
                     {showAdvancedNewAccount ? "Ocultar Opções Avançadas" : "Exibir Opções Avançadas"}
                   </button>
@@ -1424,28 +1424,28 @@ export default function DashboardPage() {
                       exit={{ opacity: 0, height: 0 }}
                       className="p-3 bg-card/60 border border-border rounded-sm space-y-2.5 overflow-hidden"
                     >
-                      <div className="flex items-center gap-1.5 text-primary text-[8.5px] uppercase font-bold mb-1">
+                      <div className="flex items-center gap-4 text-primary text-[8.5px] uppercase font-bold mb-1">
                         <Lock className="w-3.5 h-3.5" />
                         Credenciais Open Finance (API)
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <label className="text-[8px] text-muted-foreground uppercase">Client ID / App Key (Público)</label>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs text-muted-foreground uppercase">Client ID / App Key (Público)</label>
                         <input
                           type="text"
                           placeholder="Chave pública do banco ou token Pix de leitura"
                           value={accountApiKey}
                           onChange={(e) => setAccountApiKey(e.target.value)}
-                          className="w-full p-2 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none font-mono"
+                          className="w-full p-5 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none font-mono"
                         />
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <label className="text-[8px] text-muted-foreground uppercase">Client Secret / API Token (Privado)</label>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs text-muted-foreground uppercase">Client Secret / API Token (Privado)</label>
                         <input
                           type="password"
                           placeholder="Chave secreta ou certificado digital do banco"
                           value={accountApiSecret}
                           onChange={(e) => setAccountApiSecret(e.target.value)}
-                          className="w-full p-2 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none font-mono"
+                          className="w-full p-5 bg-card border border-border rounded-sm text-white focus:border-primary focus:outline-none font-mono"
                         />
                       </div>
                     </motion.div>
@@ -1459,14 +1459,14 @@ export default function DashboardPage() {
                       setIsNewAccountModalOpen(false);
                       setShowAdvancedNewAccount(false);
                     }}
-                    className="px-3 py-1.5 bg-muted/20 border border-border text-muted-foreground hover:text-white rounded-sm text-[10px] font-bold cursor-pointer transition-colors"
+                    className="px-3 py-1.5 bg-muted/20 border border-border text-muted-foreground hover:text-white rounded-sm text-sm font-bold cursor-pointer transition-colors"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={isCreatingAccount}
-                    className="px-3 py-1.5 bg-primary text-black rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer disabled:opacity-50 transition-colors"
+                    className="px-3 py-1.5 bg-primary text-black rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer disabled:opacity-50 transition-colors"
                   >
                     {isCreatingAccount ? "Salvando..." : "Salvar Conta"}
                   </button>
@@ -1488,7 +1488,7 @@ export default function DashboardPage() {
               className="w-full max-w-md bg-neutral-950 border border-border p-5 rounded-lg text-foreground flex flex-col"
             >
               <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-4">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-5">
                   <RefreshCw className={`w-4.5 h-4.5 text-primary ${isSyncingBank ? "animate-spin" : ""}`} />
                   <span className="font-display text-xs font-bold text-white uppercase tracking-wider">
                     Sincronizar {selectedAccountForSync.provider}
@@ -1503,7 +1503,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Corpo da Sincronização */}
-              <div className="space-y-4 text-[10px]">
+              <div className="space-y-4 text-sm">
                 {/* Caso 1: Sincronização OFX / CSV */}
                 {selectedAccountForSync.syncType === "ofx" && (
                   <div className="space-y-3">
@@ -1526,7 +1526,7 @@ export default function DashboardPage() {
                       <span className="text-[9.5px] text-white font-bold">
                         {syncFileName ? syncFileName : "Selecionar arquivo OFX / CSV"}
                       </span>
-                      <span className="text-[8px] text-muted-foreground mt-0.5">
+                      <span className="text-xs text-muted-foreground mt-0.5">
                         Arraste ou clique para selecionar do seu dispositivo
                       </span>
                     </div>
@@ -1535,7 +1535,7 @@ export default function DashboardPage() {
                       <button
                         onClick={() => handleSyncFinancials(selectedAccountForSync.id, "ofx", { content: syncFileContent, type: syncFileType })}
                         disabled={isSyncingBank}
-                        className="w-full py-2 bg-primary text-black font-bold rounded-sm text-[10px] uppercase cursor-pointer disabled:opacity-50 transition-colors"
+                        className="w-full py-2 bg-primary text-black font-bold rounded-sm text-sm uppercase cursor-pointer disabled:opacity-50 transition-colors"
                       >
                         {isSyncingBank ? "Processando..." : "Processar e Atualizar Saldo"}
                       </button>
@@ -1546,10 +1546,10 @@ export default function DashboardPage() {
                 {/* Caso 2: Open Finance */}
                 {selectedAccountForSync.syncType === "openfinance" && (
                   <div className="space-y-3">
-                    <div className="p-3 bg-primary/5 border border-primary/20 rounded-sm flex items-start gap-2.5">
+                    <div className="p-3 bg-primary/5 border border-primary/20 rounded-sm flex items-start gap-5.5">
                       <Info className="w-4.5 h-4.5 text-primary shrink-0 mt-0.5" />
                       <div className="space-y-0.5">
-                        <span className="text-[9px] uppercase font-bold text-white block">Conexão Segura Ativa</span>
+                        <span className="text-xs uppercase font-bold text-white block">Conexão Segura Ativa</span>
                         <p className="text-muted-foreground text-[8.5px] leading-relaxed">
                           Esta conta está vinculada via API Open Finance. A sincronização lerá os tokens criptografados e atualizará as despesas/receitas programadas para hoje de forma automática.
                         </p>
@@ -1564,7 +1564,7 @@ export default function DashboardPage() {
                     <button
                       onClick={() => handleSyncFinancials(selectedAccountForSync.id, "openfinance")}
                       disabled={isSyncingBank}
-                      className="w-full py-2 bg-primary text-black font-bold rounded-sm text-[10px] uppercase cursor-pointer disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5"
+                      className="w-full py-2 bg-primary text-black font-bold rounded-sm text-sm uppercase cursor-pointer disabled:opacity-50 transition-colors flex items-center justify-center gap-4"
                     >
                       {isSyncingBank ? (
                         <>
@@ -1591,7 +1591,7 @@ export default function DashboardPage() {
                     <button
                       onClick={() => handleSyncFinancials(selectedAccountForSync.id, "manual")}
                       disabled={isSyncingBank}
-                      className="w-full py-2 bg-primary text-black font-bold rounded-sm text-[10px] uppercase cursor-pointer disabled:opacity-50 transition-colors"
+                      className="w-full py-2 bg-primary text-black font-bold rounded-sm text-sm uppercase cursor-pointer disabled:opacity-50 transition-colors"
                     >
                       {isSyncingBank ? "Sincronizando..." : "Sincronizar Manualmente"}
                     </button>
@@ -1615,7 +1615,7 @@ export default function DashboardPage() {
                 <button
                   onClick={() => setIsSyncModalOpen(false)}
                   disabled={isSyncingBank}
-                  className="px-3 py-1.5 bg-muted/20 border border-border text-muted-foreground hover:text-white rounded-sm text-[10px] font-bold cursor-pointer disabled:opacity-50 transition-colors"
+                  className="px-3 py-1.5 bg-muted/20 border border-border text-muted-foreground hover:text-white rounded-sm text-sm font-bold cursor-pointer disabled:opacity-50 transition-colors"
                 >
                   Fechar
                 </button>

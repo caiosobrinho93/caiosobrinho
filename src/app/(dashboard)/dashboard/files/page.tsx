@@ -309,27 +309,27 @@ export default function FilesPage() {
       {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
         <div>
-          <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-2">
+          <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-5">
             <FolderOpen className="w-5 h-5 text-primary" />
             COFRE DE ARQUIVOS
           </h1>
-          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+          <p className="text-sm text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
             Armazenamento de Backups, Logs e Mídias Pessoais
           </p>
         </div>
         
         {/* Controle de ações */}
-        <div className="flex gap-2 shrink-0 ">
+        <div className="flex gap-5 shrink-0 ">
           <button
             onClick={() => setIsNewFolderOpen(true)}
-            className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] font-bold glass-btn cursor-pointer"
+            className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold glass-btn cursor-pointer"
           >
             <FolderPlus className="w-3.5 h-3.5" />
             Novo Diretório
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer"
+            className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
           >
             <Upload className="w-3.5 h-3.5" />
             Subir Arquivo
@@ -344,9 +344,9 @@ export default function FilesPage() {
       </div>
  
       {/* Barra de Ferramentas / Filtros */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5.5">
         {/* Breadcrumbs de Navegação */}
-        <div className="flex items-center gap-1.5 text-[10px]  font-bold text-muted-foreground overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+        <div className="flex items-center gap-4 text-sm  font-bold text-muted-foreground overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
             onClick={() => handleBreadcrumbClick("root", -1)}
             className="hover:text-primary transition-colors cursor-pointer uppercase"
@@ -366,7 +366,7 @@ export default function FilesPage() {
           ))}
         </div>
  
-        <div className="flex items-center gap-2 shrink-0 ">
+        <div className="flex items-center gap-5 shrink-0 ">
           <div className="relative w-full sm:w-56 ">
             <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-muted-foreground pointer-events-none">
               <Search className="w-3 h-3 text-primary" />
@@ -376,7 +376,7 @@ export default function FilesPage() {
               placeholder="Buscar arquivos..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground/60 text-[9px] focus:outline-none focus:border-primary transition-all"
+              className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground/60 text-xs focus:outline-none focus:border-primary transition-all"
             />
           </div>
  
@@ -398,7 +398,7 @@ export default function FilesPage() {
       </div>
       {/* Exibição Principal do Layout */}
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 animate-pulse">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-5.5 animate-pulse">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="h-24 bg-card/40 border border-border/80 rounded-sm" />
           ))}
@@ -406,7 +406,7 @@ export default function FilesPage() {
       ) : folders.length > 0 || files.length > 0 ? (
         viewMode === "grid" ? (
           /* Visualização em Grade */
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-5.5">
             {/* Pastas */}
             {folders.map((folder) => (
               <motion.div
@@ -429,7 +429,7 @@ export default function FilesPage() {
                   </button>
                 </div>
                 <div className="mt-3">
-                  <span className="text-[10px] font-bold text-white/95 truncate block leading-tight">
+                  <span className="text-sm font-bold text-white/95 truncate block leading-tight">
                     {folder.name}
                   </span>
                   {folder.user?.username && (
@@ -478,11 +478,11 @@ export default function FilesPage() {
                 </div>
  
                 <div className="mt-3">
-                  <span className="text-[10px] font-bold text-white/95 truncate block leading-tight">
+                  <span className="text-sm font-bold text-white/95 truncate block leading-tight">
                     {file.name}
                   </span>
-                  <div className="flex items-center justify-between gap-1 mt-1">
-                    <span className="text-[8px] text-muted-foreground block leading-none">
+                  <div className="flex items-center justify-between gap-2 mt-1">
+                    <span className="text-xs text-muted-foreground block leading-none">
                       {formatSize(file.size)}
                     </span>
                     {file.user?.username && (
@@ -532,7 +532,7 @@ export default function FilesPage() {
                           e.stopPropagation();
                           handleDeleteItem(folder.id, "folder");
                         }}
-                        className="p-1.5 rounded hover:text-destructive hover:bg-destructive/10 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer inline-block"
+                        className="p-4 rounded hover:text-destructive hover:bg-destructive/10 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer inline-block"
                         title="Excluir Pasta"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -566,13 +566,13 @@ export default function FilesPage() {
                       {formatSize(file.size)}
                     </td>
                     <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
+                      <div className="flex items-center justify-end gap-4">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleToggleFavorite(file);
                           }}
-                          className={`p-1.5 rounded cursor-pointer ${
+                          className={`p-4 rounded cursor-pointer ${
                             file.isFavorite ? "text-primary" : "text-muted-foreground"
                           }`}
                         >
@@ -583,7 +583,7 @@ export default function FilesPage() {
                             e.stopPropagation();
                             handleDeleteItem(file.id, "file");
                           }}
-                          className="p-1.5 rounded hover:text-destructive hover:bg-destructive/10 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                          className="p-4 rounded hover:text-destructive hover:bg-destructive/10 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -625,7 +625,7 @@ export default function FilesPage() {
               className="w-full max-w-sm bg-card border border-border rounded-2xl p-5 shadow-2xl relative z-10 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
-                <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                <h2 className="text-sm font-bold text-white flex items-center gap-5">
                   <FolderPlus className="w-4.5 h-4.5 text-primary" />
                   Criar Pasta
                 </h2>
@@ -639,7 +639,7 @@ export default function FilesPage() {
 
               <form onSubmit={handleCreateFolder} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                     Nome da Pasta
                   </label>
                   <input
@@ -652,7 +652,7 @@ export default function FilesPage() {
                   />
                 </div>
 
-                <div className="pt-2 border-t border-border flex items-center justify-end gap-2 text-xs font-semibold">
+                <div className="pt-2 border-t border-border flex items-center justify-end gap-5 text-xs font-semibold">
                   <button
                     type="button"
                     onClick={() => setIsNewFolderOpen(false)}
@@ -663,7 +663,7 @@ export default function FilesPage() {
                   <button
                     type="submit"
                     disabled={isCreatingFolder}
-                    className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/95 text-white flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/95 text-white flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isCreatingFolder ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                     Criar Diretório
@@ -701,26 +701,26 @@ export default function FilesPage() {
                     <span className="text-sm font-semibold text-white truncate block max-w-md">
                       {previewItem.name}
                     </span>
-                    <span className="text-[10px] text-muted-foreground leading-none mt-0.5 block font-mono">
+                    <span className="text-sm text-muted-foreground leading-none mt-0.5 block font-mono">
                       {previewItem.mimeType} &bull; {formatSize(previewItem.size)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-5">
                   <a
                     href={previewItem.path}
                     download={previewItem.name}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 rounded-xl bg-muted/60 hover:bg-muted border border-border/80 text-white cursor-pointer flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors"
+                    className="p-5 rounded-xl bg-muted/60 hover:bg-muted border border-border/80 text-white cursor-pointer flex items-center justify-center gap-4 text-xs font-semibold transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" />
                     Baixar Arquivo
                   </a>
                   <button
                     onClick={() => setPreviewItem(null)}
-                    className="p-2 rounded-xl hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                    className="p-5 rounded-xl hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>

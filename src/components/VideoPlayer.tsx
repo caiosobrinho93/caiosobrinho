@@ -268,7 +268,7 @@ export default function VideoPlayer({
   const embedUrl = getEmbedUrl(video.url);
 
   return (
-    <div className="fixed inset-0 w-full h-full z-50 flex items-center justify-center p-2 sm:p-4">
+    <div className="fixed inset-0 w-full h-full z-50 flex items-center justify-center p-5 sm:p-4">
       {/* Black backdrop overlay */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -302,8 +302,8 @@ export default function VideoPlayer({
               exit={{ opacity: 0, y: -20 }}
               className="absolute top-0 inset-x-0 h-14 bg-gradient-to-b from-black/90 to-transparent flex items-center justify-between px-4 sm:px-5 z-20 pointer-events-auto"
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="px-1.5 py-0.5 bg-primary/10 border border-primary/20 text-primary text-[9px] font-bold rounded-sm shrink-0 uppercase tracking-widest">
+              <div className="flex items-center gap-5 min-w-0">
+                <span className="px-4 py-2 bg-primary/10 border border-primary/20 text-primary text-xs font-bold rounded-sm shrink-0 uppercase tracking-widest">
                   {video.category || "CINE"}
                 </span>
                 <span className="text-xs sm:text-sm font-semibold text-white truncate max-w-[200px] sm:max-w-md shadow-sm font-display uppercase tracking-wider">
@@ -311,12 +311,12 @@ export default function VideoPlayer({
                 </span>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-5">
                 {/* Cinema Mode Switch (Not available in Fullscreen or YouTube) */}
                 {!isFullscreen && !embedUrl && (
                   <button
                     onClick={() => setIsCinemaMode(!isCinemaMode)}
-                    className={`p-2 rounded-sm border transition-all cursor-pointer ${
+                    className={`p-5 rounded-sm border transition-all cursor-pointer ${
                       isCinemaMode 
                         ? "border-primary/45 bg-primary/10 text-primary" 
                         : "border-white/5 bg-black/40 hover:bg-black/60 text-muted-foreground hover:text-white"
@@ -335,7 +335,7 @@ export default function VideoPlayer({
                     }
                     onClose();
                   }}
-                  className="p-2 rounded-sm bg-black/40 hover:bg-black/60 text-muted-foreground hover:text-white cursor-pointer border border-white/5 transition-all"
+                  className="p-5 rounded-sm bg-black/40 hover:bg-black/60 text-muted-foreground hover:text-white cursor-pointer border border-white/5 transition-all"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -347,9 +347,9 @@ export default function VideoPlayer({
         {/* Video Frame */}
         <div className="flex-1 w-full h-full relative flex items-center justify-center">
           {isLoading && !embedUrl && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-10 gap-2">
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-10 gap-5">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              <span className="text-[10px] text-primary tracking-widest font-bold font-display uppercase">Carregando Fluxo</span>
+              <span className="text-sm text-primary tracking-widest font-bold font-display uppercase">Carregando Fluxo</span>
             </div>
           )}
 
@@ -400,7 +400,7 @@ export default function VideoPlayer({
               >
                 {/* Timeline slider bar */}
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-mono text-muted-foreground w-10 text-right">
+                  <span className="text-sm font-mono text-muted-foreground w-10 text-right">
                     {formatTime(currentTime)}
                   </span>
                   
@@ -422,7 +422,7 @@ export default function VideoPlayer({
                     />
                   </div>
 
-                  <span className="text-[10px] font-mono text-muted-foreground w-10 text-left">
+                  <span className="text-sm font-mono text-muted-foreground w-10 text-left">
                     {formatTime(duration)}
                   </span>
                 </div>
@@ -442,10 +442,10 @@ export default function VideoPlayer({
                       )}
                     </button>
 
-                    <div className="flex items-center gap-1.5 group/volume">
+                    <div className="flex items-center gap-4 group/volume">
                       <button
                         onClick={toggleMute}
-                        className="p-1.5 text-muted-foreground hover:text-white transition-colors cursor-pointer"
+                        className="p-4 text-muted-foreground hover:text-white transition-colors cursor-pointer"
                       >
                         {isMuted ? (
                           <VolumeX className="w-4 h-4 text-red-400" />
@@ -471,10 +471,10 @@ export default function VideoPlayer({
                   </div>
 
                   {/* Pip & Fullscreen controls */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-5">
                     <button
                       onClick={triggerPiP}
-                      className="p-2 text-muted-foreground hover:text-white transition-colors cursor-pointer border border-transparent hover:border-white/5 hover:bg-white/5 rounded-sm"
+                      className="p-5 text-muted-foreground hover:text-white transition-colors cursor-pointer border border-transparent hover:border-white/5 hover:bg-white/5 rounded-sm"
                       title="Miniplayer (PiP)"
                     >
                       <Tv className="w-4 h-4" />
@@ -482,7 +482,7 @@ export default function VideoPlayer({
                     
                     <button
                       onClick={toggleFullscreen}
-                      className="p-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer border border-transparent hover:border-primary/10 hover:bg-primary/5 rounded-sm"
+                      className="p-5 text-muted-foreground hover:text-primary transition-colors cursor-pointer border border-transparent hover:border-primary/10 hover:bg-primary/5 rounded-sm"
                       title={isFullscreen ? "Sair da Tela Cheia" : "Tela Cheia"}
                     >
                       {isFullscreen ? (
@@ -507,9 +507,9 @@ export default function VideoPlayer({
               exit={{ opacity: 0, x: 50, y: 50 }}
               className="absolute bottom-20 right-4 z-40 max-w-sm w-80 bg-black/90 border border-primary/20 backdrop-blur-md rounded-sm p-4 text-left shadow-2xl flex flex-col gap-3 scanlines"
             >
-              <div className="flex items-start justify-between gap-2">
+              <div className="flex items-start justify-between gap-5">
                 <div className="space-y-0.5">
-                  <span className="text-[8px] font-bold text-primary uppercase tracking-widest font-display">Próximo Vídeo</span>
+                  <span className="text-xs font-bold text-primary uppercase tracking-widest font-display">Próximo Vídeo</span>
                   <h4 className="text-xs font-bold text-white line-clamp-1 uppercase font-display leading-tight">{nextVideo.title}</h4>
                 </div>
                 <button
@@ -533,21 +533,21 @@ export default function VideoPlayer({
                   </div>
                 </div>
                 
-                <div className="flex-1 flex flex-col gap-2">
-                  <span className="text-[10px] text-muted-foreground font-semibold">
+                <div className="flex-1 flex flex-col gap-5">
+                  <span className="text-sm text-muted-foreground font-semibold">
                     Iniciando em <span className="text-primary font-bold">{nextCountdown}s</span>
                   </span>
                   
-                  <div className="flex gap-2">
+                  <div className="flex gap-5">
                     <button
                       onClick={handlePlayNext}
-                      className="px-2.5 py-1.5 rounded-sm bg-primary text-black font-bold text-[9px] uppercase tracking-wider hover:bg-primary/95 flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-sm bg-primary text-black font-bold text-xs uppercase tracking-wider hover:bg-primary/95 flex items-center gap-2 cursor-pointer"
                     >
                       Iniciar <ChevronRight className="w-3 h-3" />
                     </button>
                     <button
                       onClick={cancelNextSuggestion}
-                      className="px-2 py-1.5 rounded-sm border border-border text-muted-foreground hover:text-white text-[9px] uppercase tracking-wider cursor-pointer"
+                      className="px-2 py-1.5 rounded-sm border border-border text-muted-foreground hover:text-white text-xs uppercase tracking-wider cursor-pointer"
                     >
                       Cancelar
                     </button>

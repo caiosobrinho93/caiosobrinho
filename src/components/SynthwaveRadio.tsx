@@ -243,7 +243,7 @@ export default function SynthwaveRadio({ isOpen, onClose }: SynthwaveRadioProps)
   return (
     <div
       style={{ top: position.y, left: position.x }}
-      className="fixed w-56 bg-black/95 border border-primary/20 p-2.5 rounded-xl shadow-2xl z-50 font-display flex flex-col gap-2 select-none neon-glow-card"
+      className="fixed w-56 bg-black/95 border border-primary/20 p-5.5 rounded-xl shadow-2xl z-50 font-display flex flex-col gap-5 select-none neon-glow-card"
     >
       {/* Hidden audio tag */}
       <audio
@@ -257,11 +257,11 @@ export default function SynthwaveRadio({ isOpen, onClose }: SynthwaveRadioProps)
       <div
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
-        className="drag-handle flex items-center justify-between border-b border-border/40 pb-1.5 cursor-move text-muted-foreground hover:text-white"
+        className="drag-handle flex items-center justify-between border-b border-border/40 pb-4 cursor-move text-muted-foreground hover:text-white"
       >
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-4">
           <Move className="w-3.5 h-3.5 text-primary" />
-          <span className="text-[9px] font-bold text-white uppercase tracking-wider">HUD Rádio Synth</span>
+          <span className="text-xs font-bold text-white uppercase tracking-wider">HUD Rádio Synth</span>
         </div>
         <button
           onClick={() => { playClickSound(); onClose(); }}
@@ -274,8 +274,8 @@ export default function SynthwaveRadio({ isOpen, onClose }: SynthwaveRadioProps)
 
       {/* Track Info */}
       <div className="min-w-0">
-        <p className="text-[10px] font-bold text-white truncate leading-tight">{currentTrack.title}</p>
-        <p className="text-[8px] text-muted-foreground truncate leading-none mt-0.5 uppercase tracking-wide">{currentTrack.artist}</p>
+        <p className="text-sm font-bold text-white truncate leading-tight">{currentTrack.title}</p>
+        <p className="text-xs text-muted-foreground truncate leading-none mt-0.5 uppercase tracking-wide">{currentTrack.artist}</p>
       </div>
 
       {/* Spectrometer Canvas */}
@@ -289,8 +289,8 @@ export default function SynthwaveRadio({ isOpen, onClose }: SynthwaveRadioProps)
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-between gap-1.5 pt-1 border-t border-border/20">
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between gap-4 pt-1 border-t border-border/20">
+        <div className="flex items-center gap-2">
           <button
             onClick={handlePlayToggle}
             onMouseEnter={playHoverSound}
@@ -308,7 +308,7 @@ export default function SynthwaveRadio({ isOpen, onClose }: SynthwaveRadioProps)
         </div>
 
         {/* Volume Control */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Volume2 className="w-3 h-3 text-muted-foreground" />
           <input
             type="range"

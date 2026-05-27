@@ -371,7 +371,7 @@ export default function SettingsPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Cabeçalho */}
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
+        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-5.5">
           <Settings className="w-6 h-6 text-primary" />
           Configurações
         </h1>
@@ -383,11 +383,11 @@ export default function SettingsPage() {
       {/* 1. Visual e Temas do Painel */}
       <div className="glass-panel rounded-sm p-5 space-y-6">
         <div className="border-b border-border/60 pb-3 flex items-center justify-between">
-          <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2">
+          <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
             <Palette className="w-4 h-4 text-primary" />
             Temas do Dashboard
           </h2>
-          <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-md font-bold uppercase">
+          <span className="text-sm text-primary bg-primary/10 border border-primary/20 px-2 py-2 rounded-md font-bold uppercase">
             {themePreset === "custom" ? "Customizado" : "Preset Ativo"}
           </span>
         </div>
@@ -402,7 +402,7 @@ export default function SettingsPage() {
                 <button
                   key={preset.id}
                   onClick={() => setThemePreset(preset.id)}
-                  className={`p-3 rounded-sm border text-left flex flex-col gap-2.5 transition-all cursor-pointer group relative overflow-hidden ${
+                  className={`p-3 rounded-sm border text-left flex flex-col gap-5.5 transition-all cursor-pointer group relative overflow-hidden ${
                     isSelected
                       ? "border-primary bg-primary/5 shadow-lg shadow-primary/5 scale-[1.01]"
                       : "border-border bg-muted/10 hover:bg-muted/20 hover:border-white/10"
@@ -412,7 +412,7 @@ export default function SettingsPage() {
                   <div className={`w-full h-12 rounded-sm bg-gradient-to-br ${preset.bgPreview} border border-white/5 flex items-center justify-center shadow-inner relative`}>
                     <div className={`w-4.5 h-4.5 rounded-full ${preset.accentHex} border border-white/20 shadow-md ${preset.glowColor} shadow-lg`} />
                     {isSelected && (
-                      <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center text-white border border-white/10">
+                      <div className="absolute top-4 right-1.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center text-white border border-white/10">
                         <Check className="w-2.5 h-2.5" />
                       </div>
                     )}
@@ -422,7 +422,7 @@ export default function SettingsPage() {
                     <span className="text-xs font-bold text-white block group-hover:text-primary transition-colors">
                       {preset.name}
                     </span>
-                    <span className="text-[10px] text-muted-foreground leading-tight mt-0.5 block">
+                    <span className="text-sm text-muted-foreground leading-tight mt-0.5 block">
                       {preset.description}
                     </span>
                   </div>
@@ -435,7 +435,7 @@ export default function SettingsPage() {
         {/* EDITOR DE TEMA CUSTOMIZADO (Condicional) */}
         {themePreset === "custom" && (
           <div className="p-4 bg-muted/20 border border-border/80 rounded-sm space-y-5 animate-fadeIn">
-            <div className="flex items-center gap-2 border-b border-border/40 pb-2.5">
+            <div className="flex items-center gap-5 border-b border-border/40 pb-2.5">
               <Sparkles className="w-4 h-4 text-primary animate-pulse" />
               <h3 className="font-display text-xs tracking-widest text-white leading-tight">Ajustes Finos do Tema Customizado</h3>
             </div>
@@ -445,8 +445,8 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 {/* Cor de Realce */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Cor de Destaque (Accent)</label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Cor de Destaque (Accent)</label>
+                  <div className="flex flex-wrap gap-5">
                     {colors.map((color) => (
                       <button
                         key={color}
@@ -464,8 +464,8 @@ export default function SettingsPage() {
 
                 {/* Estilo do Grid */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Padrão da Grade Cyber</label>
-                  <div className="grid grid-cols-2 gap-1.5">
+                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Padrão da Grade Cyber</label>
+                  <div className="grid grid-cols-2 gap-4">
                     {[
                       { id: "fine", name: "Grade Fina" },
                       { id: "lines", name: "Linhas Horizontais" },
@@ -476,7 +476,7 @@ export default function SettingsPage() {
                         key={grid.id}
                         type="button"
                         onClick={() => updateCustomTheme({ gridStyle: grid.id as any })}
-                        className={`py-1.5 px-3 rounded-sm text-[10px] font-bold uppercase transition-all cursor-pointer border ${
+                        className={`py-1.5 px-3 rounded-sm text-sm font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.gridStyle === grid.id
                             ? "bg-primary/10 text-primary border-primary/30"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
@@ -493,8 +493,8 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 {/* Intensidade Neon */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Intensidade do Brilho Neon</label>
-                  <div className="grid grid-cols-2 gap-1.5">
+                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Intensidade do Brilho Neon</label>
+                  <div className="grid grid-cols-2 gap-4">
                     {[
                       { id: "none", name: "Desativado" },
                       { id: "low", name: "Suave" },
@@ -505,7 +505,7 @@ export default function SettingsPage() {
                         key={intensity.id}
                         type="button"
                         onClick={() => updateCustomTheme({ neonIntensity: intensity.id as any })}
-                        className={`py-1.5 px-3 rounded-sm text-[10px] font-bold uppercase transition-all cursor-pointer border ${
+                        className={`py-1.5 px-3 rounded-sm text-sm font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.neonIntensity === intensity.id
                             ? "bg-primary/10 text-primary border-primary/30"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
@@ -519,8 +519,8 @@ export default function SettingsPage() {
 
                 {/* Velocidade de Animação */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Velocidade de Pulsar/Glow</label>
-                  <div className="grid grid-cols-2 gap-1.5">
+                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Velocidade de Pulsar/Glow</label>
+                  <div className="grid grid-cols-2 gap-4">
                     {[
                       { id: "disabled", name: "Estática" },
                       { id: "slow", name: "Lenta" },
@@ -531,7 +531,7 @@ export default function SettingsPage() {
                         key={speed.id}
                         type="button"
                         onClick={() => updateCustomTheme({ animationSpeed: speed.id as any })}
-                        className={`py-1.5 px-3 rounded-sm text-[10px] font-bold uppercase transition-all cursor-pointer border ${
+                        className={`py-1.5 px-3 rounded-sm text-sm font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.animationSpeed === speed.id
                             ? "bg-primary/10 text-primary border-primary/30"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
@@ -550,7 +550,7 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Seletor de Gradiente */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">Gradiente Cyber de Fundo</label>
+                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider block">Gradiente Cyber de Fundo</label>
                   <select
                     value={customTheme.bgGradient}
                     disabled={!!customTheme.bgImage}
@@ -569,7 +569,7 @@ export default function SettingsPage() {
 
                 {/* Imagem de Fundo (Wallpaper) */}
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">Papel de Parede Físico (URL)</label>
+                  <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider block">Papel de Parede Físico (URL)</label>
                   <div className="relative">
                     <input
                       type="text"
@@ -591,7 +591,7 @@ export default function SettingsPage() {
                 </div>
               </div>
               {customTheme.bgImage && (
-                <p className="text-[10px] text-amber/80 bg-amber/5 border border-amber/15 p-2 rounded-sm">
+                <p className="text-sm text-amber/80 bg-amber/5 border border-amber/15 p-5 rounded-sm">
                   Nota: Um papel de parede físico ativo substituirá o gradiente de fundo padrão do dashboard.
                 </p>
               )}
@@ -622,7 +622,7 @@ export default function SettingsPage() {
           {/* Micro-interações Switch */}
           <div className="space-y-2.5 flex flex-col justify-between">
             <label className="text-xs font-semibold text-muted-foreground">Animações Gerais</label>
-            <div className="flex items-center justify-between p-2.5 bg-muted/20 border border-border rounded-sm h-10">
+            <div className="flex items-center justify-between p-5.5 bg-muted/20 border border-border rounded-sm h-10">
               <span className="text-xs font-semibold text-white/95">Transições e micro-interações</span>
               <button
                 onClick={toggleAnimations}
@@ -643,7 +643,7 @@ export default function SettingsPage() {
 
       {/* 2. Entrada por Biometria */}
       <div className="glass-panel rounded-sm p-5 space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2 border-b border-border/60 pb-3">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5 border-b border-border/60 pb-3">
           <Fingerprint className="w-4 h-4 text-primary" />
           Segurança Biométrica (Passkeys)
         </h2>
@@ -656,13 +656,13 @@ export default function SettingsPage() {
         </div>
 
         {biometricsError && (
-          <div className="p-3 text-[11px] rounded-sm border border-destructive/20 bg-destructive/10 text-destructive font-semibold">
+          <div className="p-3 text-sm rounded-sm border border-destructive/20 bg-destructive/10 text-destructive font-semibold">
             {biometricsError}
           </div>
         )}
 
         {biometricsSuccess && (
-          <div className="p-3 text-[11px] rounded-sm border border-primary/20 bg-primary/10 text-primary font-semibold">
+          <div className="p-3 text-sm rounded-sm border border-primary/20 bg-primary/10 text-primary font-semibold">
             Biometria cadastrada com sucesso! Agora você pode entrar com biometria na tela de login a partir deste dispositivo.
           </div>
         )}
@@ -672,7 +672,7 @@ export default function SettingsPage() {
             <h3 className="font-display text-xs tracking-widest text-white leading-tight">
               Status da Biometria
             </h3>
-            <p className="text-[11px] mt-1 leading-normal font-sans">
+            <p className="text-sm mt-1 leading-normal font-sans">
               {!isBiometricsSupported ? (
                 <span className="text-destructive font-semibold">Este navegador ou dispositivo não suporta biometria/passkeys.</span>
               ) : hasBiometrics ? (
@@ -687,7 +687,7 @@ export default function SettingsPage() {
             <button
               onClick={handleRegisterBiometrics}
               disabled={isRegisteringBiometrics}
-              className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-black hover:bg-primary/90 text-xs font-bold rounded-sm transition-colors cursor-pointer shrink-0 disabled:opacity-50 font-sans"
+              className="flex items-center justify-center gap-5 px-4 py-2 bg-primary text-black hover:bg-primary/90 text-xs font-bold rounded-sm transition-colors cursor-pointer shrink-0 disabled:opacity-50 font-sans"
             >
               {isRegisteringBiometrics ? (
                 <>
@@ -707,7 +707,7 @@ export default function SettingsPage() {
 
       {/* 3. Backup e Banco de Dados */}
       <div className="glass-panel rounded-sm p-5 space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2 border-b border-border/60 pb-3">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5 border-b border-border/60 pb-3">
           <Database className="w-4 h-4 text-primary" />
           Operações de Banco de Dados
         </h2>
@@ -724,12 +724,12 @@ export default function SettingsPage() {
           <div className="p-4 bg-muted/10 border border-border rounded-sm flex flex-col justify-between h-36">
             <div>
               <h3 className="font-display text-xs tracking-widest text-white leading-tight">Exportar Dados</h3>
-              <p className="text-[11px] text-muted-foreground mt-1 leading-normal">Baixe um arquivo JSON descriptografado contendo todos os registros de senhas, notas, torrents, softwares e dados cadastrados.</p>
+              <p className="text-sm text-muted-foreground mt-1 leading-normal">Baixe um arquivo JSON descriptografado contendo todos os registros de senhas, notas, torrents, softwares e dados cadastrados.</p>
             </div>
             <button
               onClick={handleExport}
               disabled={isExporting}
-              className="flex items-center justify-center gap-2 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold"
+              className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold"
             >
               {isExporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
               Salvar Backup JSON
@@ -740,9 +740,9 @@ export default function SettingsPage() {
           <div className="p-4 bg-muted/10 border border-border rounded-sm flex flex-col justify-between h-36">
             <div>
               <h3 className="font-display text-xs tracking-widest text-white leading-tight">Restaurar Banco</h3>
-              <p className="text-[11px] text-muted-foreground mt-1 leading-normal">Selecione um arquivo de backup do Nexus (.json) previamente baixado para restaurar todas as tabelas locais do banco.</p>
+              <p className="text-sm text-muted-foreground mt-1 leading-normal">Selecione um arquivo de backup do Nexus (.json) previamente baixado para restaurar todas as tabelas locais do banco.</p>
             </div>
-            <label className="flex items-center justify-center gap-2 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold">
+            <label className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold">
               {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
               Selecionar Backup
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
@@ -753,7 +753,7 @@ export default function SettingsPage() {
 
       {/* 3.5. Integração de Lembretes & Alertas */}
       <div className="glass-panel rounded-sm p-5 space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2 border-b border-border/60 pb-3">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5 border-b border-border/60 pb-3">
           <Bell className="w-4 h-4 text-primary" />
           Integração de Lembretes (Telegram & Email)
         </h2>
@@ -769,11 +769,11 @@ export default function SettingsPage() {
           {/* Email Form */}
           <div className="p-4 bg-muted/10 border border-border rounded-sm space-y-3">
             <div>
-              <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
+              <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-4">
                 <Mail className="w-3.5 h-3.5 text-primary" />
                 Alertas por E-mail
               </h3>
-              <p className="text-[10px] text-muted-foreground mt-0.5 leading-normal">Receba relatórios diários de vencimento no e-mail especificado.</p>
+              <p className="text-sm text-muted-foreground mt-0.5 leading-normal">Receba relatórios diários de vencimento no e-mail especificado.</p>
             </div>
             <input
               type="email"
@@ -787,11 +787,11 @@ export default function SettingsPage() {
           {/* Telegram Form */}
           <div className="p-4 bg-muted/10 border border-border rounded-sm space-y-3">
             <div>
-              <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
+              <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-4">
                 <Send className="w-3.5 h-3.5 text-primary" />
                 Alertas via Telegram Bot
               </h3>
-              <p className="text-[10px] text-muted-foreground mt-0.5 leading-normal">Integre alertas imediatos usando a API de Bots do Telegram.</p>
+              <p className="text-sm text-muted-foreground mt-0.5 leading-normal">Integre alertas imediatos usando a API de Bots do Telegram.</p>
             </div>
             <div className="space-y-1.5">
               <input
@@ -813,12 +813,12 @@ export default function SettingsPage() {
         </div>
 
         {saveAlertsSuccess && (
-          <div className="p-3 text-[11px] rounded-sm border border-primary/20 bg-primary/10 text-primary font-semibold">
+          <div className="p-3 text-sm rounded-sm border border-primary/20 bg-primary/10 text-primary font-semibold">
             Configurações de alerta salvas com sucesso!
           </div>
         )}
 
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex justify-end gap-5 pt-2">
           {telegramToken && telegramChatId && (
             <button
               onClick={handleTestNotification}
@@ -839,7 +839,7 @@ export default function SettingsPage() {
 
             {/* 4. Zona de Perigo */}
       <div className="bg-card/55 backdrop-blur-xl border border-destructive/20 rounded-sm p-5 space-y-4">
-        <h2 className="text-sm font-bold text-destructive uppercase tracking-wider flex items-center gap-2 border-b border-destructive/10 pb-3">
+        <h2 className="text-sm font-bold text-destructive uppercase tracking-wider flex items-center gap-5 border-b border-destructive/10 pb-3">
           <Trash2 className="w-4 h-4 text-destructive" />
           Zona de Perigo
         </h2>
@@ -847,7 +847,7 @@ export default function SettingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-destructive/5 border border-destructive/10 rounded-sm">
           <div className="min-w-0 flex-1">
             <h3 className="font-display text-xs tracking-widest text-white leading-tight">Destruir Dados do Cofre</h3>
-            <p className="text-[11px] text-muted-foreground mt-1 leading-normal">
+            <p className="text-sm text-muted-foreground mt-1 leading-normal">
               Limpe permanentemente todas as senhas, notas textuais, catálogos de softwares e índices locais do banco. Esta ação é irreversível.
             </p>
           </div>

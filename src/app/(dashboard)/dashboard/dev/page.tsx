@@ -124,7 +124,7 @@ export default function DevPage() {
       {/* HEADER */}
       <div className="glass-panel p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-5">
             <Code className="w-6 h-6 text-primary" />
             DEV Central
           </h1>
@@ -174,10 +174,10 @@ export default function DevPage() {
               </div>
               
               <div className="p-4 border-t border-white/5 bg-background/80 backdrop-blur-md">
-                <div className="flex justify-between items-start gap-2">
+                <div className="flex justify-between items-start gap-5">
                   <h3 className="text-white font-semibold text-sm truncate">{comp.title}</h3>
                   {comp.category && (
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/20 text-primary whitespace-nowrap">
+                    <span className="text-sm uppercase tracking-wider px-2 py-2 rounded-full bg-primary/20 text-primary whitespace-nowrap">
                       {comp.category}
                     </span>
                   )}
@@ -218,12 +218,12 @@ export default function DevPage() {
                   type="text"
                   value={selectedComp.title || ""}
                   onChange={e => setSelectedComp({ ...selectedComp, title: e.target.value })}
-                  className="bg-transparent text-xl font-bold text-white outline-none border-b border-transparent focus:border-primary/50 px-1 py-0.5 transition-colors"
+                  className="bg-transparent text-xl font-bold text-white outline-none border-b border-transparent focus:border-primary/50 px-1 py-2 transition-colors"
                   placeholder="Nome do Componente"
                 />
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-5">
                   {selectedComp.id && (
-                    <button onClick={() => handleDelete(selectedComp.id!)} className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
+                    <button onClick={() => handleDelete(selectedComp.id!)} className="p-5 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
                       <Trash2 className="w-5 h-5" />
                     </button>
                   )}
@@ -231,7 +231,7 @@ export default function DevPage() {
                     <Save className="w-4 h-4" />
                     <span className="hidden sm:inline">Salvar</span>
                   </button>
-                  <button onClick={() => setIsModalOpen(false)} className="p-2 rounded-lg text-muted-foreground hover:bg-white/10 transition-colors ml-2">
+                  <button onClick={() => setIsModalOpen(false)} className="p-5 rounded-lg text-muted-foreground hover:bg-white/10 transition-colors ml-2">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
@@ -242,22 +242,22 @@ export default function DevPage() {
                 
                 {/* Left: Code Editor */}
                 <div className="w-full lg:w-1/2 flex flex-col border-r border-white/10 bg-black/40">
-                  <div className="flex border-b border-white/10 px-2 py-2 gap-1 bg-black/20">
+                  <div className="flex border-b border-white/10 px-2 py-2 gap-2 bg-black/20">
                     <button 
                       onClick={() => setActiveTab("html")}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all ${activeTab === "html" ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-5 transition-all ${activeTab === "html" ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
                     >
                       <Layout className="w-4 h-4" /> HTML
                     </button>
                     <button 
                       onClick={() => setActiveTab("css")}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all ${activeTab === "css" ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-5 transition-all ${activeTab === "css" ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
                     >
                       <Paintbrush className="w-4 h-4" /> CSS
                     </button>
                     <button 
                       onClick={() => setActiveTab("js")}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all ${activeTab === "js" ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-5 transition-all ${activeTab === "js" ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"}`}
                     >
                       <Code className="w-4 h-4" /> JS
                     </button>
@@ -296,7 +296,7 @@ export default function DevPage() {
 
                 {/* Right: Live Preview */}
                 <div className="w-full lg:w-1/2 flex flex-col bg-slate-900/50">
-                  <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2 text-sm font-medium text-white/70 bg-black/20">
+                  <div className="px-4 py-3 border-b border-white/10 flex items-center gap-5 text-sm font-medium text-white/70 bg-black/20">
                     <MonitorPlay className="w-4 h-4 text-primary" /> Live Preview
                   </div>
                   <div className="flex-1 relative overflow-hidden bg-white/5">

@@ -247,28 +247,28 @@ function PasswordsContent() {
       {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
         <div>
-          <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-2">
+          <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
             <Key className="w-5 h-5 text-primary" />
             SENHAS
           </h1>
-          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+          <p className="text-sm text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
             Criptografia local AES-256 de Grau Militar
           </p>
         </div>
-        <div className="flex gap-2 shrink-0 select-none pb-1 sm:pb-0 ">
+        <div className="flex gap-5 shrink-0 select-none pb-1 sm:pb-0 ">
           <button
             onClick={() => {
               handleGenerate();
               setIsGeneratorOpen(true);
             }}
-            className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] font-bold glass-btn cursor-pointer"
+            className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold glass-btn cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
             Gerador
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer"
+            className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             Adicionar
@@ -277,13 +277,13 @@ function PasswordsContent() {
       </div>
  
       {/* Barra de Ferramentas / Filtros */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-        <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-none ">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5.5">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none ">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-2.5 py-1 rounded-sm text-[9px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer transition-colors border ${
+              className={`px-2.5 py-1 rounded-sm text-xs font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer transition-colors border ${
                 activeCategory === cat
                   ? "bg-primary border-primary/20 text-black"
                   : "bg-card/25 border-border/80 text-muted-foreground hover:text-white"
@@ -303,34 +303,34 @@ function PasswordsContent() {
             placeholder="Buscar por título ou usuário..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground/60 text-[9px] focus:outline-none focus:border-primary transition-all"
+            className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground/60 text-xs focus:outline-none focus:border-primary transition-all"
           />
         </div>
       </div>
 
       {/* Grade de Cards Minimalistas (Compacto Cockpit) */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 animate-pulse">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5.5 animate-pulse">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="h-12 bg-card/40 rounded-sm border border-border/80" />
           ))}
         </div>
       ) : filteredPasswords.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5.5">
           {filteredPasswords.map((item) => {
             return (
               <motion.div
                 key={item.id}
                 whileTap={{ scale: 0.98 }}
-                className="group cursor-pointer glass-panel flex items-center justify-between border border-border/75 rounded-sm p-2.5 hover:border-primary/45 transition-colors"
+                className="group cursor-pointer glass-panel flex items-center justify-between border border-border/75 rounded-sm p-5.5 hover:border-primary/45 transition-colors"
                 onClick={() => setSelectedPassword(item)}
               >
-                <div className="flex items-center gap-2.5 min-w-0 ">
+                <div className="flex items-center gap-5.5 min-w-0 ">
                   <div className="w-7.5 h-7.5 rounded-sm bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                     <Key className="w-3.5 h-3.5 text-primary" />
                   </div>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-5">
                       <h3 className="text-xs font-bold text-white group-hover:text-primary transition-colors truncate leading-tight">
                         {item.title}
                       </h3>
@@ -340,12 +340,12 @@ function PasswordsContent() {
                         </span>
                       )}
                     </div>
-                    <span className="text-[9px] text-muted-foreground truncate block leading-tight mt-0.5">
+                    <span className="text-xs text-muted-foreground truncate block leading-tight mt-0.5">
                       {item.username || item.email || "Sem credencial"}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0 ml-2 ">
+                <div className="flex items-center gap-4 shrink-0 ml-2 ">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -365,12 +365,12 @@ function PasswordsContent() {
         <div className="py-16 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-xl">
           <FolderKey className="w-8 h-8 text-muted-foreground mb-2" />
           <h3 className="text-xs font-semibold text-white font-display">Nenhuma Senha Salva</h3>
-          <p className="text-[10px] text-muted-foreground mt-1 max-w-xs">
+          <p className="text-sm text-muted-foreground mt-1 max-w-xs">
             Comece a armazenar detalhes criptografados de suas contas e logins.
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-3 px-3 py-1.5 bg-primary text-white rounded-lg text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer"
+            className="mt-3 px-3 py-1.5 bg-primary text-white rounded-lg text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
           >
             Adicionar Credencial
           </button>
@@ -412,7 +412,7 @@ function PasswordsContent() {
               {/* Botão de Fechar */}
               <button
                 onClick={() => setSelectedPassword(null)}
-                className="absolute top-3 right-3 p-1.5 rounded-lg bg-card/65 border border-border hover:bg-muted text-muted-foreground hover:text-white cursor-pointer z-20"
+                className="absolute top-3 right-3 p-4 rounded-lg bg-card/65 border border-border hover:bg-muted text-muted-foreground hover:text-white cursor-pointer z-20"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -426,20 +426,20 @@ function PasswordsContent() {
                         href={selectedPassword.url.startsWith("http") ? selectedPassword.url : `https://${selectedPassword.url}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-primary hover:underline inline-flex items-center gap-1 mt-0.5 font-medium"
+                        className="text-xs text-primary hover:underline inline-flex items-center gap-2 mt-0.5 font-medium"
                       >
                         {selectedPassword.url}
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-4 shrink-0">
                     {selectedPassword.createdBy && (
                       <span className={`user-tag user-tag-${selectedPassword.createdBy}`}>
                         {selectedPassword.createdBy === "caio" ? "Caio" : "Giselle"}
                       </span>
                     )}
-                    <span className="text-[10px] px-2.5 py-1 bg-muted rounded border border-border/80 text-muted-foreground font-bold uppercase tracking-wider">
+                    <span className="text-sm px-2.5 py-1 bg-muted rounded border border-border/80 text-muted-foreground font-bold uppercase tracking-wider">
                       {selectedPassword.category || "Geral"}
                     </span>
                   </div>
@@ -449,9 +449,9 @@ function PasswordsContent() {
                 <div className="space-y-3 pt-2 border-t border-border/50">
                   {/* Usuário */}
                   {selectedPassword.username && (
-                    <div className="flex justify-between items-center text-xs p-2.5 bg-muted/20 border border-border/40 rounded-xl">
+                    <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
                       <span className="text-muted-foreground">Usuário:</span>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-5">
                         <span className="text-white font-bold">{selectedPassword.username}</span>
                         <button
                           onClick={() => handleCopy(`${selectedPassword.id}-user`, selectedPassword.username || "")}
@@ -466,9 +466,9 @@ function PasswordsContent() {
 
                   {/* Email */}
                   {selectedPassword.email && (
-                    <div className="flex justify-between items-center text-xs p-2.5 bg-muted/20 border border-border/40 rounded-xl">
+                    <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
                       <span className="text-muted-foreground">E-mail:</span>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-5">
                         <span className="text-white font-bold">{selectedPassword.email}</span>
                         <button
                           onClick={() => handleCopy(`${selectedPassword.id}-email`, selectedPassword.email || "")}
@@ -482,13 +482,13 @@ function PasswordsContent() {
                   )}
 
                   {/* Senha */}
-                  <div className="flex justify-between items-center text-xs p-2.5 bg-muted/20 border border-border/40 rounded-xl">
+                  <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
                     <span className="text-muted-foreground">Senha:</span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-5">
                       <span className="text-white font-mono font-bold tracking-wider text-sm">
                         {visiblePasswords[selectedPassword.id] ? selectedPassword.password : "••••••••••••"}
                       </span>
-                      <div className="flex items-center gap-1 ml-2">
+                      <div className="flex items-center gap-2 ml-2">
                         <button
                           onClick={() =>
                             setVisiblePasswords((prev) => ({ ...prev, [selectedPassword.id]: !prev[selectedPassword.id] }))
@@ -514,7 +514,7 @@ function PasswordsContent() {
                 <div className="p-3 bg-muted/20 border border-border/40 rounded-xl space-y-1.5">
                   <div className="flex justify-between items-center text-xs">
                     <span className="text-muted-foreground">Força da Senha:</span>
-                    <span className={`font-bold uppercase text-[10px] ${
+                    <span className={`font-bold uppercase text-sm ${
                       checkPasswordStrength(selectedPassword.password).label === "Forte"
                         ? "text-emerald"
                         : checkPasswordStrength(selectedPassword.password).label === "Média"
@@ -535,7 +535,7 @@ function PasswordsContent() {
                 {/* Anotações */}
                 {selectedPassword.notes && (
                   <div className="p-3 bg-muted/20 border border-border/40 rounded-xl">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase block mb-1">Anotações</span>
+                    <span className="text-sm font-bold text-muted-foreground uppercase block mb-1">Anotações</span>
                     <p className="text-xs text-white/80 leading-relaxed font-medium whitespace-pre-wrap">{selectedPassword.notes}</p>
                   </div>
                 )}
@@ -544,16 +544,16 @@ function PasswordsContent() {
                 <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-3">
                   <button
                     onClick={() => handleDelete(selectedPassword.id)}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                    className="flex items-center gap-4 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-xl transition-all cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Excluir Credencial
                   </button>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-5">
                     <button
                       onClick={() => handleToggleFavorite(selectedPassword)}
-                      className={`flex items-center gap-1.5 px-3 py-2 border rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                      className={`flex items-center gap-4 px-3 py-2 border rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
                         selectedPassword.isFavorite
                           ? "border-primary/20 bg-primary/10 text-primary"
                           : "border-border/80 text-muted-foreground hover:text-white"
@@ -595,13 +595,13 @@ function PasswordsContent() {
               className="w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl relative z-10 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
-                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <h2 className="text-base font-bold text-white flex items-center gap-5">
                   <PlusCircle className="w-5 h-5 text-primary" />
                   Nova Credencial
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                  className="p-4 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -609,7 +609,7 @@ function PasswordsContent() {
 
               <form onSubmit={handleCreate} className="space-y-3.5">
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                     Nome do Serviço / Site *
                   </label>
                   <input
@@ -624,7 +624,7 @@ function PasswordsContent() {
 
                 <div className="grid grid-cols-1 gap-3.5">
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                       Nome de Usuário
                     </label>
                     <input
@@ -638,7 +638,7 @@ function PasswordsContent() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                     Senha *
                   </label>
                   <div className="relative">
@@ -673,7 +673,7 @@ function PasswordsContent() {
                   <button
                     type="button"
                     onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="text-[9px] text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                    className="text-xs text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer"
                   >
                     {showAdvanced ? "Ocultar Opções Avançadas" : "Exibir Opções Avançadas"}
                   </button>
@@ -689,7 +689,7 @@ function PasswordsContent() {
                       className="space-y-3.5 overflow-hidden pt-1.5 border-t border-border/30"
                     >
                       <div>
-                        <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                           E-mail
                         </label>
                         <input
@@ -703,7 +703,7 @@ function PasswordsContent() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                             URL do Site
                           </label>
                           <input
@@ -716,7 +716,7 @@ function PasswordsContent() {
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                             Categoria
                           </label>
                           <select
@@ -734,7 +734,7 @@ function PasswordsContent() {
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                           URL da Imagem / Logo (Capa)
                         </label>
                         <input
@@ -747,7 +747,7 @@ function PasswordsContent() {
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">
+                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-1">
                           Anotações
                         </label>
                         <textarea
@@ -762,7 +762,7 @@ function PasswordsContent() {
                   )}
                 </AnimatePresence>
 
-                <div className="pt-2 border-t border-border flex items-center justify-end gap-2.5">
+                <div className="pt-2 border-t border-border flex items-center justify-end gap-5.5">
                   <button
                     type="button"
                     onClick={() => {
@@ -776,7 +776,7 @@ function PasswordsContent() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -813,13 +813,13 @@ function PasswordsContent() {
               className="w-full max-w-sm bg-card border border-border rounded-2xl p-6 shadow-2xl relative z-10 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
-                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <h2 className="text-base font-bold text-white flex items-center gap-5">
                   <Sparkles className="w-5 h-5 text-primary" />
                   Gerador de Chaves
                 </h2>
                 <button
                   onClick={() => setIsGeneratorOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                  className="p-4 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -831,7 +831,7 @@ function PasswordsContent() {
                     {generatedPassword || "Carregando..."}
                   </span>
                   
-                  <div className="flex gap-1 shrink-0 absolute right-2 bg-gradient-to-l from-card pl-4">
+                  <div className="flex gap-2 shrink-0 absolute right-2 bg-gradient-to-l from-card pl-4">
                     <button
                       onClick={handleGenerate}
                       className="p-1 hover:text-primary text-muted-foreground cursor-pointer transition-colors"

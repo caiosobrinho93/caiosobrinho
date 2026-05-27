@@ -182,7 +182,7 @@ export default function TorrentsPage() {
       {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
+          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-5.5">
             <DownloadCloud className="w-6 h-6 text-primary" />
             Torrents
           </h1>
@@ -192,7 +192,7 @@ export default function TorrentsPage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
+          className="flex items-center justify-center gap-5 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Adicionar Torrent
@@ -225,25 +225,25 @@ export default function TorrentsPage() {
       ) : filteredTorrents.length > 0 ? (
         <>
           {/* MOBILE: compact list rows */}
-          <div className="sm:hidden flex flex-col gap-2">
+          <div className="sm:hidden flex flex-col gap-5">
             {filteredTorrents.map((item) => (
               <motion.div
                 key={item.id}
                 onClick={() => setSelectedTorrent(item)}
                 whileTap={{ scale: 0.99 }}
                 className="flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all"
-                style={{ maxHeight: 80 }}
+                
               >
                 <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                   <DownloadCloud className="w-4 h-4 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-white truncate leading-tight">{item.title}</p>
-                  <p className="text-[10px] text-muted-foreground leading-tight mt-0.5 font-mono">{item.size}</p>
+                  <p className="text-sm text-muted-foreground leading-tight mt-0.5 font-mono">{item.size}</p>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-4 shrink-0">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]" />
-                  <span className="text-[9px] font-bold text-emerald-400 uppercase">OK</span>
+                  <span className="text-xs font-bold text-emerald-400 uppercase">OK</span>
                 </div>
               </motion.div>
             ))}
@@ -260,9 +260,9 @@ export default function TorrentsPage() {
                   className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-sm p-4.5 flex flex-col justify-between h-28 relative overflow-hidden hover-card-effects"
                 >
                   {/* Linha superior */}
-                  <div className="flex justify-between items-start gap-2.5">
+                  <div className="flex justify-between items-start gap-5.5">
                     <div className="min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
+                      <div className="flex items-center gap-4 flex-wrap">
                         <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[120px] xs:max-w-[160px] sm:max-w-[200px] md:max-w-full">
                           {item.title}
                         </h3>
@@ -272,21 +272,21 @@ export default function TorrentsPage() {
                           </span>
                         )}
                       </div>
-                      <span className="text-[9px] text-muted-foreground font-mono bg-muted/60 border border-border/60 px-1.5 py-0.5 rounded inline-block mt-1 font-semibold">
+                      <span className="text-xs text-muted-foreground font-mono bg-muted/60 border border-border/60 px-4 py-2 rounded inline-block mt-1 font-semibold">
                         {item.size}
                       </span>
                     </div>
                     {/* Ponto Neon de Status */}
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex items-center gap-4 shrink-0">
                       <span className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_8px_#10b981]" />
-                      <span className="text-[9px] font-bold text-emerald uppercase hide-mobile font-display tracking-wider">
+                      <span className="text-xs font-bold text-emerald uppercase hide-mobile font-display tracking-wider">
                         Disponível
                       </span>
                     </div>
                   </div>
 
                   {/* Info do Arquivo */}
-                  <div className="text-[10px] text-muted-foreground flex justify-between items-center mt-3">
+                  <div className="text-sm text-muted-foreground flex justify-between items-center mt-3">
                     <span className="font-semibold text-white/50">Clique para gerenciar arquivo</span>
                     <span className="font-mono text-emerald font-bold flex items-center gap-0.5">
                       PC Link
@@ -333,7 +333,7 @@ export default function TorrentsPage() {
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
-                <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                <h2 className="text-sm font-bold text-white flex items-center gap-5">
                   <DownloadCloud className="w-5 h-5 text-primary" />
                   Detalhes do Torrent
                 </h2>
@@ -349,11 +349,11 @@ export default function TorrentsPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm font-extrabold text-white">{activeSelected.title}</h3>
-                  <div className="flex gap-2 items-center mt-1.5">
-                    <span className="text-[10px] text-muted-foreground font-mono bg-muted/60 border border-border px-1.5 py-0.5 rounded font-semibold">
+                  <div className="flex gap-5 items-center mt-1.5">
+                    <span className="text-sm text-muted-foreground font-mono bg-muted/60 border border-border px-4 py-2 rounded font-semibold">
                       Tamanho: {activeSelected.size}
                     </span>
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase flex items-center gap-1.5 bg-emerald/10 text-emerald">
+                    <span className="text-xs font-bold px-4 py-2 rounded uppercase flex items-center gap-4 bg-emerald/10 text-emerald">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald shadow-[0_0_8px_#10b981]" />
                       Disponível
                     </span>
@@ -365,7 +365,7 @@ export default function TorrentsPage() {
                   const { cleanNotes } = parseNotesAndFile(activeSelected.notes);
                   return cleanNotes ? (
                     <div className="p-3 bg-muted/20 border border-border/40 rounded-sm">
-                      <span className="text-[9px] font-bold text-muted-foreground uppercase block mb-1">Anotações</span>
+                      <span className="text-xs font-bold text-muted-foreground uppercase block mb-1">Anotações</span>
                       <p className="text-xs text-white/85 leading-relaxed font-semibold">{cleanNotes}</p>
                     </div>
                   ) : null;
@@ -374,14 +374,14 @@ export default function TorrentsPage() {
                 {/* Magnet Link */}
                 {!activeSelected.magnet.includes("virtual-") && (
                   <div className="p-3 bg-muted/20 border border-border/40 rounded-sm space-y-2">
-                    <span className="text-[9px] font-bold text-muted-foreground uppercase block">Link Magnético</span>
-                    <div className="flex items-center justify-between gap-2.5">
-                      <span className="text-[11px] text-white/80 font-mono truncate select-all flex-1">
+                    <span className="text-xs font-bold text-muted-foreground uppercase block">Link Magnético</span>
+                    <div className="flex items-center justify-between gap-5.5">
+                      <span className="text-sm text-white/80 font-mono truncate select-all flex-1">
                         {activeSelected.magnet}
                       </span>
                       <button
                         onClick={() => handleCopy(activeSelected.id, activeSelected.magnet)}
-                        className="p-1.5 rounded-sm bg-card hover:bg-muted border border-border text-muted-foreground hover:text-white transition-colors cursor-pointer"
+                        className="p-4 rounded-sm bg-card hover:bg-muted border border-border text-muted-foreground hover:text-white transition-colors cursor-pointer"
                         title="Copiar link"
                       >
                         {copiedId === activeSelected.id ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
@@ -394,13 +394,13 @@ export default function TorrentsPage() {
                 <div className="pt-4 border-t border-border flex items-center justify-between gap-3 flex-wrap">
                   <button
                     onClick={() => handleDelete(activeSelected.id)}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-sm transition-all cursor-pointer"
+                    className="flex items-center gap-4 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-sm transition-all cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Excluir
                   </button>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-5">
                     {/* Botão Baixar arquivo .torrent (Se Houver) */}
                     {(() => {
                       const { fileUrl } = parseNotesAndFile(activeSelected.notes);
@@ -409,7 +409,7 @@ export default function TorrentsPage() {
                           <a
                             href={fileUrl}
                             download={`${activeSelected.title.replace(/\s+/g, "_")}.torrent`}
-                            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-sm transition-colors cursor-pointer"
+                            className="flex items-center gap-4 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-sm transition-colors cursor-pointer"
                             title="Baixar arquivo .torrent real"
                           >
                             <Download className="w-4 h-4" />
@@ -420,7 +420,7 @@ export default function TorrentsPage() {
                         return (
                           <button
                             onClick={() => downloadTorrentFile(activeSelected)}
-                            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-sm transition-colors cursor-pointer"
+                            className="flex items-center gap-4 px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-sm transition-colors cursor-pointer"
                             title="Baixar arquivo .torrent virtual"
                           >
                             <Download className="w-4 h-4" />
@@ -434,7 +434,7 @@ export default function TorrentsPage() {
                     {activeSelected.magnet.startsWith("magnet:?") && !activeSelected.magnet.includes("virtual-") && (
                       <a
                         href={activeSelected.magnet}
-                        className="flex items-center gap-1.5 px-3.5 py-2 bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary text-xs font-bold rounded-sm transition-colors cursor-pointer"
+                        className="flex items-center gap-4 px-3.5 py-2 bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary text-xs font-bold rounded-sm transition-colors cursor-pointer"
                         title="Abrir no uTorrent local"
                       >
                         <LinkIcon className="w-4 h-4" />
@@ -468,13 +468,13 @@ export default function TorrentsPage() {
               className="w-full max-w-md bg-card border border-border rounded-sm p-6 shadow-2xl relative z-10 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
-                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <h2 className="text-base font-bold text-white flex items-center gap-5">
                   <PlusCircle className="w-5 h-5 text-primary" />
                   Adicionar Torrent
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                  className="p-4 rounded-sm hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -482,7 +482,7 @@ export default function TorrentsPage() {
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                     Nome do Arquivo / Título *
                   </label>
                   <input
@@ -497,14 +497,14 @@ export default function TorrentsPage() {
 
                 {/* Seletores de abas do torrent (Upload vs Magnet) */}
                 <div className="space-y-1.5">
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase">
                     Origem do Torrent *
                   </label>
                   <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
                     <button
                       type="button"
                       onClick={() => setTorrentSourceType("file")}
-                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                         torrentSourceType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -514,7 +514,7 @@ export default function TorrentsPage() {
                     <button
                       type="button"
                       onClick={() => setTorrentSourceType("magnet")}
-                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                         torrentSourceType === "magnet" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -526,7 +526,7 @@ export default function TorrentsPage() {
 
                 {torrentSourceType === "file" ? (
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       Selecionar Arquivo .torrent
                     </label>
                     <input
@@ -534,12 +534,12 @@ export default function TorrentsPage() {
                       accept=".torrent"
                       required
                       onChange={(e) => setFormTorrentFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-sm"
+                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-5.5 rounded-sm"
                     />
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       Link Magnet *
                     </label>
                     <input
@@ -555,7 +555,7 @@ export default function TorrentsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       Tamanho
                     </label>
                     <input
@@ -568,7 +568,7 @@ export default function TorrentsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       Categoria
                     </label>
                     <input
@@ -580,7 +580,7 @@ export default function TorrentsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                     Anotações Extras
                   </label>
                   <textarea
@@ -592,7 +592,7 @@ export default function TorrentsPage() {
                   />
                 </div>
 
-                <div className="pt-2 border-t border-border flex items-center justify-end gap-2.5">
+                <div className="pt-2 border-t border-border flex items-center justify-end gap-5.5">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
@@ -603,7 +603,7 @@ export default function TorrentsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>

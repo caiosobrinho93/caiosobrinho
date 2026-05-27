@@ -1,0 +1,9 @@
+{
+  "appId": "com.caiosobrinho.nexusvault",
+  "appName": "Nexus Vault",
+  "webDir": "public",
+  "server": {
+    "url": "https://caioegiselle.vercel.app",
+    "cleartext": true
+  }
+}

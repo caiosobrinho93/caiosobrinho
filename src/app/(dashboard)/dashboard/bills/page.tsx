@@ -171,7 +171,7 @@ export default function BillsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4">
         <div>
-          <h1 className="text-xl font-display font-bold text-white flex items-center gap-2.5">
+          <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
             <CreditCard className="w-5 h-5 text-primary" />
             Contas Compartilhadas
           </h1>
@@ -189,46 +189,46 @@ export default function BillsPage() {
       </div>
 
       {/* Totais Cards - compact 3-col on mobile */}
-      <div className="grid grid-cols-3 gap-2 sm:grid-cols-3 sm:gap-6">
+      <div className="grid grid-cols-3 gap-5 sm:grid-cols-3 sm:gap-6">
         <div className="glass-panel p-3 sm:p-5 border border-red-500/10 flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-[9px] sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">A Pagar</p>
+            <p className="text-xs sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">A Pagar</p>
             <p className="text-sm sm:text-xl font-bold text-red-400 mt-1">
               R$ {totalPagar.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="p-2 sm:p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl shrink-0 hidden sm:block">
+          <div className="p-5 sm:p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl shrink-0 hidden sm:block">
             <TrendingDown className="w-5 h-5" />
           </div>
         </div>
 
         <div className="glass-panel p-3 sm:p-5 border border-emerald-500/10 flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-[9px] sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">A Receber</p>
+            <p className="text-xs sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">A Receber</p>
             <p className="text-sm sm:text-xl font-bold text-emerald-400 mt-1">
               R$ {totalReceber.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="p-2 sm:p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl shrink-0 hidden sm:block">
+          <div className="p-5 sm:p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl shrink-0 hidden sm:block">
             <TrendingUp className="w-5 h-5" />
           </div>
         </div>
 
         <div className="glass-panel p-3 sm:p-5 border border-amber-500/10 flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-[9px] sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">Agendados</p>
+            <p className="text-xs sm:text-xs text-muted-foreground font-semibold uppercase tracking-wider truncate">Agendados</p>
             <p className="text-sm sm:text-xl font-bold text-amber-400 mt-1">
               R$ {totalAgendado.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="p-2 sm:p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl shrink-0 hidden sm:block">
+          <div className="p-5 sm:p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-xl shrink-0 hidden sm:block">
             <Clock className="w-5 h-5" />
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-card/45 border border-border/80 p-1 rounded-xl gap-2 max-w-md">
+      <div className="flex bg-card/45 border border-border/80 p-1 rounded-xl gap-5 max-w-md">
         {(["todas", "pagar", "receber", "agendar"] as const).map((tab) => (
           <button
             key={tab}
@@ -252,7 +252,7 @@ export default function BillsPage() {
       ) : filteredBills.length > 0 ? (
         <>
           {/* Mobile compact rows */}
-          <div className="flex flex-col gap-2 sm:hidden">
+          <div className="flex flex-col gap-5 sm:hidden">
             {filteredBills.map((bill) => {
               const isCompleted = bill.status === "pago" || bill.status === "recebido";
               return (
@@ -267,7 +267,7 @@ export default function BillsPage() {
                       ? 'border-emerald-500/20 bg-card/30 hover:border-emerald-500/35'
                       : 'border-amber-500/20 bg-card/30 hover:border-amber-500/35'
                   }`}
-                  style={{ maxHeight: 80 }}
+                  
                   onClick={() => setSelectedBill(bill)}
                 >
                   <div className={`w-1 self-stretch rounded-full shrink-0 ${
@@ -275,23 +275,23 @@ export default function BillsPage() {
                   }`} />
                   <div className="flex-1 min-w-0">
                     <p className={`text-xs font-semibold truncate leading-tight ${isCompleted ? 'line-through text-muted-foreground' : 'text-white'}`}>{bill.title}</p>
-                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                    <p className="text-sm text-muted-foreground leading-tight mt-0.5">
                       {bill.type === 'pagar' ? 'A Pagar' : bill.type === 'receber' ? 'A Receber' : 'Agendado'}
                       {' · '}{new Date(bill.dueDate).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-5 shrink-0">
                     <span className={`text-sm font-bold ${
                       bill.type === 'pagar' ? 'text-red-400' : bill.type === 'receber' ? 'text-emerald-400' : 'text-amber-400'
                     }`}>R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     <button onClick={(e) => { e.stopPropagation(); handleToggleStatus(bill.id, bill.status, bill.type); }}
-                      className={`p-1.5 rounded-lg border transition-colors ${
+                      className={`p-4 rounded-lg border transition-colors ${
                         isCompleted ? 'bg-muted/20 border-border text-muted-foreground' : 'bg-primary/10 border-primary/20 text-primary'
                       }`}>
                       <Check className="w-3.5 h-3.5" />
                     </button>
                     <button onClick={(e) => { e.stopPropagation(); handleDelete(bill.id); }}
-                      className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors">
+                      className="p-4 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -331,14 +331,14 @@ export default function BillsPage() {
                       <Calendar className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-5">
                         <h3 className={`font-semibold text-base text-white ${isCompleted ? "line-through text-muted-foreground" : ""}`}>
                           {bill.title}
                         </h3>
                         <span className={`user-tag user-tag-${bill.user.username}`}>
                           {bill.user.username === "caio" ? "Caio" : "Giselle"}
                         </span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                        <span className={`px-2 py-2 rounded text-sm font-bold uppercase tracking-wider ${
                           isCompleted
                             ? "bg-muted text-muted-foreground"
                             : bill.type === "pagar"
@@ -374,10 +374,10 @@ export default function BillsPage() {
                       R$ {bill.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-5">
                       <button
                         onClick={() => handleToggleStatus(bill.id, bill.status, bill.type)}
-                        className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                        className={`p-5 rounded-xl border transition-all cursor-pointer ${
                           isCompleted
                             ? "bg-muted/20 border-border text-muted-foreground hover:bg-muted/40 hover:text-white"
                             : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
@@ -388,7 +388,7 @@ export default function BillsPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(bill.id)}
-                        className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
+                        className="p-5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
                         title="Excluir conta"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -437,7 +437,7 @@ export default function BillsPage() {
 
               <form onSubmit={handleCreate} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Título *
                   </label>
                   <input
@@ -452,7 +452,7 @@ export default function BillsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Valor (R$) *
                     </label>
                     <input
@@ -467,7 +467,7 @@ export default function BillsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Data de Vencimento *
                     </label>
                     <input
@@ -482,7 +482,7 @@ export default function BillsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Tipo *
                     </label>
                     <select
@@ -504,7 +504,7 @@ export default function BillsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                       Status Inicial *
                     </label>
                     <select
@@ -530,7 +530,7 @@ export default function BillsPage() {
                   <button
                     type="button"
                     onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="text-[9px] text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                    className="text-xs text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer"
                   >
                     {showAdvanced ? "Ocultar Opções Avançadas" : "Exibir Opções Avançadas"}
                   </button>
@@ -546,7 +546,7 @@ export default function BillsPage() {
                       className="space-y-3.5 overflow-hidden pt-1.5 border-t border-border/30"
                     >
                       <div>
-                        <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
+                        <label className="block text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
                           Descrição
                         </label>
                         <textarea
@@ -561,7 +561,7 @@ export default function BillsPage() {
                   )}
                 </AnimatePresence>
 
-                <div className="pt-2 border-t border-border flex items-center justify-end gap-2.5">
+                <div className="pt-2 border-t border-border flex items-center justify-end gap-5.5">
                   <button
                     type="button"
                     onClick={() => {
@@ -575,7 +575,7 @@ export default function BillsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -612,13 +612,13 @@ export default function BillsPage() {
             >
               {/* Modal header */}
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/60">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-5">
                   <div className={`w-2 h-2 rounded-full ${
                     selectedBill.type === 'pagar' ? 'bg-red-400' : selectedBill.type === 'receber' ? 'bg-emerald-400' : 'bg-amber-400'
                   }`} />
                   <h3 className="font-bold text-white text-sm truncate max-w-[220px]">{selectedBill.title}</h3>
                 </div>
-                <button onClick={() => setSelectedBill(null)} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer">
+                <button onClick={() => setSelectedBill(null)} className="p-4 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -635,8 +635,8 @@ export default function BillsPage() {
               {/* Detail rows */}
               <div className="space-y-2 text-xs mb-4">
                 <div className="flex items-center justify-between py-1.5 border-b border-border/30">
-                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Tipo</span>
-                  <span className={`px-2 py-0.5 rounded font-bold uppercase text-[10px] ${
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-sm">Tipo</span>
+                  <span className={`px-2 py-2 rounded font-bold uppercase text-sm ${
                     selectedBill.type === 'pagar' ? 'bg-red-500/10 text-red-400 border border-red-500/20'
                     : selectedBill.type === 'receber' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                     : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
@@ -645,41 +645,41 @@ export default function BillsPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-1.5 border-b border-border/30">
-                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Status</span>
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-sm">Status</span>
                   <span className="text-white font-semibold capitalize">{selectedBill.status}</span>
                 </div>
                 <div className="flex items-center justify-between py-1.5 border-b border-border/30">
-                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Vencimento</span>
-                  <span className="text-white font-semibold flex items-center gap-1">
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-sm">Vencimento</span>
+                  <span className="text-white font-semibold flex items-center gap-2">
                     <Calendar className="w-3 h-3 text-primary" />
                     {new Date(selectedBill.dueDate).toLocaleDateString('pt-BR')}
                   </span>
                 </div>
                 {selectedBill.paymentDate && (
                   <div className="flex items-center justify-between py-1.5 border-b border-border/30">
-                    <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Pagamento</span>
+                    <span className="text-muted-foreground font-semibold uppercase tracking-wider text-sm">Pagamento</span>
                     <span className="text-emerald-400 font-semibold">{new Date(selectedBill.paymentDate).toLocaleDateString('pt-BR')}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between py-1.5 border-b border-border/30">
-                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">Usuário</span>
+                  <span className="text-muted-foreground font-semibold uppercase tracking-wider text-sm">Usuário</span>
                   <span className={`user-tag user-tag-${selectedBill.user.username}`}>
                     {selectedBill.user.username === 'caio' ? 'Caio' : 'Giselle'}
                   </span>
                 </div>
                 {selectedBill.description && (
                   <div className="py-1.5">
-                    <span className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px] block mb-1">Descrição</span>
+                    <span className="text-muted-foreground font-semibold uppercase tracking-wider text-sm block mb-1">Descrição</span>
                     <p className="text-white text-xs leading-relaxed">{selectedBill.description}</p>
                   </div>
                 )}
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2 pt-2 border-t border-border/40">
+              <div className="flex items-center gap-5 pt-2 border-t border-border/40">
                 <button
                   onClick={() => { handleToggleStatus(selectedBill.id, selectedBill.status, selectedBill.type); setSelectedBill(null); }}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-colors cursor-pointer ${
+                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-4 border transition-colors cursor-pointer ${
                     selectedBill.status === 'pago' || selectedBill.status === 'recebido'
                       ? 'bg-muted/20 border-border text-muted-foreground'
                       : 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20'
@@ -690,7 +690,7 @@ export default function BillsPage() {
                 </button>
                 <button
                   onClick={() => { handleDelete(selectedBill.id); setSelectedBill(null); }}
-                  className="flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-4 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   Excluir

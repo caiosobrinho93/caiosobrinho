@@ -101,7 +101,7 @@ export default function RssTechWidget({ idx, renderHeader, itemVariants, activeM
       <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
         {isLoading ? (
           [...Array(3)].map((_, i) => (
-            <div key={i} className="p-2 border border-border/30 rounded bg-card/25 animate-pulse space-y-1">
+            <div key={i} className="p-5 border border-border/30 rounded bg-card/25 animate-pulse space-y-1">
               <div className="h-2 w-3/4 bg-muted rounded" />
               <div className="h-1.5 w-full bg-muted rounded" />
               <div className="h-1.5 w-1/2 bg-muted rounded" />
@@ -116,15 +116,15 @@ export default function RssTechWidget({ idx, renderHeader, itemVariants, activeM
               rel="noopener noreferrer"
               onClick={playClickSound}
               onMouseEnter={playHoverSound}
-              className="block p-2 border border-border/30 rounded bg-card/25 hover:border-primary/20 hover:bg-muted/15 transition-all group"
+              className="block p-5 border border-border/30 rounded bg-card/25 hover:border-primary/20 hover:bg-muted/15 transition-all group"
             >
-              <div className="flex items-start justify-between gap-1.5">
-                <span className="text-[10px] font-bold text-white leading-tight group-hover:text-primary transition-colors line-clamp-2">
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-sm font-bold text-white leading-tight group-hover:text-primary transition-colors line-clamp-5">
                   {art.title}
                 </span>
                 <ExternalLink className="w-2.5 h-2.5 text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              <p className="text-[8px] text-muted-foreground line-clamp-2 mt-1 leading-snug">
+              <p className="text-xs text-muted-foreground line-clamp-5 mt-1 leading-snug">
                 {art.description}
               </p>
               <div className="flex items-center justify-between text-[7px] text-muted-foreground font-mono mt-1 pt-1 border-t border-border/10">

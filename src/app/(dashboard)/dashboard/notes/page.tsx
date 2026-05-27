@@ -292,7 +292,7 @@ function NotesContent() {
     // Negrito, itálico e códigos
     html = html.replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>');
     html = html.replace(/\*(.*)\*/gim, '<em>$1</em>');
-    html = html.replace(/`(.*)`/gim, '<code class="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">$1</code>');
+    html = html.replace(/`(.*)`/gim, '<code class="bg-muted px-4 py-2 rounded text-xs font-mono">$1</code>');
 
     // Listas
     html = html.replace(/^\s*-\s*(.*$)/gim, '<li class="ml-4 list-disc text-muted-foreground font-medium">$1</li>');
@@ -319,13 +319,13 @@ function NotesContent() {
       <div className={`w-full md:w-80 border-r border-border flex flex-col h-full bg-card/30 shrink-0 ${isFocusMode ? "hidden" : showSidebarOnMobile ? "flex" : "hidden md:flex"}`}>
         <div className="p-4 border-b border-border flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-1.5">
+            <span className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-4">
               <FileText className="w-4 h-4 text-primary" />
               Editor de Notas
             </span>
             <button
               onClick={handleCreateNote}
-              className="p-1.5 rounded-sm glass-btn glass-btn-primary text-black cursor-pointer"
+              className="p-4 rounded-sm glass-btn glass-btn-primary text-black cursor-pointer"
               title="Nova Nota"
             >
               <Plus className="w-4 h-4" />
@@ -346,7 +346,7 @@ function NotesContent() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        <div className="flex-1 overflow-y-auto p-5 space-y-1">
           {isLoading ? (
             [...Array(3)].map((_, i) => (
               <div key={i} className="h-16 bg-muted/20 animate-pulse rounded-sm border border-border/40" />
@@ -364,7 +364,7 @@ function NotesContent() {
                       : "border-transparent text-muted-foreground hover:bg-muted/40 hover:text-white"
                   }`}
                 >
-                  <div className="flex justify-between items-baseline gap-2">
+                  <div className="flex justify-between items-baseline gap-5">
                     <span className={`text-xs font-semibold truncate block ${isSelected ? "text-white" : "text-white/80 group-hover:text-primary transition-colors"}`}>
                       {note.title || "Rascunho sem Título"}
                     </span>
@@ -373,9 +373,9 @@ function NotesContent() {
                     )}
                   </div>
                   
-                  <div className="flex justify-between items-center mt-2 text-[10px] leading-none">
-                    <div className="flex items-center gap-1.5">
-                      <span className="px-1.5 py-0.5 bg-muted rounded text-muted-foreground font-semibold">
+                  <div className="flex justify-between items-center mt-2 text-sm leading-none">
+                    <div className="flex items-center gap-4">
+                      <span className="px-4 py-2 bg-muted rounded text-muted-foreground font-semibold">
                         {note.category || "Geral"}
                       </span>
                       {note.user?.username && (
@@ -403,13 +403,13 @@ function NotesContent() {
           <div className="flex-1 flex flex-col h-full overflow-hidden">
             
             {/* Cabeçalho do Editor */}
-            <div className="h-14 border-b border-border px-4 md:px-5 flex items-center justify-between shrink-0 bg-muted/10 gap-2">
-              <div className="flex items-center gap-1.5 min-w-0">
+            <div className="h-14 border-b border-border px-4 md:px-5 flex items-center justify-between shrink-0 bg-muted/10 gap-5">
+              <div className="flex items-center gap-4 min-w-0">
                 {!isFocusMode && (
                   <button
                     type="button"
                     onClick={() => setShowSidebarOnMobile(true)}
-                    className="md:hidden p-1.5 rounded-sm border border-border text-muted-foreground hover:text-white shrink-0 animate-pulse"
+                    className="md:hidden p-4 rounded-sm border border-border text-muted-foreground hover:text-white shrink-0 animate-pulse"
                     title="Voltar para lista"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
@@ -419,7 +419,7 @@ function NotesContent() {
                 <div className="flex bg-muted/40 border border-border p-0.5 rounded-sm shrink-0">
                   <button
                     onClick={() => setActiveTab("write")}
-                    className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
+                    className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-4 cursor-pointer transition-colors ${
                       activeTab === "write" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                     }`}
                   >
@@ -428,7 +428,7 @@ function NotesContent() {
                   </button>
                   <button
                     onClick={() => setActiveTab("preview")}
-                    className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
+                    className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-4 cursor-pointer transition-colors ${
                       activeTab === "preview" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                     }`}
                   >
@@ -439,8 +439,8 @@ function NotesContent() {
               </div>
 
               {/* Status e Ações */}
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1 bg-muted/40 border border-border/80 px-2 py-1 rounded-sm shrink-0">
+              <div className="flex items-center gap-5 shrink-0">
+                <span className="text-sm text-muted-foreground font-medium flex items-center gap-2 bg-muted/40 border border-border/80 px-2 py-1 rounded-sm shrink-0">
                   {saveStatus === "saving" ? (
                     <>
                       <Loader2 className="w-3 h-3 animate-spin text-primary shrink-0" />
@@ -461,7 +461,7 @@ function NotesContent() {
 
                 <button
                   onClick={() => handleToggleFavorite(selectedNote)}
-                  className={`p-2 rounded-sm border cursor-pointer hover:bg-muted transition-colors ${
+                  className={`p-5 rounded-sm border cursor-pointer hover:bg-muted transition-colors ${
                     selectedNote.isFavorite
                       ? "border-primary/20 bg-primary/10 text-primary"
                       : "border-border text-muted-foreground hover:text-white"
@@ -473,7 +473,7 @@ function NotesContent() {
                 <button
                   type="button"
                   onClick={() => setIsFocusMode(!isFocusMode)}
-                  className={`p-2 rounded-sm border cursor-pointer hover:bg-muted transition-colors ${isFocusMode ? "border-primary/20 bg-primary/10 text-primary shadow-[0_0_8px_rgba(197,254,0,0.2)]" : "border-border text-muted-foreground hover:text-white"}`}
+                  className={`p-5 rounded-sm border cursor-pointer hover:bg-muted transition-colors ${isFocusMode ? "border-primary/20 bg-primary/10 text-primary shadow-[0_0_8px_rgba(197,254,0,0.2)]" : "border-border text-muted-foreground hover:text-white"}`}
                   title={isFocusMode ? "Sair do Modo Foco" : "Modo Foco Fullscreen"}
                 >
                   {isFocusMode ? <Minimize className="w-4 h-4" /> : <Expand className="w-4 h-4" />}
@@ -481,7 +481,7 @@ function NotesContent() {
 
                 <button
                   onClick={() => handleDelete(selectedNote.id)}
-                  className="p-2 rounded-sm border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
+                  className="p-5 rounded-sm border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -500,8 +500,8 @@ function NotesContent() {
                   className="flex-1 bg-transparent border-0 font-bold text-lg text-white placeholder-muted-foreground focus:outline-none focus:ring-0 p-0 leading-tight"
                 />
                 
-                <div className="flex gap-2 shrink-0 items-center">
-                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider hidden sm:inline">Categoria:</span>
+                <div className="flex gap-5 shrink-0 items-center">
+                  <span className="text-sm text-muted-foreground font-bold uppercase tracking-wider hidden sm:inline">Categoria:</span>
                   <input
                     type="text"
                     placeholder="Geral"
@@ -561,7 +561,7 @@ function NotesContent() {
                     </div>
 
                     <div className="space-y-2">
-                      <h3 className="text-sm font-black text-white tracking-widest uppercase flex items-center justify-center gap-1.5 font-display">
+                      <h3 className="text-sm font-black text-white tracking-widest uppercase flex items-center justify-center gap-4 font-display">
                         <Lock className="w-3.5 h-3.5 text-primary" />
                         Acesso Criptografado
                       </h3>
@@ -588,7 +588,7 @@ function NotesContent() {
 
                       <button
                         onClick={() => setRevealedNoteIds(prev => [...prev, selectedNote.id])}
-                        className="py-1 text-[9px] text-muted-foreground hover:text-white uppercase tracking-wider font-bold transition-colors cursor-pointer"
+                        className="py-1 text-xs text-muted-foreground hover:text-white uppercase tracking-wider font-bold transition-colors cursor-pointer"
                       >
                         Desbloqueio Rápido (Clique)
                       </button>

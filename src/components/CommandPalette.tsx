@@ -146,18 +146,18 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                 placeholder="Digite um comando ou atalho de navegação..."
                 className="w-full h-full bg-transparent border-0 text-white placeholder-muted-foreground text-sm focus:outline-none focus:ring-0"
               />
-              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 border border-border/70 bg-muted/50 rounded text-[9px] font-mono text-muted-foreground select-none">
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-2 border border-border/70 bg-muted/50 rounded text-xs font-mono text-muted-foreground select-none">
                 esc
               </kbd>
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto p-2.5">
+            <div className="flex-1 overflow-y-auto p-5.5">
               {filteredItems.length > 0 ? (
                 <div>
                   {Array.from(new Set(filteredItems.map((item) => item.category))).map((category) => (
                     <div key={category} className="mb-3">
-                      <div className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                      <div className="px-3 py-1.5 text-sm font-bold text-muted-foreground uppercase tracking-wider">
                         {category}
                       </div>
                       
@@ -188,7 +188,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                                   <span className="text-sm font-medium">{item.label}</span>
                                 </div>
                                 {isSelected && (
-                                  <span className="flex items-center text-[10px] gap-1 opacity-80">
+                                  <span className="flex items-center text-sm gap-2 opacity-80">
                                     Executar <ArrowRight className="w-3 h-3" />
                                   </span>
                                 )}
@@ -209,7 +209,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
             </div>
 
             {/* Footer */}
-            <div className="h-10 px-4 border-t border-border bg-muted/20 flex items-center justify-between text-[10px] text-muted-foreground shrink-0 select-none">
+            <div className="h-10 px-4 border-t border-border bg-muted/20 flex items-center justify-between text-sm text-muted-foreground shrink-0 select-none">
               <span>Use as teclas <kbd className="font-mono bg-card px-1 border border-border">↑</kbd> <kbd className="font-mono bg-card px-1 border border-border">↓</kbd> para navegar</span>
               <span>Pressione <kbd className="font-mono bg-card px-1 border border-border">Enter</kbd> para selecionar</span>
             </div>

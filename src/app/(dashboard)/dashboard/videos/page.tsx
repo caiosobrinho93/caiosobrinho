@@ -196,7 +196,7 @@ export default function VideosPage() {
       {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
+          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-5.5">
             <Video className="w-6 h-6 text-primary" />
             Cine Vault
           </h1>
@@ -206,7 +206,7 @@ export default function VideosPage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
+          className="flex items-center justify-center gap-5 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Vincular Vídeo
@@ -215,7 +215,7 @@ export default function VideosPage() {
 
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 md:pb-0 scrollbar-none">
+        <div className="flex items-center gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -282,7 +282,7 @@ export default function VideosPage() {
                 </div>
 
                 {vid.duration && (
-                  <span className="absolute bottom-2.5 right-2.5 bg-black/80 text-[10px] px-2 py-0.5 rounded text-white font-mono border border-white/5">
+                  <span className="absolute bottom-2.5 right-2.5 bg-black/80 text-sm px-2 py-2 rounded text-white font-mono border border-white/5">
                     {formatDuration(vid.duration)}
                   </span>
                 )}
@@ -299,13 +299,13 @@ export default function VideosPage() {
 
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-sm font-semibold text-white/95 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+                  <h3 className="text-sm font-semibold text-white/95 line-clamp-5 leading-snug group-hover:text-primary transition-colors">
                     {vid.title}
                   </h3>
                   
-                  <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+                  <div className="flex flex-wrap items-center gap-4 mt-2.5">
                     {vid.category && (
-                      <span className="text-[10px] px-2 py-0.5 bg-muted rounded border border-border/80 text-muted-foreground font-semibold">
+                      <span className="text-sm px-2 py-2 bg-muted rounded border border-border/80 text-muted-foreground font-semibold">
                         {vid.category}
                       </span>
                     )}
@@ -315,7 +315,7 @@ export default function VideosPage() {
                       </span>
                     )}
                     {vid.tags && vid.tags.split(",").slice(0, 2).map(tag => (
-                      <span key={tag} className="text-[9px] text-primary bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">
+                      <span key={tag} className="text-xs text-primary bg-primary/5 px-4 py-2 rounded border border-primary/10">
                         #{tag}
                       </span>
                     ))}
@@ -323,18 +323,18 @@ export default function VideosPage() {
                 </div>
 
                 <div className="flex items-center justify-between border-t border-border/40 mt-4 pt-3.5">
-                  <span className="text-[10px] text-muted-foreground truncate max-w-44 flex items-center gap-1.5 font-mono">
+                  <span className="text-sm text-muted-foreground truncate max-w-44 flex items-center gap-4 font-mono">
                     <ExternalLink className="w-3 h-3 text-border shrink-0" />
                     {vid.url}
                   </span>
                   
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleToggleFavorite(vid);
                       }}
-                      className={`p-1.5 rounded-sm border cursor-pointer hover:bg-muted/40 transition-colors ${
+                      className={`p-4 rounded-sm border cursor-pointer hover:bg-muted/40 transition-colors ${
                         vid.isFavorite
                           ? "border-primary/20 bg-primary/10 text-primary"
                           : "border-border/80 text-muted-foreground hover:text-white"
@@ -344,7 +344,7 @@ export default function VideosPage() {
                     </button>
                     <button
                       onClick={(e) => handleDelete(vid.id, e)}
-                      className="p-1.5 rounded-sm border border-border/80 text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
+                      className="p-4 rounded-sm border border-border/80 text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -389,13 +389,13 @@ export default function VideosPage() {
               className="w-full max-w-md bg-card border border-border rounded-sm p-6 shadow-2xl relative z-10 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
-                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <h2 className="text-base font-bold text-white flex items-center gap-5">
                   <PlusCircle className="w-5 h-5 text-primary" />
                   Vincular Novo Vídeo
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                  className="p-4 rounded-sm hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -403,7 +403,7 @@ export default function VideosPage() {
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                     Título do Vídeo *
                   </label>
                   <input
@@ -418,14 +418,14 @@ export default function VideosPage() {
 
                 {/* Seletores de abas do vídeo (Upload vs URL) */}
                 <div className="space-y-1.5">
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase">
                     Origem do Vídeo *
                   </label>
                   <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
                     <button
                       type="button"
                       onClick={() => setVideoUploadType("file")}
-                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                         videoUploadType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -435,7 +435,7 @@ export default function VideosPage() {
                     <button
                       type="button"
                       onClick={() => setVideoUploadType("url")}
-                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                         videoUploadType === "url" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -447,7 +447,7 @@ export default function VideosPage() {
 
                 {videoUploadType === "file" ? (
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       Selecionar Arquivo de Vídeo
                     </label>
                     <input
@@ -455,12 +455,12 @@ export default function VideosPage() {
                       accept="video/*"
                       required
                       onChange={(e) => setFormVideoFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-sm"
+                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-5.5 rounded-sm"
                     />
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       URL de Origem
                     </label>
                     <input
@@ -479,7 +479,7 @@ export default function VideosPage() {
                   <button
                     type="button"
                     onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="text-[9px] text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                    className="text-xs text-primary hover:underline font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer"
                   >
                     {showAdvanced ? "Ocultar Opções Avançadas" : "Exibir Opções Avançadas"}
                   </button>
@@ -496,7 +496,7 @@ export default function VideosPage() {
                     >
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                             Categoria
                           </label>
                           <select
@@ -513,7 +513,7 @@ export default function VideosPage() {
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                             Duração (segundos)
                           </label>
                           <input
@@ -528,14 +528,14 @@ export default function VideosPage() {
 
                       {/* Seletores de abas da imagem de capa (Upload vs URL) */}
                       <div className="space-y-1.5">
-                        <label className="block text-[10px] font-bold text-muted-foreground uppercase">
+                        <label className="block text-sm font-bold text-muted-foreground uppercase">
                           Capa do Vídeo
                         </label>
                         <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
                           <button
                             type="button"
                             onClick={() => setThumbUploadType("file")}
-                            className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                            className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                               thumbUploadType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                             }`}
                           >
@@ -545,7 +545,7 @@ export default function VideosPage() {
                           <button
                             type="button"
                             onClick={() => setThumbUploadType("url")}
-                            className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                            className={`flex-1 py-1.5 rounded-sm text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                               thumbUploadType === "url" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                             }`}
                           >
@@ -557,19 +557,19 @@ export default function VideosPage() {
 
                       {thumbUploadType === "file" ? (
                         <div>
-                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                             Selecionar Arquivo de Capa
                           </label>
                           <input
                             type="file"
                             accept="image/*"
                             onChange={(e) => setFormThumbFile(e.target.files?.[0] || null)}
-                            className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-sm"
+                            className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-5.5 rounded-sm"
                           />
                         </div>
                       ) : (
                         <div>
-                          <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                          <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                             URL da Imagem de Capa
                           </label>
                           <input
@@ -583,7 +583,7 @@ export default function VideosPage() {
                       )}
 
                       <div>
-                        <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                        <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                           Tags (separadas por vírgula)
                         </label>
                         <div className="relative">
@@ -603,7 +603,7 @@ export default function VideosPage() {
                   )}
                 </AnimatePresence>
 
-                <div className="pt-2 border-t border-border flex items-center justify-end gap-2.5">
+                <div className="pt-2 border-t border-border flex items-center justify-end gap-5.5">
                   <button
                     type="button"
                     onClick={() => {
@@ -617,7 +617,7 @@ export default function VideosPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>

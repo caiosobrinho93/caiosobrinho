@@ -54,24 +54,24 @@ function KanbanColumn({ id, title, goals, colorClass, icon }: ColumnProps) {
     <div className="flex-1 min-w-[280px] bg-slate-950/45 border border-border/80 rounded-sm p-4 flex flex-col min-h-[500px]">
       {/* Column Title */}
       <div className="flex items-center justify-between pb-3 border-b border-border/60 mb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5">
           <span className={colorClass}>{icon}</span>
           <h3 className="text-xs font-black uppercase text-white tracking-widest font-display">{title}</h3>
         </div>
-        <span className="text-[10px] font-mono px-2 py-0.5 bg-white/5 border border-border text-muted-foreground rounded-sm">
+        <span className="text-sm font-mono px-2 py-2 bg-white/5 border border-border text-muted-foreground rounded-sm">
           {goals.length}
         </span>
       </div>
 
       {/* Sortable Drop Area */}
-      <div ref={setNodeRef} className="flex-1 flex flex-col gap-2.5">
+      <div ref={setNodeRef} className="flex-1 flex flex-col gap-5.5">
         <SortableContext items={goals.map(g => g.id)} strategy={verticalListSortingStrategy}>
           {goals.map((goal) => (
             <SortableCard key={goal.id} goal={goal} />
           ))}
         </SortableContext>
         {goals.length === 0 && (
-          <div className="flex-1 flex items-center justify-center border border-dashed border-border/40 rounded-sm py-12 text-center select-none text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+          <div className="flex-1 flex items-center justify-center border border-dashed border-border/40 rounded-sm py-12 text-center select-none text-sm text-muted-foreground uppercase font-bold tracking-wider">
             Vazio
           </div>
         )}
@@ -123,7 +123,7 @@ function SortableCard({ goal }: { goal: Goal }) {
           : "border-border"
       }`}
     >
-      <div className="flex justify-between items-start gap-2">
+      <div className="flex justify-between items-start gap-5">
         <p className={`text-xs font-semibold leading-snug ${goal.isCompleted ? "line-through text-muted-foreground" : "text-white"}`}>
           {goal.title}
         </p>
@@ -135,8 +135,8 @@ function SortableCard({ goal }: { goal: Goal }) {
         </button>
       </div>
 
-      <div className="flex justify-between items-center text-[9px] leading-none mt-1">
-        <span className={`px-1.5 py-0.5 rounded font-black tracking-wider uppercase ${
+      <div className="flex justify-between items-center text-xs leading-none mt-1">
+        <span className={`px-4 py-2 rounded font-black tracking-wider uppercase ${
           goal.isCompleted 
             ? "bg-emerald-500/10 text-emerald-400" 
             : "bg-primary/10 text-primary border border-primary/20"
@@ -281,7 +281,7 @@ export default function KanbanPage() {
 
   if (!isMounted || isLoading || !data) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-2">
+      <div className="flex flex-col items-center justify-center py-24 gap-5">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         <span className="text-xs text-primary font-bold tracking-widest uppercase">Carregando Quadro Kanban</span>
       </div>
@@ -300,17 +300,17 @@ export default function KanbanPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-black text-white tracking-widest uppercase flex items-center gap-2.5 font-display">
+          <h1 className="text-xl font-black text-white tracking-widest uppercase flex items-center gap-5.5 font-display">
             <Trophy className="w-5 h-5 text-primary" />
             Metas & Kanban
           </h1>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">
+          <p className="text-sm text-muted-foreground uppercase tracking-wider mt-1">
             Arraste os cards para organizar e conclua para ganhar XP e Subir de Nível.
           </p>
         </div>
 
         {/* Quick add Goal Bar */}
-        <form onSubmit={handleCreateGoal} className="flex gap-2 max-w-md w-full sm:w-auto">
+        <form onSubmit={handleCreateGoal} className="flex gap-5 max-w-md w-full sm:w-auto">
           <input
             type="text"
             required
@@ -322,7 +322,7 @@ export default function KanbanPage() {
           <button
             type="submit"
             disabled={isAddingGoal}
-            className="px-4 py-2 bg-primary text-black font-extrabold text-xs uppercase tracking-wider hover:bg-primary/95 transition-all rounded-sm cursor-pointer shadow-md shadow-primary/10 flex items-center justify-center gap-1.5 shrink-0"
+            className="px-4 py-2 bg-primary text-black font-extrabold text-xs uppercase tracking-wider hover:bg-primary/95 transition-all rounded-sm cursor-pointer shadow-md shadow-primary/10 flex items-center justify-center gap-4 shrink-0"
           >
             {isAddingGoal ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
             <span className="hidden sm:inline">Adicionar</span>

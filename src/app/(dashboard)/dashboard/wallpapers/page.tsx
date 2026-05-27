@@ -153,17 +153,17 @@ export default function WallpapersPage() {
       {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
         <div>
-          <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-2">
+          <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-5">
             <ImageIcon className="w-5 h-5 text-primary" />
             IMAGENS
           </h1>
-          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+          <p className="text-sm text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
             Papéis de Parede Widescreen de Alta Definição
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] font-bold glass-btn glass-btn-primary cursor-pointer  shrink-0"
+          className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer  shrink-0"
         >
           <Plus className="w-3.5 h-3.5" />
           Adicionar Wallpaper
@@ -171,11 +171,11 @@ export default function WallpapersPage() {
       </div>
  
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5.5">
         <div className="flex items-center bg-card/25 border border-border p-0.5 rounded-sm shrink-0 ">
           <button
             onClick={() => setActiveTab("all")}
-            className={`px-3 py-1.5 rounded-sm text-[9px] font-bold uppercase tracking-wider cursor-pointer transition-colors ${
+            className={`px-3 py-1.5 rounded-sm text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors ${
               activeTab === "all" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
             }`}
           >
@@ -183,7 +183,7 @@ export default function WallpapersPage() {
           </button>
           <button
             onClick={() => setActiveTab("favorites")}
-            className={`px-3 py-1.5 rounded-sm text-[9px] font-bold uppercase tracking-wider cursor-pointer transition-colors ${
+            className={`px-3 py-1.5 rounded-sm text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors ${
               activeTab === "favorites" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
             }`}
           >
@@ -200,7 +200,7 @@ export default function WallpapersPage() {
             placeholder="Buscar por título..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground text-[9px] focus:outline-none focus:border-primary transition-all"
+            className="w-full pl-8 pr-3 py-1 bg-card/25 border border-border/80 rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
           />
         </div>
       </div>
@@ -233,7 +233,7 @@ export default function WallpapersPage() {
  
                   {/* Overlay escuro em foco */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-between duration-300 z-10">
-                    <div className="flex justify-end gap-1 ">
+                    <div className="flex justify-end gap-2 ">
                       <button
                         onClick={(e) => handleToggleFavorite(item, e)}
                         className="p-1 rounded-sm bg-black/45 hover:bg-black/75 border border-white/5 text-white transition-colors cursor-pointer"
@@ -250,9 +250,9 @@ export default function WallpapersPage() {
  
                     <div className="flex items-center justify-between">
                       <div className="min-w-0 ">
-                        <span className="text-[11px] font-bold text-white truncate block uppercase tracking-wide">{item.title}</span>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="text-[8px] text-muted-foreground block">WIDESCREEN</span>
+                        <span className="text-sm font-bold text-white truncate block uppercase tracking-wide">{item.title}</span>
+                        <div className="flex items-center gap-4 mt-0.5">
+                          <span className="text-xs text-muted-foreground block">WIDESCREEN</span>
                           {item.user?.username && (
                             <span className={`user-tag user-tag-${item.user.username}`}>
                               {item.user.username === "caio" ? "Caio" : "Giselle"}
@@ -274,7 +274,7 @@ export default function WallpapersPage() {
         <div className="py-24 flex flex-col items-center justify-center text-center bg-card/15 border border-dashed border-border rounded-2xl">
           <ImageIcon className="w-10 h-10 text-muted-foreground mb-3" />
           <h3 className="text-sm font-semibold text-white">Nenhum wallpaper vinculado</h3>
-          <p className="text-[10px] text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
+          <p className="text-sm text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
             Comece vinculando ou subindo belos papéis de parede para o seu catálogo de imagens.
           </p>
           <button
@@ -305,13 +305,13 @@ export default function WallpapersPage() {
               className="w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl relative z-10 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
-                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <h2 className="text-base font-bold text-white flex items-center gap-5">
                   <PlusCircle className="w-5 h-5 text-primary" />
                   Novo Wallpaper
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                  className="p-4 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -319,7 +319,7 @@ export default function WallpapersPage() {
 
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                     Título do Wallpaper *
                   </label>
                   <input
@@ -334,14 +334,14 @@ export default function WallpapersPage() {
 
                 {/* Seletores de abas (Arquivo ou URL) */}
                 <div className="space-y-1.5">
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase">
+                  <label className="block text-sm font-bold text-muted-foreground uppercase">
                     Origem da Imagem *
                   </label>
                   <div className="flex bg-muted/30 border border-border p-1 rounded-xl">
                     <button
                       type="button"
                       onClick={() => setUploadType("file")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                         uploadType === "file" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -351,7 +351,7 @@ export default function WallpapersPage() {
                     <button
                       type="button"
                       onClick={() => setUploadType("url")}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-4 transition-colors cursor-pointer ${
                         uploadType === "url" ? "bg-card text-white shadow-sm" : "text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -364,7 +364,7 @@ export default function WallpapersPage() {
                 {/* Área dinâmica das abas */}
                 {uploadType === "file" ? (
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       Selecionar Arquivo de Imagem
                     </label>
                     <input
@@ -372,12 +372,12 @@ export default function WallpapersPage() {
                       accept="image/*"
                       required
                       onChange={(e) => setFormFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-2.5 rounded-xl"
+                      className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:cursor-pointer hover:file:bg-primary/20 cursor-pointer bg-muted/20 border border-border p-5.5 rounded-xl"
                     />
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1.5">
+                    <label className="block text-sm font-bold text-muted-foreground uppercase mb-4">
                       URL da Imagem
                     </label>
                     <input
@@ -391,7 +391,7 @@ export default function WallpapersPage() {
                   </div>
                 )}
 
-                <div className="pt-2 border-t border-border flex items-center justify-end gap-2.5">
+                <div className="pt-2 border-t border-border flex items-center justify-end gap-5.5">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
@@ -402,7 +402,7 @@ export default function WallpapersPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -447,26 +447,26 @@ export default function WallpapersPage() {
                   {activeWallpaper.title}
                 </span>
 
-                <div className="flex gap-2 pointer-events-auto">
+                <div className="flex gap-5 pointer-events-auto">
                   <a
                     href={activeWallpaper.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     download={activeWallpaper.title}
-                    className="p-2.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors"
+                    className="p-5.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center gap-4 text-xs font-semibold transition-colors"
                   >
                     <Download className="w-4.5 h-4.5" />
                     Baixar
                   </a>
                   <button
                     onClick={(e) => handleToggleFavorite(activeWallpaper, e)}
-                    className="p-2.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center transition-colors"
+                    className="p-5.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center transition-colors"
                   >
                     <Star className={`w-4.5 h-4.5 ${activeWallpaper.isFavorite ? "text-primary fill-current" : ""}`} />
                   </button>
                   <button
                     onClick={() => setActiveWallpaper(null)}
-                    className="p-2.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center transition-colors"
+                    className="p-5.5 rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/5 cursor-pointer flex items-center justify-center transition-colors"
                   >
                     <X className="w-4.5 h-4.5" />
                   </button>

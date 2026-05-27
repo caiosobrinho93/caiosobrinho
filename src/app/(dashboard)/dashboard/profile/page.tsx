@@ -42,7 +42,7 @@ export default function ProfilePage() {
 
   if (isLoading || !data) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-2">
+      <div className="flex flex-col items-center justify-center py-24 gap-5">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         <span className="text-xs text-primary font-bold tracking-widest uppercase">Carregando Perfil Gamer</span>
       </div>
@@ -144,7 +144,7 @@ export default function ProfilePage() {
                 className="w-full h-full object-cover" 
                 alt={profile.username} 
               />
-              <span className={`absolute -bottom-1 px-2 py-0.5 text-[9px] font-black rounded uppercase text-black leading-none ${
+              <span className={`absolute -bottom-1 px-2 py-2 text-xs font-black rounded uppercase text-black leading-none ${
                 profile.username === "Giselle" ? "bg-fuchsia-400" : "bg-cyan-400"
               }`}>
                 {profile.username === "Giselle" ? "P2" : "P1"}
@@ -152,11 +152,11 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 justify-center sm:justify-start">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-5 justify-center sm:justify-start">
                 <h1 className="text-xl font-black text-white tracking-widest uppercase font-display">
                   {profile.username}
                 </h1>
-                <span className={`text-[9px] font-black px-2 py-0.5 rounded border tracking-wider uppercase inline-block ${
+                <span className={`text-xs font-black px-2 py-2 rounded border tracking-wider uppercase inline-block ${
                   profile.username === "Giselle"
                     ? "bg-fuchsia-500/10 border-fuchsia-500/20 text-fuchsia-400"
                     : "bg-cyan-500/10 border-cyan-500/20 text-cyan-400"
@@ -164,15 +164,15 @@ export default function ProfilePage() {
                   {profile.username === "Giselle" ? "Hacker Co-op" : "Admin Master"}
                 </span>
               </div>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+              <p className="text-sm text-muted-foreground uppercase tracking-widest font-bold">
                 Classe: Operador do Sistema • Status: Online
               </p>
               <div className="flex flex-wrap gap-3 justify-center sm:justify-start pt-2">
-                <div className="flex items-center gap-1 text-[10px] font-bold text-amber-400 bg-amber-400/5 px-2.5 py-1 border border-amber-400/10 rounded-sm">
+                <div className="flex items-center gap-2 text-sm font-bold text-amber-400 bg-amber-400/5 px-2.5 py-1 border border-amber-400/10 rounded-sm">
                   <Flame className="w-3.5 h-3.5" />
                   <span>STREAK: 7 DIAS</span>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/5 px-2.5 py-1 border border-primary/10 rounded-sm">
+                <div className="flex items-center gap-2 text-sm font-bold text-primary bg-primary/5 px-2.5 py-1 border border-primary/10 rounded-sm">
                   <Trophy className="w-3.5 h-3.5" />
                   <span>GOALS: {totalGoalsCompleted}/{goals.length}</span>
                 </div>
@@ -182,17 +182,17 @@ export default function ProfilePage() {
 
           {/* Gamer Rank / Nível Display */}
           <div className="flex flex-col items-center md:items-end justify-center bg-card/25 border border-border/80 px-5 py-4 rounded-sm min-w-[160px] text-center md:text-right">
-            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Nível Geral</span>
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Nível Geral</span>
             <span className="text-3xl font-black text-white leading-tight font-display tracking-wider">
               {profile.level}
             </span>
-            <span className="text-[10px] text-primary font-bold uppercase tracking-wider mt-1">{profile.xp} XP TOTAL</span>
+            <span className="text-sm text-primary font-bold uppercase tracking-wider mt-1">{profile.xp} XP TOTAL</span>
           </div>
         </div>
 
         {/* Dynamic XP Bar */}
         <div className="mt-6 space-y-2 relative z-10">
-          <div className="flex justify-between items-end text-[10px] font-black uppercase tracking-widest">
+          <div className="flex justify-between items-end text-sm font-black uppercase tracking-widest">
             <span className="text-white">XP para Próximo Nível</span>
             <span className="text-muted-foreground font-mono">{currentLevelXp} / 1000 XP</span>
           </div>
@@ -223,7 +223,7 @@ export default function ProfilePage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex-1 py-3.5 rounded-sm text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all ${
+              className={`flex-1 py-3.5 rounded-sm text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-5 cursor-pointer transition-all ${
                 activeTab === tab.id 
                   ? "bg-primary/10 text-primary border border-primary/20" 
                   : "text-muted-foreground hover:text-white hover:bg-muted/15"
@@ -242,7 +242,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Stat Cards - counts */}
             <div className="md:col-span-2 space-y-4">
-              <h3 className="text-xs font-black text-white uppercase tracking-widest mb-2 flex items-center gap-2">
+              <h3 className="text-xs font-black text-white uppercase tracking-widest mb-2 flex items-center gap-5">
                 <TrendingUp className="w-4 h-4 text-primary" />
                 Arsenal do Cofre
               </h3>
@@ -257,9 +257,9 @@ export default function ProfilePage() {
                   { name: "Torrents", count: counts.torrents, detail: "Indexadores arquivados" },
                 ].map((item) => (
                   <div key={item.name} className="p-4 bg-card/25 border border-border rounded-sm hover:border-primary/25 transition-all group">
-                    <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{item.name}</span>
+                    <span className="text-sm text-muted-foreground uppercase font-bold tracking-wider">{item.name}</span>
                     <p className="text-2xl font-black text-white mt-1 group-hover:text-primary transition-colors">{item.count}</p>
-                    <p className="text-[9px] text-muted-foreground/60 leading-none mt-1.5">{item.detail}</p>
+                    <p className="text-xs text-muted-foreground/60 leading-none mt-1.5">{item.detail}</p>
                   </div>
                 ))}
               </div>
@@ -267,14 +267,14 @@ export default function ProfilePage() {
 
             {/* Streak & Active Stats details */}
             <div className="space-y-4">
-              <h3 className="text-xs font-black text-white uppercase tracking-widest mb-2 flex items-center gap-2">
+              <h3 className="text-xs font-black text-white uppercase tracking-widest mb-2 flex items-center gap-5">
                 <Calendar className="w-4 h-4 text-primary" />
                 Atividade
               </h3>
               
               <div className="p-5 bg-card/25 border border-border rounded-sm space-y-4">
                 <div className="space-y-1">
-                  <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Histórico de Login</p>
+                  <p className="text-sm text-muted-foreground uppercase font-bold tracking-wider">Histórico de Login</p>
                   <p className="text-xs text-white leading-relaxed font-semibold">Login diário consecutivo ativo. Ganhe bônus de XP conectando-se todos os dias.</p>
                 </div>
                 
@@ -302,11 +302,11 @@ export default function ProfilePage() {
             {/* List of current goals */}
             <div className="md:col-span-2 space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+                <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-5">
                   <Target className="w-4 h-4 text-primary" />
                   Metas & Desafios Ativos
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 bg-primary/10 border border-primary/20 text-primary font-black uppercase rounded-sm">
+                <span className="text-sm px-2 py-2 bg-primary/10 border border-primary/20 text-primary font-black uppercase rounded-sm">
                   {totalGoalsCompleted}/{goals.length} Feito
                 </span>
               </div>
@@ -336,7 +336,7 @@ export default function ProfilePage() {
                         </span>
                       </div>
                       
-                      <span className={`text-[10px] font-black shrink-0 px-2 py-0.5 rounded ${
+                      <span className={`text-sm font-black shrink-0 px-2 py-2 rounded ${
                         goal.isCompleted 
                           ? "bg-emerald-500/10 text-emerald-400" 
                           : "bg-primary/10 text-primary border border-primary/20"
@@ -355,14 +355,14 @@ export default function ProfilePage() {
 
             {/* Create Goal Form */}
             <div>
-              <h3 className="text-xs font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+              <h3 className="text-xs font-black text-white uppercase tracking-widest mb-4 flex items-center gap-5">
                 <PlusCircle className="w-4 h-4 text-primary" />
                 Criar Novo Desafio
               </h3>
 
               <form onSubmit={handleCreateGoal} className="p-4 bg-card/25 border border-border rounded-sm space-y-4">
                 <div>
-                  <label className="block text-[9px] font-black text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-black text-muted-foreground uppercase tracking-wider mb-4">
                     Título da Meta
                   </label>
                   <input
@@ -376,7 +376,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="block text-[9px] font-black text-muted-foreground uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-black text-muted-foreground uppercase tracking-wider mb-4">
                     Recompensa de XP
                   </label>
                   <select
@@ -405,7 +405,7 @@ export default function ProfilePage() {
 
         {activeTab === "rewards" && (
           <div className="space-y-4">
-            <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
+            <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-5">
               <Award className="w-4 h-4 text-primary" />
               Recompensas por Nível
             </h3>
@@ -439,18 +439,18 @@ export default function ProfilePage() {
                       </div>
                       
                       <div className="space-y-0.5">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-4">
                           <h4 className="text-xs font-bold text-white uppercase tracking-wider">{reward.title}</h4>
-                          <span className="text-[9px] font-black text-muted-foreground">LV {reward.level}</span>
+                          <span className="text-xs font-black text-muted-foreground">LV {reward.level}</span>
                         </div>
-                        <p className="text-[10px] text-muted-foreground leading-normal">{reward.desc}</p>
+                        <p className="text-sm text-muted-foreground leading-normal">{reward.desc}</p>
                       </div>
                     </div>
 
                     <button
                       disabled={!isUnlocked || isClaimed}
                       onClick={() => handleClaimReward(reward.id, reward.level)}
-                      className={`px-3 py-1.5 rounded-sm font-black text-[9px] uppercase tracking-wider transition-all cursor-pointer ${
+                      className={`px-3 py-1.5 rounded-sm font-black text-xs uppercase tracking-wider transition-all cursor-pointer ${
                         isClaimed
                           ? "bg-muted text-muted-foreground cursor-not-allowed"
                           : isUnlocked

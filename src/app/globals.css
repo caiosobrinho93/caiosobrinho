@@ -302,38 +302,26 @@
 /* density-compact (Very close together) */
 .density-compact .glass-panel,
 .density-compact .bg-card {
-  padding: 0.75rem !important;
-  border-radius: 8px !important;
+  padding: 1.25rem !important;
+  border-radius: 12px !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
    READABILITY & FONT SYSTEM OVERRIDES
    ══════════════════════════════════════════════════════════════ */
 
-/* Upscale tiny fonts to be highly readable */
-.text-\[8px\] {
-  font-size: 0.725rem !important; /* ~11.5px */
-  letter-spacing: 0.05em !important;
-}
-.text-\[9px\] {
-  font-size: 0.775rem !important;  /* ~12.5px */
-}
-.text-\[10px\] {
-  font-size: 0.85rem !important; /* ~13.5px */
-}
-.text-\[11px\] {
-  font-size: 0.875rem !important; /* ~14px */
-}
-
 /* Adjust default base sizes for smoother reading */
 .text-xs {
   font-size: 0.8125rem !important; /* 13px */
+  line-height: 1.5 !important;
 }
 .text-sm {
   font-size: 0.875rem !important; /* 14px */
+  line-height: 1.5 !important;
 }
 .text-base {
   font-size: 1rem !important; /* 16px */
+  line-height: 1.5 !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
