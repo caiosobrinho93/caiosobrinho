@@ -307,7 +307,7 @@ export default function FilesPage() {
       </AnimatePresence>
 
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3 mb-8">
         <div>
           <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-5">
             <FolderOpen className="w-5 h-5 text-primary" />

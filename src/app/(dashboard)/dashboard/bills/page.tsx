@@ -169,7 +169,7 @@ export default function BillsPage() {
   return (
     <div className="space-y-6 max-w-6xl mx-auto p-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4 mb-8">
         <div>
           <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
             <CreditCard className="w-5 h-5 text-primary" />

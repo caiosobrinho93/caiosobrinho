@@ -382,7 +382,7 @@ export default function SettingsPage() {
 
       {/* 1. Visual e Temas do Painel */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-6">
-        <div className="border-b border-border/60 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+        <div className="border-b border-border/60 pb-3 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
           <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5">
             <Palette className="w-4 h-4 text-primary" />
             Temas do Dashboard

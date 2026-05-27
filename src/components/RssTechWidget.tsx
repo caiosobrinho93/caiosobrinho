@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Newspaper, ExternalLink, RefreshCw } from "lucide-react";
 import { playClickSound, playHoverSound } from "./CyberAudio";
+import { motion } from "framer-motion";
 
 interface Article {
   id: number | string;
@@ -16,25 +17,25 @@ interface Article {
 }
 
 const FEED_SOURCES = {
-  tech: {
-    label: "Tech",
-    type: "devto",
-    url: "https://dev.to/api/articles?tag=technology&per_page=3",
+  googlenews: {
+    label: "Google News BR",
+    type: "api",
   },
-  br_mundo: {
-    label: "Brasil & Mundo",
-    type: "rss",
-    url: "https://news.google.com/rss?hl=pt-BR&gl=BR&ceid=BR:pt-419",
+  g1: {
+    label: "G1 - Brasil",
+    type: "api",
   },
-  esportes: {
-    label: "Esportes",
-    type: "rss",
-    url: "https://globoesporte.globo.com/rss/ge/",
+  techtudo: {
+    label: "TechTudo",
+    type: "api",
   },
-  jogos: {
-    label: "Jogos",
-    type: "rss",
-    url: "https://br.ign.com/feed.xml",
+  ign: {
+    label: "IGN Jogos",
+    type: "api",
+  },
+  ge: {
+    label: "GE Esportes",
+    type: "api",
   },
 };
 
@@ -54,14 +55,6 @@ const FALLBACK_ARTICLES: Article[] = [
     url: "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API",
     published_at: new Date().toISOString(),
     user: { name: "MDN Web Docs" }
-  },
-  {
-    id: 3,
-    title: "PWA Viewport Fit: Notch Optimization for Fullscreen APKs",
-    description: "Designing edge-to-edge mobile web apps using env(safe-area-inset-top) and display: fullscreen configuration.",
-    url: "https://web.dev",
-    published_at: new Date().toISOString(),
-    user: { name: "Chrome Devs" }
   }
 ];
 
@@ -73,46 +66,18 @@ interface RssTechWidgetProps {
 }
 
 export default function RssTechWidget({ idx, renderHeader, itemVariants, activeMobileTab }: RssTechWidgetProps) {
-  const [feedSource, setFeedSource] = useState<keyof typeof FEED_SOURCES>("tech");
+  const [feedSource, setFeedSource] = useState<keyof typeof FEED_SOURCES>("googlenews");
   const [articles, setArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchNews = async (currentSource: keyof typeof FEED_SOURCES) => {
     setIsLoading(true);
     try {
-      const source = FEED_SOURCES[currentSource];
-      let url = source.url;
-
-      if (source.type === "rss") {
-        url = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
-      }
-
-      const res = await fetch(url, {
-        next: { revalidate: 3600 }
-      });
+      const res = await fetch(`/api/rss?source=${currentSource}`);
       if (res.ok) {
         const data = await res.json();
-        
-        if (source.type === "devto" && Array.isArray(data) && data.length > 0) {
-          setArticles(data.slice(0, 3).map((art: any) => ({
-            id: art.id,
-            title: art.title,
-            description: art.description || "",
-            url: art.url,
-            published_at: art.published_at,
-            user: { name: art.user?.name || source.label }
-          })));
-          setIsLoading(false);
-          return;
-        } else if (source.type === "rss" && data.items && data.items.length > 0) {
-          setArticles(data.items.slice(0, 3).map((item: any, index: number) => ({
-            id: item.guid || index.toString(),
-            title: item.title,
-            description: (item.description || "").replace(/<[^>]+>/g, '').substring(0, 150) + "...",
-            url: item.link,
-            published_at: item.pubDate,
-            user: { name: item.author || source.label }
-          })));
+        if (data.items && Array.isArray(data.items)) {
+          setArticles(data.items);
           setIsLoading(false);
           return;
         }
@@ -130,7 +95,7 @@ export default function RssTechWidget({ idx, renderHeader, itemVariants, activeM
 
   return (
     <div className={`glass-panel lg:col-span-1 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}>
-      {renderHeader("RSS Feed", <Newspaper className="w-3.5 h-3.5 text-[#8fe319]" />, idx, (
+      {renderHeader("Feed de Notícias", <Newspaper className="w-3.5 h-3.5 text-primary" />, idx, (
         <div className="flex items-center gap-1.5">
           <select
             value={feedSource}
@@ -139,7 +104,7 @@ export default function RssTechWidget({ idx, renderHeader, itemVariants, activeM
               setFeedSource(e.target.value as keyof typeof FEED_SOURCES);
             }}
             onMouseEnter={playHoverSound}
-            className="bg-muted/15 border border-border/40 text-[9px] text-muted-foreground rounded p-0.5 outline-none hover:text-[#8fe319] hover:border-[#8fe319]/40 cursor-pointer transition-colors max-w-[100px] truncate"
+            className="bg-black/40 border border-white/10 text-[10px] font-bold text-white rounded-lg px-2 py-1 outline-none focus:border-primary/50 cursor-pointer transition-colors max-w-[120px] truncate"
           >
             {Object.entries(FEED_SOURCES).map(([key, source]) => (
               <option key={key} value={key} className="bg-card text-foreground">
@@ -150,53 +115,65 @@ export default function RssTechWidget({ idx, renderHeader, itemVariants, activeM
           <button
             onClick={() => { playClickSound(); fetchNews(feedSource); }}
             onMouseEnter={playHoverSound}
-            className="p-1 rounded bg-muted/15 border border-border/40 text-muted-foreground hover:text-[#8fe319] hover:border-[#8fe319]/40 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
             title="Recarregar Feed"
           >
-            <RefreshCw className={`w-2.5 h-2.5 ${isLoading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-3 h-3 ${isLoading ? "animate-spin" : ""}`} />
           </button>
         </div>
       ))}
 
-      <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+      <div className="space-y-3.5 max-h-[380px] overflow-y-auto pr-1 mt-2">
         {isLoading ? (
           [...Array(3)].map((_, i) => (
-            <div key={i} className="p-5 border border-border/30 rounded bg-card/25 animate-pulse space-y-1">
-              <div className="h-2 w-3/4 bg-muted rounded" />
-              <div className="h-1.5 w-full bg-muted rounded" />
-              <div className="h-1.5 w-1/2 bg-muted rounded" />
+            <div key={i} className="p-4 border border-border/30 rounded-xl bg-card/20 animate-pulse space-y-2">
+              <div className="h-3 w-1/4 bg-white/5 rounded" />
+              <div className="h-4 w-3/4 bg-white/5 rounded" />
+              <div className="h-3 w-full bg-white/5 rounded" />
+              <div className="h-2 w-1/2 bg-white/5 rounded" />
             </div>
           ))
+        ) : articles.length === 0 ? (
+          <p className="text-xs text-muted-foreground text-center py-4">Nenhuma notícia encontrada.</p>
         ) : (
           articles.map((art) => (
-            <a
+            <motion.a
               key={art.id}
               href={art.url}
               target="_blank"
               rel="noopener noreferrer"
               onClick={playClickSound}
               onMouseEnter={playHoverSound}
-              className="block p-5 border border-border/30 rounded bg-card/25 hover:border-[#8fe319]/40 hover:bg-[#8fe319]/5 transition-all group"
+              whileTap={{ scale: 0.98 }}
+              className="block p-4 border border-white/5 rounded-2xl bg-black/10 hover:border-primary/30 hover:bg-primary/[0.02] transition-all group relative overflow-hidden"
             >
-              <div className="flex items-start justify-between gap-4">
-                <span className="text-sm font-bold text-white leading-tight group-hover:text-[#8fe319] transition-colors line-clamp-5">
+              <div className="flex items-start justify-between gap-3">
+                <span className="text-[13px] font-bold text-white leading-snug group-hover:text-primary transition-colors line-clamp-3">
                   {art.title}
                 </span>
-                <ExternalLink className="w-2.5 h-2.5 text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ExternalLink className="w-3.5 h-3.5 text-white/30 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity mt-0.5" />
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-5 mt-1 leading-snug">
-                {art.description}
-              </p>
-              <div className="flex items-center justify-between text-[7px] text-muted-foreground font-mono mt-1 pt-1 border-t border-border/10">
-                <span>By {art.user.name}</span>
+              
+              {art.description && (
+                <p className="text-[11px] text-muted-foreground line-clamp-3 mt-1.5 leading-relaxed font-sans">
+                  {art.description}
+                </p>
+              )}
+
+              <div className="flex items-center justify-between text-[9px] text-white/40 font-mono mt-3 pt-2 border-t border-white/[0.04]">
+                <span className="font-extrabold uppercase text-[8px] px-1.5 py-0.5 rounded bg-primary/10 border border-primary/20 text-primary">
+                  {art.user.name}
+                </span>
                 <span>
                   {new Date(art.published_at).toLocaleDateString("pt-BR", {
                     month: "short",
-                    day: "numeric"
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
                   })}
                 </span>
               </div>
-            </a>
+            </motion.a>
           ))
         )}
       </div>

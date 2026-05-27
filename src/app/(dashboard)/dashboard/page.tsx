@@ -114,13 +114,13 @@ export default function DashboardPage() {
   const [newGoalTitle, setNewGoalTitle] = useState("");
   const [newGoalXp, setNewGoalXp] = useState(100);
   const [isAddingGoal, setIsAddingGoal] = useState(false);
-  const [activeMobileTab, setActiveMobileTab] = useState<"general" | "goals" | "finance">("general");
+  const [activeMobileTab, setActiveMobileTab] = useState<"general" | "finance">("general");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
         const saved = sessionStorage.getItem("activeMobileTab");
-        if (saved && (saved === "general" || saved === "goals" || saved === "finance")) {
+        if (saved && (saved === "general" || saved === "finance")) {
           setActiveMobileTab(saved as any);
         }
       } catch (err) {
@@ -129,7 +129,7 @@ export default function DashboardPage() {
     }
   }, []);
 
-  const changeMobileTab = (tab: "general" | "goals" | "finance") => {
+  const changeMobileTab = (tab: "general" | "finance") => {
     setActiveMobileTab(tab);
     if (typeof window !== "undefined") {
       try {
@@ -748,7 +748,7 @@ export default function DashboardPage() {
         layout
         key="goals"
         variants={itemVariants}
-        className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
       >
         {renderWidgetHeader(`Central de Metas`, <Trophy className="w-3.5 h-3.5 text-primary " />, idx, (
           <span className="text-xs text-primary bg-primary/10 border border-primary/20 px-4 py-2 rounded-sm font-bold font-mono">
@@ -857,7 +857,7 @@ export default function DashboardPage() {
         layout
         key="rewards"
         variants={itemVariants}
-        className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
       >
         {renderWidgetHeader("Baú de Prêmios Pix", <Trophy className="w-3.5 h-3.5 text-primary" />, idx, (
           <span className="text-xs text-muted-foreground uppercase font-bold font-display">
@@ -934,41 +934,41 @@ export default function DashboardPage() {
         layout
         key="shortcuts"
         variants={itemVariants}
-        className={`glass-panel lg:col-span-1 ${activeMobileTab === "goals" ? "block" : "hidden md:block"}`}
+        className={`glass-panel lg:col-span-1 ${activeMobileTab === "general" ? "block" : "hidden md:block"}`}
       >
         {renderWidgetHeader("Atalhos Rápidos", <Zap className="w-3 h-3 text-primary" />, idx)}
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => router.push("/dashboard/notes?new=true")}
-            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px]"
           >
-            <Plus className="w-2.5 h-2.5 text-primary shrink-0" />
+            <Plus className="w-3 h-3 text-primary shrink-0" />
             Criar Nota
           </button>
           <button
             type="button"
             onClick={() => router.push("/dashboard/passwords?generate=true")}
-            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px]"
           >
-            <Key className="w-2.5 h-2.5 text-secondary shrink-0" />
+            <Key className="w-3 h-3 text-secondary shrink-0" />
             Nova Senha
           </button>
           <button
             type="button"
             onClick={() => router.push("/dashboard/torrents")}
-            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px]"
           >
-            <RefreshCw className="w-2.5 h-2.5 text-amber shrink-0" />
+            <RefreshCw className="w-3 h-3 text-amber shrink-0" />
             Torrent
           </button>
           <button
             type="button"
             onClick={() => router.push("/dashboard/files")}
-            className="flex items-center gap-2 p-4 bg-muted/15 border border-border rounded-sm text-xs font-bold glass-btn cursor-pointer justify-center"
+            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px]"
           >
-            <FolderOpen className="w-2.5 h-2.5 text-emerald shrink-0" />
+            <FolderOpen className="w-3 h-3 text-emerald shrink-0" />
             Upload
           </button>
         </div>
@@ -1049,99 +1049,9 @@ export default function DashboardPage() {
       animate="show"
       className="space-y-6"
     >
-      {/* Alertas de Contas Próximas do Vencimento */}
-      {data.upcomingBills && data.upcomingBills.length > 0 && (
-        <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-300 space-y-2 fade-in">
-          <div className="flex items-center gap-5">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            <h3 className="text-sm font-semibold text-white">Atenção: Contas Próximas do Vencimento</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {data.upcomingBills.map((bill: any) => {
-              const diffDays = Math.ceil((new Date(bill.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-              const diffText = diffDays === 0 ? "hoje" : diffDays === 1 ? "amanhã" : `em ${diffDays} dias`;
-              return (
-                <div key={bill.id} className="flex items-center justify-between p-3 rounded-xl bg-card/45 border border-border">
-                  <div className="min-w-0">
-                    <p className="font-semibold text-sm text-white truncate">{bill.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Vence {diffText} • Criado por <span className={`user-tag user-tag-${bill.user.username}`}>
-                        {bill.user.username === "caio" ? "Caio" : "Giselle"}
-                      </span>
-                    </p>
-                  </div>
-                  <span className="font-bold text-sm text-white whitespace-nowrap ml-4">
-                    R$ {bill.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
-      {/* Gamer HUD Header */}
-      <div className={`p-4 rounded-xl border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl ${
-        data.profile.username === "Giselle"
-          ? "border-border/25 bg-fuchsia-950/5 shadow-fuchsia-950/10"
-          : "border-[#c5ff1a]/25 bg-slate-950/40 shadow-slate-950/20"
-      }`}>
-        <div className="flex items-center gap-4">
-          {/* Avatar com Borda Neon Gamer */}
-          <div className={`relative w-12 h-12 rounded-full border-2 overflow-hidden flex items-center justify-center shrink-0 ${
-            data.profile.username === "Giselle"
-              ? "border-border bg-fuchsia-950/30 "
-              : "border-border bg-cyan-950/30 "
-          }`}>
-            <img 
-              src={data.profile.username === "Giselle" ? "/avatar-giselle.png" : "/avatar-caio.png"} 
-              className="w-full h-full object-cover" 
-              alt={data.profile.username} 
-            />
-            <span className={`absolute -bottom-1 px-4 py-2 text-xs font-black rounded uppercase text-black leading-none ${
-              data.profile.username === "Giselle" ? "bg-fuchsia-400" : "bg-cyan-400"
-            }`}>
-              {data.profile.username === "Giselle" ? "P2" : "P1"}
-            </span>
-          </div>
 
-          <div>
-            <div className="flex items-center gap-5">
-              <h2 className="text-base font-extrabold text-white tracking-wide uppercase">
-                {data.profile.username === "Giselle" ? "Giselle" : "Caio"}
-              </h2>
-              <span className={`text-xs font-black px-4 py-2 rounded uppercase ${
-                data.profile.username === "Giselle" 
-                  ? "bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400" 
-                  : "bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"
-              }`}>
-                {data.profile.username === "Giselle" ? "Co-op" : "Admin"}
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground uppercase mt-0.5 tracking-wider font-semibold">
-              Status: Online
-            </p>
-          </div>
-        </div>
 
-        {/* Level and XP progress HUD */}
-        <div className="flex-1 max-w-sm space-y-1.5 md:ml-4">
-          <div className="flex justify-between items-end text-sm font-bold uppercase tracking-wider">
-            <span className="text-white">Nível {data.profile.level}</span>
-            <span className="text-muted-foreground">{currentLevelXp} / 1000 XP</span>
-          </div>
-          <div className="w-full h-2 bg-muted rounded-none overflow-hidden border border-border/40 relative">
-            <div
-              className={`h-full transition-all duration-1000 ${
-                data.profile.username === "Giselle"
-                  ? "bg-gradient-to-r from-fuchsia-500 to-pink-500"
-                  : "bg-gradient-to-r from-[#c5ff1a] to-cyan-400"
-              }`}
-              style={{ width: `${xpPercentage}%` }}
-            />
-          </div>
-        </div>
-      </div>
 
       <div className="md:hidden flex bg-card/30 border border-border/50 p-0.5 rounded-sm gap-0.5">
         <motion.button
@@ -1152,15 +1062,6 @@ export default function DashboardPage() {
           }`}
         >
           PAINEL
-        </motion.button>
-        <motion.button
-          onClick={() => changeMobileTab("goals")}
-          whileTap={{ scale: 0.94 }}
-          className={`flex-1 py-1 text-xs font-display font-semibold rounded-sm transition-all cursor-pointer ${
-            activeMobileTab === "goals" ? "bg-primary text-black shadow-sm" : "text-muted-foreground"
-          }`}
-        >
-          METAS
         </motion.button>
         <motion.button
           onClick={() => changeMobileTab("finance")}
@@ -1213,10 +1114,8 @@ export default function DashboardPage() {
           {renderStorage(2)}
         </div>
 
-        {/* Coluna da Direita (Largura 1) - Metas, Atalhos, Util e Info */}
+        {/* Coluna da Direita (Largura 1) - Atalhos, Util e Info */}
         <div className="space-y-4">
-          {renderGoals(3)}
-          {renderRewards(4)}
           {renderShortcuts(5)}
           <RssTechWidget
             key="rss_tech"

@@ -167,7 +167,7 @@ export default function SoftwarePage() {
   return (
     <div className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4 mb-8">
         <div>
           <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
             <Cpu className="w-5 h-5 text-primary" />
