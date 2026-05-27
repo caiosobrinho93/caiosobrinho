@@ -1108,18 +1108,18 @@ export default function DashboardPage() {
           <div>
             <div className="flex items-center gap-5">
               <h2 className="text-base font-extrabold text-white tracking-wide uppercase">
-                {data.profile.username}
+                {data.profile.username === "Giselle" ? "Giselle" : "Caio"}
               </h2>
               <span className={`text-xs font-black px-4 py-2 rounded uppercase ${
                 data.profile.username === "Giselle" 
-                  ? "bg-fuchsia-500/10 border border-border/20 text-primary-400" 
-                  : "bg-cyan-500/10 border border-border/20 text-primary-400"
+                  ? "bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400" 
+                  : "bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"
               }`}>
-                {data.profile.username === "Giselle" ? "Giselle" : "Caio"}
+                {data.profile.username === "Giselle" ? "Co-op" : "Admin"}
               </span>
             </div>
             <p className="text-xs text-muted-foreground uppercase mt-0.5 tracking-wider font-semibold">
-              Classe: {data.profile.username === "Giselle" ? "Co-op Player" : "Admin / Developer"} // Status: Online
+              Status: Online
             </p>
           </div>
         </div>

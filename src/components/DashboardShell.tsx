@@ -26,11 +26,12 @@ import {
   User,
   CreditCard,
   FileCheck,
-  LayoutGrid,
   RefreshCw,
   Calculator,
   Pin,
-  Music
+  Music,
+  LayoutGrid,
+  Star
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
 
@@ -42,6 +43,89 @@ import { playClickSound, playHoverSound } from "./CyberAudio";
 import SynthwaveRadio from "./SynthwaveRadio";
 import CyberCalculator from "./CyberCalculator";
 import FloatingHUDNotes from "./FloatingHUDNotes";
+
+// BottomBar sub-component
+function BottomBar({
+  username,
+  isCentralOptionsOpen,
+  setIsCentralOptionsOpen,
+}: {
+  username: string;
+  isCentralOptionsOpen: boolean;
+  setIsCentralOptionsOpen: (v: (prev: boolean) => boolean) => void;
+}) {
+  const stats = useStatsStore((s) => s.data);
+  const xpInLevel = stats ? stats.profile.xp % 1000 : 0;
+  const xpPct = (xpInLevel / 1000) * 100;
+  const level = stats ? stats.profile.level : 1;
+
+  return (
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-[50px] flex items-center justify-between px-4 border-t border-white/[0.06] bg-black/95 backdrop-blur-xl safe-area-bottom">
+      {/* Left: Menu button */}
+      <motion.button
+        onClick={() => setIsCentralOptionsOpen((v) => !v)}
+        whileTap={{ scale: 0.88 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        className={`flex items-center justify-center w-9 h-9 rounded-xl border transition-all cursor-pointer ${
+          isCentralOptionsOpen
+            ? "bg-white/10 border-white/20 text-white"
+            : "bg-transparent border-transparent text-white/60 hover:text-white"
+        }`}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {isCentralOptionsOpen ? (
+            <motion.span
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <X className="w-5 h-5" />
+            </motion.span>
+          ) : (
+            <motion.span
+              key="menu"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <LayoutGrid className="w-5 h-5" />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.button>
+
+      {/* Center: App name */}
+      <span className="text-xs font-bold text-white/30 tracking-widest uppercase select-none">NEXUS</span>
+
+      {/* Right: Avatar + Level + XP bar */}
+      <Link href="/dashboard/profile" className="flex items-center gap-2 cursor-pointer">
+        <div className="flex flex-col items-end gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] font-bold text-primary uppercase tracking-wider">Lv {level}</span>
+          </div>
+          <div className="w-16 h-1 rounded-full bg-white/10 overflow-hidden">
+            <motion.div
+              className="h-full bg-primary rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${xpPct}%` }}
+              transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            />
+          </div>
+        </div>
+        <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary/50 shrink-0">
+          <img
+            src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"}
+            alt={username}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </Link>
+    </div>
+  );
+}
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -523,37 +607,25 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </div>
         </header>
  
-        <main className="flex-1 overflow-y-auto bg-background/35 relative p-4 md:p-8 lg:p-10 pb-24 md:pb-8">
+        <main className="flex-1 overflow-y-auto bg-background/35 relative p-4 md:p-8 lg:p-10 pb-[66px] md:pb-8">
           <motion.div
             key={pathname}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.12 }}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="h-full"
           >
             {children}
           </motion.div>
         </main>
- 
-        {/* 3. BOTTOM NAV BAR MOBILE (Magic Floating Button) */}
-        <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 select-none pointer-events-none">
-          <div className="pointer-events-auto relative">
-            <motion.button
-              id="magic-menu-btn"
-              onClick={() => setIsCentralOptionsOpen((v) => !v)}
-              animate={isCentralOptionsOpen ? { rotate: 45, scale: 1.1 } : { rotate: 0, scale: 1 }}
-              whileTap={{ scale: 0.88 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className={`flex items-center justify-center w-13 h-13 rounded-full border-2 shadow-2xl cursor-pointer relative transition-colors duration-300 ${
-                isCentralOptionsOpen
-                  ? "bg-white text-black border-white shadow-white/20"
-                  : "bg-primary text-black border-primary shadow-primary/30"
-              }`}
-            >
-              {isCentralOptionsOpen ? <X className="w-5 h-5" /> : <LayoutGrid className="w-5 h-5" />}
-            </motion.button>
-          </div>
-        </div>
+
+        {/* 3. BOTTOM NAV BAR MOBILE — Fixed black bar */}
+        <BottomBar
+          username={username}
+          isCentralOptionsOpen={isCentralOptionsOpen}
+          setIsCentralOptionsOpen={setIsCentralOptionsOpen}
+        />
       </div>
 
       {/* 4. SLIDEOUT MENU MOBILE */}
@@ -670,14 +742,14 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               className="fixed inset-0 bg-black/75 z-40 md:hidden backdrop-blur-md"
             />
 
-            {/* Bottom Drawer */}
+            {/* Bottom Drawer — Silky smooth spring, no bounce */}
             <motion.div
-              initial={{ y: "100%", borderRadius: "32px 32px 0 0" }}
-              animate={{ y: 0, borderRadius: "24px 24px 0 0" }}
-              exit={{ y: "110%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 260, mass: 0.8 }}
-              className="fixed bottom-0 left-0 right-0 max-h-[80vh] z-50 md:hidden flex flex-col overflow-y-auto"
-              style={{ background: "linear-gradient(180deg, #0d0f11 0%, #09090b 100%)", borderTop: "1px solid rgba(255,255,255,0.06)" }}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 380, damping: 40, mass: 0.6 }}
+              className="fixed bottom-0 left-0 right-0 max-h-[80vh] z-50 md:hidden flex flex-col overflow-y-auto rounded-t-3xl"
+              style={{ background: "linear-gradient(180deg, #111214 0%, #09090b 100%)", borderTop: "1px solid rgba(255,255,255,0.07)" }}
             >
               {/* Handle */}
               <div className="w-full flex justify-center pt-3 pb-1 shrink-0">
