@@ -63,6 +63,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [isStickyNotesOpen, setIsStickyNotesOpen] = useState(false);
   const [isRadioOpen, setIsRadioOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -188,7 +189,6 @@ export default function DashboardShell({ children, username }: DashboardShellPro
     { name: "Notas", href: "/dashboard/notes", icon: FileText },
     { name: "Contas", href: "/dashboard/bills", icon: CreditCard },
     { name: "Comprovantes", href: "/dashboard/receipts", icon: FileCheck },
-    { name: "Metas & Kanban", href: "/dashboard/kanban", icon: LayoutGrid },
     { name: "DEV Central", href: "/dashboard/dev", icon: Code },
     { name: "Configurações", href: "/dashboard/settings", icon: Settings },
   ];
@@ -357,9 +357,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             </div>
             {!isSidebarCollapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-sm text-white font-bold truncate leading-tight">
-                  {username === "caio" ? "Caio" : username === "giselle" ? "Giselle" : username}
-                </span>
+                <span className="text-sm text-white font-bold truncate leading-tight capitalize">{username}</span>
                 <span className="text-xs text-muted-foreground truncate leading-none uppercase tracking-wide">Cofre Compartilhado</span>
               </div>
             )}
@@ -488,6 +486,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
 
             {/* Notification Bell */}
             <button
+              onClick={() => { playClickSound(); setIsNotificationsOpen(true); }}
               title="Notificações"
               className="relative flex items-center justify-center w-8 h-8 rounded-full bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319] transition-all cursor-pointer shrink-0"
             >
@@ -639,9 +638,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white leading-tight">
-                      {username === "caio" ? "Caio" : username === "giselle" ? "Giselle" : username}
-                    </p>
+                    <p className="text-sm font-bold text-white leading-tight capitalize">{username}</p>
                     <p className="text-xs text-muted-foreground">Sessão Compartilhada</p>
                   </div>
                 </div>
@@ -725,7 +722,6 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                       { href: "/dashboard/passwords", icon: Key, name: "Senhas" },
                       { href: "/dashboard/notes", icon: FileText, name: "Notas" },
                       { href: "/dashboard/software", icon: Cpu, name: "Softwares" },
-                      { href: "/dashboard/kanban", icon: LayoutGrid, name: "Metas" },
                       { href: "/dashboard/dev", icon: Code, name: "DEV Central" },
                     ],
                   },
@@ -803,6 +799,81 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </>
         )}
       </AnimatePresence>
+      
+      {/* 6. NOTIFICATION MODAL */}
+      <AnimatePresence>
+        {isNotificationsOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsNotificationsOpen(false)}
+              className="fixed inset-0 bg-black/80 z-[60] backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              className="fixed top-16 right-4 left-4 md:left-auto md:w-96 bg-card border border-border/80 rounded-2xl shadow-2xl z-[61] overflow-hidden flex flex-col"
+              style={{ maxHeight: '80vh' }}
+            >
+              <div className="flex items-center justify-between p-4 border-b border-border/50 bg-background/50">
+                <h3 className="font-bold text-white">Notificações</h3>
+                <button onClick={() => setIsNotificationsOpen(false)} className="p-1.5 rounded-full hover:bg-white/10 text-white/50 hover:text-white transition-colors">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-2">
+                
+                {/* Red Badge Alert Link for Bills */}
+                <Link href="/dashboard/bills" onClick={() => setIsNotificationsOpen(false)} className="block p-3 mb-2 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-all">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                        <CreditCard className="w-4 h-4 text-red-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-red-400">Contas a Vencer</p>
+                        <p className="text-[11px] text-red-400/70">Revisão necessária</p>
+                      </div>
+                    </div>
+                    <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  </div>
+                </Link>
+
+                <div className="px-3 py-2">
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-3">Histórico do Sistema</p>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                        <User className="w-4 h-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-white leading-tight">Giselle atualizou uma senha</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Há 2 horas</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                        <FolderOpen className="w-4 h-4 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-white leading-tight">Novo backup da Vercel concluído</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Ontem</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <SynthwaveRadio isOpen={isRadioOpen} onClose={() => setIsRadioOpen(false)} />
       <CyberCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} />
       <FloatingHUDNotes isOpen={isStickyNotesOpen} onClose={() => setIsStickyNotesOpen(false)} />

@@ -1183,7 +1183,7 @@ export default function DashboardPage() {
               variants={itemVariants}
               onClick={() => router.push(stat.href)}
               whileTap={{ scale: 0.97 }}
-              className="group cursor-pointer relative overflow-hidden p-5.5 glass-panel flex items-center justify-between border border-primary/10 rounded-sm hover:border-primary/45 transition-colors"
+              className="group cursor-pointer relative overflow-hidden p-3 h-[60px] glass-panel flex items-center justify-between border border-primary/10 rounded-sm hover:border-primary/45 transition-colors"
             >
               <div className="flex items-center gap-5 min-w-0">
                 <div className={`p-4 rounded-sm border ${stat.color} shrink-0`}>
