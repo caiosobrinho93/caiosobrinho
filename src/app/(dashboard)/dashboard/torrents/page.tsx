@@ -214,10 +214,14 @@ export default function TorrentsPage() {
         <div className="flex flex-wrap gap-4 items-center justify-start">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-5 px-4 py-2 bg-primary text-primary-foreground text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
+            className="dev-btn-3d shrink-0"
           >
-            <Plus className="w-4 h-4" />
-            Adicionar Torrent
+            <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" />
+              Adicionar Torrent
+            </span>
+            <span className="dev-btn-3d-bottom"></span>
+            <span className="dev-btn-3d-base"></span>
           </button>
         </div>
 
@@ -330,9 +334,13 @@ export default function TorrentsPage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-4 px-3.5 py-2 bg-primary text-primary-foreground rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+            className="dev-btn-3d mt-4"
           >
-            Adicionar Primeiro Torrent
+            <span className="dev-btn-3d-top">
+              Adicionar Primeiro Torrent
+            </span>
+            <span className="dev-btn-3d-bottom"></span>
+            <span className="dev-btn-3d-base"></span>
           </button>
         </div>
       )}
@@ -628,16 +636,20 @@ export default function TorrentsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-primary-foreground font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="dev-btn-3d"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        Indexando...
-                      </>
-                    ) : (
-                    "Indexar Torrent"
-                    )}
+                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Indexando...
+                        </>
+                      ) : (
+                        "Indexar Torrent"
+                      )}
+                    </span>
+                    <span className="dev-btn-3d-bottom"></span>
+                    <span className="dev-btn-3d-base"></span>
                   </button>
                 </div>
               </form>

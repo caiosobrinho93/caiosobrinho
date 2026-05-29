@@ -611,10 +611,14 @@ export default function FilesPage() {
                 </button>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold glass-btn glass-btn-primary cursor-pointer transition-all active:scale-[0.98]"
+                  className="dev-btn-3d"
                 >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Enviar</span>
+                  <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+                    <Upload className="w-4 h-4" />
+                    Enviar
+                  </span>
+                  <span className="dev-btn-3d-bottom"></span>
+                  <span className="dev-btn-3d-base"></span>
                 </button>
                 <input
                   type="file"
@@ -1226,10 +1230,14 @@ export default function FilesPage() {
                   <button
                     type="submit"
                     disabled={isCreatingFolder}
-                    className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/95 text-primary-foreground flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-primary/10"
+                    className="dev-btn-3d"
                   >
-                    {isCreatingFolder ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                    Criar Diretório
+                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+                      {isCreatingFolder ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                      Criar Diretório
+                    </span>
+                    <span className="dev-btn-3d-bottom"></span>
+                    <span className="dev-btn-3d-base"></span>
                   </button>
                 </div>
               </form>

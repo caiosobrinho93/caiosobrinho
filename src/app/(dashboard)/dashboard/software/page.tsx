@@ -206,10 +206,14 @@ export default function SoftwarePage() {
         <div className="flex flex-wrap gap-4 items-center justify-start">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer shrink-0"
+            className="dev-btn-3d shrink-0"
           >
-            <Plus className="w-3.5 h-3.5" />
-            Registrar App
+            <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" />
+              Registrar App
+            </span>
+            <span className="dev-btn-3d-bottom"></span>
+            <span className="dev-btn-3d-base"></span>
           </button>
         </div>
  
@@ -426,9 +430,13 @@ export default function SoftwarePage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-4 px-3.5 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+            className="dev-btn-3d mt-4"
           >
-            Vincular Primeiro Software
+            <span className="dev-btn-3d-top">
+              Vincular Primeiro Software
+            </span>
+            <span className="dev-btn-3d-bottom"></span>
+            <span className="dev-btn-3d-base"></span>
           </button>
         </div>
       )}
@@ -703,16 +711,20 @@ export default function SoftwarePage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-primary-foreground font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="dev-btn-3d"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        Salvando...
-                      </>
-                    ) : (
-                      "Registrar App"
-                    )}
+                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Salvando...
+                        </>
+                      ) : (
+                        "Registrar App"
+                      )}
+                    </span>
+                    <span className="dev-btn-3d-bottom"></span>
+                    <span className="dev-btn-3d-base"></span>
                   </button>
                 </div>
               </form>

@@ -525,12 +525,12 @@ button, a, nav, header {
   appearance: none;
   position: relative;
   border-width: 0;
-  padding: 0 8px 12px;
-  min-width: 10em;
+  padding: 0 0 10px;
   box-sizing: border-box;
   background: transparent;
   font: inherit;
   cursor: pointer;
+  display: inline-block;
 }
 
 .dev-btn-3d-top {

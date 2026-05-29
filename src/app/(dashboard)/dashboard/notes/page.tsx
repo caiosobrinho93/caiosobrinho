@@ -348,10 +348,14 @@ function NotesContent() {
             </span>
             <button
               onClick={handleCreateNote}
-              className="p-4 rounded-sm glass-btn glass-btn-primary text-black cursor-pointer"
+              className="dev-btn-3d"
               title="Nova Nota"
             >
-              <Plus className="w-4 h-4" />
+              <span className="dev-btn-3d-top flex items-center justify-center p-2.5">
+                <Plus className="w-4 h-4" />
+              </span>
+              <span className="dev-btn-3d-bottom"></span>
+              <span className="dev-btn-3d-base"></span>
             </button>
           </div>
 
@@ -660,9 +664,13 @@ function NotesContent() {
             </p>
             <button
               onClick={handleCreateNote}
-              className="mt-4 px-3.5 py-2 bg-primary text-primary-foreground rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+              className="dev-btn-3d mt-4"
             >
-              Criar Primeira Nota
+              <span className="dev-btn-3d-top">
+                Criar Primeira Nota
+              </span>
+              <span className="dev-btn-3d-bottom"></span>
+              <span className="dev-btn-3d-base"></span>
             </button>
           </div>
         )}

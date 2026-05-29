@@ -288,13 +288,17 @@ function PasswordsContent() {
           <Sparkles className="w-3.5 h-3.5 text-black animate-pulse" />
           Gerador
         </button>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          Adicionar
-        </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="dev-btn-3d shrink-0"
+          >
+            <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" />
+              Adicionar Credencial
+            </span>
+            <span className="dev-btn-3d-bottom"></span>
+            <span className="dev-btn-3d-base"></span>
+          </button>
       </div>
  
       {/* Barra de Ferramentas / Filtros */}
@@ -381,9 +385,13 @@ function PasswordsContent() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-3 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
+            className="dev-btn-3d mt-3"
           >
-            Adicionar Credencial
+            <span className="dev-btn-3d-top">
+              Adicionar Credencial
+            </span>
+            <span className="dev-btn-3d-bottom"></span>
+            <span className="dev-btn-3d-base"></span>
           </button>
         </div>
       )}
@@ -794,16 +802,20 @@ function PasswordsContent() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-primary-foreground font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="dev-btn-3d"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        Criptografando...
-                      </>
-                    ) : (
-                      "Salvar Credencial"
-                    )}
+                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Criptografando...
+                        </>
+                      ) : (
+                        "Salvar Credencial"
+                      )}
+                    </span>
+                    <span className="dev-btn-3d-bottom"></span>
+                    <span className="dev-btn-3d-base"></span>
                   </button>
                 </div>
               </form>
@@ -943,9 +955,13 @@ function PasswordsContent() {
                       }
                       setIsGeneratorOpen(false);
                     }}
-                    className="w-full py-2.5 rounded-xl bg-primary hover:bg-primary/95 text-primary-foreground font-semibold text-center cursor-pointer shadow-lg shadow-primary/10"
+                    className="dev-btn-3d w-full"
                   >
-                    Usar Senha no Cadastro
+                    <span className="dev-btn-3d-top">
+                      Usar Senha no Cadastro
+                    </span>
+                    <span className="dev-btn-3d-bottom"></span>
+                    <span className="dev-btn-3d-base"></span>
                   </button>
                 </div>
               </div>
