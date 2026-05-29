@@ -172,12 +172,12 @@ export default function SettingsPage() {
 
   if (!mounted) {
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         <div>
           <div className="h-8 w-48 bg-muted/30 rounded-sm animate-pulse" />
           <div className="h-4 w-96 bg-muted/20 rounded-sm mt-2 animate-pulse" />
         </div>
-        <div className="bg-card/55 border border-border rounded-sm p-5 h-64 animate-pulse" />
+        <div className="bg-card/55 border border-white/10 rounded-sm p-5 h-64 animate-pulse" />
       </div>
     );
   }
@@ -275,7 +275,7 @@ export default function SettingsPage() {
       description: "Ajuste e crie o seu próprio layout cyber dinâmico.",
       bgPreview: "from-[#09090b] via-[#1c1917] to-[#09090b]",
       accentHex: "bg-gradient-to-r from-[#7c3aed] to-[#06b6d4]",
-      glowColor: "shadow-primary/10 border-primary/30",
+      glowColor: "shadow-primary/10 border-white/20",
     },
   ];
 
@@ -368,9 +368,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 pb-8">
+    <div className="w-full space-y-4 sm:space-y-6 pb-8">
       {/* Cabeçalho */}
-      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-white/10/40 mb-6">
         <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-5.5">
           <Settings className="w-6 h-6 text-primary" />
           Configurações
@@ -385,7 +385,7 @@ export default function SettingsPage() {
 
       {/* 1. Visual e Temas do Painel */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-6">
-        <div className="border-b border-border/60 pb-3 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+        <div className="border-b border-white/10/60 pb-3 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
           <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5">
             <Palette className="w-4 h-4 text-primary" />
             Temas do Dashboard
@@ -408,7 +408,7 @@ export default function SettingsPage() {
                   className={`p-3 rounded-sm border text-left flex flex-col gap-5.5 transition-all cursor-pointer group relative overflow-hidden ${
                     isSelected
                       ? "border-primary bg-primary/5 shadow-lg shadow-primary/5 scale-[1.01]"
-                      : "border-border bg-muted/10 hover:bg-muted/20 hover:border-white/10"
+                      : "border-white/10 bg-muted/10 hover:bg-muted/20 hover:border-white/10"
                   }`}
                 >
                   {/* Preview de gradiente e cor */}
@@ -437,8 +437,8 @@ export default function SettingsPage() {
 
         {/* EDITOR DE TEMA CUSTOMIZADO (Condicional) */}
         {themePreset === "custom" && (
-          <div className="p-4 bg-muted/20 border border-border/80 rounded-sm space-y-5 animate-fadeIn">
-            <div className="flex items-center gap-5 border-b border-border/40 pb-2.5">
+          <div className="p-4 bg-muted/20 border border-white/10/80 rounded-sm space-y-5 animate-fadeIn">
+            <div className="flex items-center gap-5 border-b border-white/10/40 pb-2.5">
               <Sparkles className="w-4 h-4 text-primary animate-pulse" />
               <h3 className="font-display text-xs tracking-widest text-white leading-tight">Ajustes Finos do Tema Customizado</h3>
             </div>
@@ -481,7 +481,7 @@ export default function SettingsPage() {
                         onClick={() => updateCustomTheme({ gridStyle: grid.id as any })}
                         className={`py-1.5 px-3 rounded-sm text-sm font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.gridStyle === grid.id
-                            ? "bg-primary/10 text-primary border-primary/30"
+                            ? "bg-primary/10 text-primary border-white/20"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
                         }`}
                       >
@@ -510,7 +510,7 @@ export default function SettingsPage() {
                         onClick={() => updateCustomTheme({ neonIntensity: intensity.id as any })}
                         className={`py-1.5 px-3 rounded-sm text-sm font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.neonIntensity === intensity.id
-                            ? "bg-primary/10 text-primary border-primary/30"
+                            ? "bg-primary/10 text-primary border-white/20"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
                         }`}
                       >
@@ -536,7 +536,7 @@ export default function SettingsPage() {
                         onClick={() => updateCustomTheme({ animationSpeed: speed.id as any })}
                         className={`py-1.5 px-3 rounded-sm text-sm font-bold uppercase transition-all cursor-pointer border ${
                           customTheme.animationSpeed === speed.id
-                            ? "bg-primary/10 text-primary border-primary/30"
+                            ? "bg-primary/10 text-primary border-white/20"
                             : "bg-muted/40 text-muted-foreground border-transparent hover:text-white"
                         }`}
                       >
@@ -549,7 +549,7 @@ export default function SettingsPage() {
             </div>
 
             {/* Estilo do Fundo (Gradiente vs Imagem) */}
-            <div className="space-y-3.5 pt-2 border-t border-border/40">
+            <div className="space-y-3.5 pt-2 border-t border-white/10/40">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Seletor de Gradiente */}
                 <div className="space-y-2">
@@ -558,7 +558,7 @@ export default function SettingsPage() {
                     value={customTheme.bgGradient}
                     disabled={!!customTheme.bgImage}
                     onChange={(e) => updateCustomTheme({ bgGradient: e.target.value })}
-                    className="w-full px-3 py-2 bg-muted/40 border border-border rounded-sm text-xs text-white outline-none cursor-pointer focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-3 py-2 bg-muted/40 border border-white/10 rounded-sm text-xs text-white outline-none cursor-pointer focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="bg-preset-synth">Synthwave Gradient (Roxo/Rosa)</option>
                     <option value="bg-preset-cyber">Deep Ocean Grid (Ciano/Preto)</option>
@@ -579,7 +579,7 @@ export default function SettingsPage() {
                       placeholder="Ex: /uploads/meu-wallpaper.png ou URL"
                       value={customTheme.bgImage}
                       onChange={(e) => updateCustomTheme({ bgImage: e.target.value })}
-                      className="w-full px-3 py-2 bg-muted/40 border border-border focus:border-primary rounded-sm text-xs text-white outline-none placeholder:text-muted-foreground/60 pr-10"
+                      className="w-full px-3 py-2 bg-muted/40 border border-white/10 focus:border-primary rounded-sm text-xs text-white outline-none placeholder:text-muted-foreground/60 pr-10"
                     />
                     {customTheme.bgImage && (
                       <button
@@ -603,11 +603,11 @@ export default function SettingsPage() {
         )}
 
         {/* Densidade e Outros Ajustes */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-3 border-t border-border/60">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-3 border-t border-white/10/60">
           {/* Densidade de Espaçamento */}
           <div className="space-y-2.5">
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold text-muted-foreground block">Densidade do Layout</label>
-            <div className="flex bg-muted/30 border border-border p-1 rounded-sm">
+            <div className="flex bg-muted/30 border border-white/10 p-1 rounded-sm">
               {(["compact", "normal", "spacious"] as const).map((d) => (
                 <button
                   key={d}
@@ -625,7 +625,7 @@ export default function SettingsPage() {
           {/* Micro-interações Switch */}
           <div className="space-y-2.5 flex flex-col justify-between">
             <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold text-muted-foreground">Animações Gerais</label>
-            <div className="flex items-center justify-between p-5.5 bg-muted/20 border border-border rounded-sm h-10">
+            <div className="flex items-center justify-between p-5.5 bg-muted/20 border border-white/10 rounded-sm h-10">
               <span className="text-xs font-semibold text-white/95">Transições e micro-interações</span>
               <button
                 onClick={toggleAnimations}
@@ -646,12 +646,12 @@ export default function SettingsPage() {
 
       {/* 2. Entrada por Biometria */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-white/10/60 pb-3">
           <Fingerprint className="w-4 h-4 text-primary" />
           Segurança Biométrica (Passkeys)
         </h2>
 
-        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-sm flex items-start gap-3">
+        <div className="p-3.5 bg-muted/20 border border-white/10/80 rounded-sm flex items-start gap-3">
           <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-normal font-sans">
             Cadastre a biometria (impressão digital, reconhecimento facial ou desbloqueio de tela) deste dispositivo para acessar o Nexus Vault de forma instantânea sem precisar digitar sua senha.
@@ -670,7 +670,7 @@ export default function SettingsPage() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-muted/10 border border-border rounded-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-muted/10 border border-white/10 rounded-sm">
           <div className="min-w-0 flex-1">
             <h3 className="font-display text-xs tracking-widest text-white leading-tight">
               Status da Biometria
@@ -710,12 +710,12 @@ export default function SettingsPage() {
 
       {/* 3. Backup e Banco de Dados */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-white/10/60 pb-3">
           <Database className="w-4 h-4 text-primary" />
           Operações de Banco de Dados
         </h2>
 
-        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-sm flex items-start gap-3">
+        <div className="p-3.5 bg-muted/20 border border-white/10/80 rounded-sm flex items-start gap-3">
           <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-normal">
             O banco de dados do Nexus Vault reside inteiramente no seu sistema local SQLite. Exporte backups periodicamente para garantir a segurança dos seus dados em migrações ou reconfigurações do sistema.
@@ -724,7 +724,7 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Exportar */}
-          <div className="p-4 bg-muted/10 border border-border rounded-sm flex flex-col justify-between h-36">
+          <div className="p-4 bg-muted/10 border border-white/10 rounded-sm flex flex-col justify-between h-36">
             <div>
               <h3 className="font-display text-xs tracking-widest text-white leading-tight">Exportar Dados</h3>
               <p className="text-sm text-muted-foreground mt-1 leading-normal">Baixe um arquivo JSON descriptografado contendo todos os registros de senhas, notas, torrents, softwares e dados cadastrados.</p>
@@ -732,7 +732,7 @@ export default function SettingsPage() {
             <button
               onClick={handleExport}
               disabled={isExporting}
-              className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold"
+              className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-xs font-semibold rounded-sm border border-white/10 transition-colors cursor-pointer font-bold"
             >
               {isExporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
               Salvar Backup JSON
@@ -740,12 +740,12 @@ export default function SettingsPage() {
           </div>
 
           {/* Importar */}
-          <div className="p-4 bg-muted/10 border border-border rounded-sm flex flex-col justify-between h-36">
+          <div className="p-4 bg-muted/10 border border-white/10 rounded-sm flex flex-col justify-between h-36">
             <div>
               <h3 className="font-display text-xs tracking-widest text-white leading-tight">Restaurar Banco</h3>
               <p className="text-sm text-muted-foreground mt-1 leading-normal">Selecione um arquivo de backup do Nexus (.json) previamente baixado para restaurar todas as tabelas locais do banco.</p>
             </div>
-            <label className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-[10px] uppercase tracking-wider text-muted-foreground font-semibold rounded-sm border border-border transition-colors cursor-pointer font-bold">
+            <label className="flex items-center justify-center gap-5 w-full py-2 bg-muted hover:bg-muted/70 text-white text-[10px] uppercase tracking-wider text-muted-foreground font-semibold rounded-sm border border-white/10 transition-colors cursor-pointer font-bold">
               {isImporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
               Selecionar Backup
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
@@ -756,12 +756,12 @@ export default function SettingsPage() {
 
       {/* 3.5. Integração de Lembretes & Alertas */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
-        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
+        <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-white/10/60 pb-3">
           <Bell className="w-4 h-4 text-primary" />
           Integração de Lembretes (Telegram & Email)
         </h2>
 
-        <div className="p-3.5 bg-muted/20 border border-border/80 rounded-sm flex items-start gap-3">
+        <div className="p-3.5 bg-muted/20 border border-white/10/80 rounded-sm flex items-start gap-3">
           <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-normal">
             Configure seu bot do Telegram ou Email para receber alertas automáticos de contas a pagar/receber próximas do vencimento e metas pendentes.
@@ -770,7 +770,7 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Email Form */}
-          <div className="p-4 bg-muted/10 border border-border rounded-sm space-y-3">
+          <div className="p-4 bg-muted/10 border border-white/10 rounded-sm space-y-3">
             <div>
               <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-4">
                 <Mail className="w-3.5 h-3.5 text-primary" />
@@ -783,12 +783,12 @@ export default function SettingsPage() {
               placeholder="seu-email@dominio.com"
               value={emailAlert}
               onChange={(e) => setEmailAlert(e.target.value)}
-              className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-border rounded-sm text-white focus:border-primary outline-none transition-colors"
+              className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-white/10 rounded-sm text-white focus:border-primary outline-none transition-colors"
             />
           </div>
 
           {/* Telegram Form */}
-          <div className="p-4 bg-muted/10 border border-border rounded-sm space-y-3">
+          <div className="p-4 bg-muted/10 border border-white/10 rounded-sm space-y-3">
             <div>
               <h3 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-4">
                 <Send className="w-3.5 h-3.5 text-primary" />
@@ -802,14 +802,14 @@ export default function SettingsPage() {
                 placeholder="Token do Bot (Ex: 123456:ABC-DEF...)"
                 value={telegramToken}
                 onChange={(e) => setTelegramToken(e.target.value)}
-                className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-border rounded-sm text-white focus:border-primary outline-none transition-colors"
+                className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-white/10 rounded-sm text-white focus:border-primary outline-none transition-colors"
               />
               <input
                 type="text"
                 placeholder="Chat ID (Ex: 987654321)"
                 value={telegramChatId}
                 onChange={(e) => setTelegramChatId(e.target.value)}
-                className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-border rounded-sm text-white focus:border-primary outline-none transition-colors"
+                className="w-full px-2.5 py-1.5 text-xs bg-black/45 border border-white/10 rounded-sm text-white focus:border-primary outline-none transition-colors"
               />
             </div>
           </div>
@@ -826,7 +826,7 @@ export default function SettingsPage() {
             <button
               onClick={handleTestNotification}
               disabled={isTestingNotification}
-              className="px-4 py-2 border border-border/80 text-white hover:bg-muted/40 text-xs font-bold rounded-sm transition-colors cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 border border-white/10/80 text-white hover:bg-muted/40 text-xs font-bold rounded-sm transition-colors cursor-pointer disabled:opacity-50"
             >
               {isTestingNotification ? "Enviando Teste..." : "Testar Telegram"}
             </button>

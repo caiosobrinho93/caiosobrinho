@@ -141,7 +141,7 @@ export default function NeonParticles() {
   return (
     <canvas
       ref={canvasRef}
-      className="particles-canvas"
+      className="particles-canvas absolute inset-0 pointer-events-none z-0"
       aria-hidden="true"
     />
   );

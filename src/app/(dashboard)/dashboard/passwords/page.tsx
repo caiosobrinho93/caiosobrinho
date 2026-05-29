@@ -290,15 +290,15 @@ function PasswordsContent() {
         </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d shrink-0"
-          >
-            <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-              <Plus className="w-4 h-4" />
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      <Plus className="w-4 h-4" />
               Adicionar Credencial
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+    </span>
+  </div>
+</button>
       </div>
  
       {/* Barra de Ferramentas / Filtros */}
@@ -347,7 +347,7 @@ function PasswordsContent() {
               <motion.div
                 key={item.id}
                 whileTap={{ scale: 0.98 }}
-                className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-4 flex items-center justify-between min-h-[72px] h-auto relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-primary/5"
+                className="nexus-card group cursor-pointer flex items-center justify-between min-h-[72px] h-auto"
                 onClick={() => handleSelectPassword(item)}
               >
                 <div className="flex items-center gap-3.5 min-w-0 w-full">
@@ -385,14 +385,14 @@ function PasswordsContent() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d mt-3"
-          >
-            <span className="dev-btn-3d-top">
-              Adicionar Credencial
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      Adicionar Credencial
+    </span>
+  </div>
+</button>
         </div>
       )}
 
@@ -802,10 +802,11 @@ function PasswordsContent() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="dev-btn-3d"
-                  >
-                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-                      {isSubmitting ? (
+                    className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      {isSubmitting ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
                           Criptografando...
@@ -813,10 +814,9 @@ function PasswordsContent() {
                       ) : (
                         "Salvar Credencial"
                       )}
-                    </span>
-                    <span className="dev-btn-3d-bottom"></span>
-                    <span className="dev-btn-3d-base"></span>
-                  </button>
+    </span>
+  </div>
+</button>
                 </div>
               </form>
             </motion.div>
@@ -955,14 +955,14 @@ function PasswordsContent() {
                       }
                       setIsGeneratorOpen(false);
                     }}
-                    className="dev-btn-3d w-full"
-                  >
-                    <span className="dev-btn-3d-top">
-                      Usar Senha no Cadastro
-                    </span>
-                    <span className="dev-btn-3d-bottom"></span>
-                    <span className="dev-btn-3d-base"></span>
-                  </button>
+                    className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      Usar Senha no Cadastro
+    </span>
+  </div>
+</button>
                 </div>
               </div>
             </motion.div>

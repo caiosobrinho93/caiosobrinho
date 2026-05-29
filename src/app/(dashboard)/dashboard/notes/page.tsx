@@ -309,7 +309,7 @@ function NotesContent() {
 
     // Títulos
     html = html.replace(/^### (.*$)/gim, '<h3 class="text-base font-bold text-white mt-4 mb-2">$1</h3>');
-    html = html.replace(/^## (.*$)/gim, '<h2 class="text-lg font-bold text-white mt-5 mb-2.5 border-b border-border/50 pb-1">$1</h2>');
+    html = html.replace(/^## (.*$)/gim, '<h2 class="text-lg font-bold text-white mt-5 mb-2.5 border-b border-white/10/50 pb-1">$1</h2>');
     html = html.replace(/^# (.*$)/gim, '<h1 class="text-xl font-black text-white mt-6 mb-3">$1</h1>');
 
     // Negrito, itálico e códigos
@@ -336,11 +336,11 @@ function NotesContent() {
   );
 
   return (
-    <div className={`flex border bg-black md:bg-card/45 backdrop-blur-xl overflow-hidden shadow-sm ${isFocusMode ? "fixed inset-0 z-[100] w-screen h-screen rounded-none border-none" : "h-[calc(100vh-140px)] border-border rounded-sm"}`}>
+    <div className={`flex border bg-black md:bg-card/45 backdrop-blur-xl overflow-hidden shadow-sm ${isFocusMode ? "fixed inset-0 z-[100] w-screen h-screen rounded-none border-none" : "h-[calc(100vh-140px)] border-white/10 rounded-sm"}`}>
       
       {/* PAINEL LATERAL: Listagem de notas */}
-      <div className={`w-full md:w-80 border-r border-border flex flex-col h-full bg-card/30 shrink-0 ${isFocusMode ? "hidden" : showSidebarOnMobile ? "flex" : "hidden md:flex"}`}>
-        <div className="p-4 border-b border-border flex flex-col gap-3">
+      <div className={`w-full md:w-80 border-r border-white/10 flex flex-col h-full bg-card/30 shrink-0 ${isFocusMode ? "hidden" : showSidebarOnMobile ? "flex" : "hidden md:flex"}`}>
+        <div className="p-4 border-b border-white/10 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-4">
               <FileText className="w-4 h-4 text-primary" />
@@ -348,14 +348,12 @@ function NotesContent() {
             </span>
             <button
               onClick={handleCreateNote}
-              className="dev-btn-3d"
+              className="frutiger-button"
               title="Nova Nota"
             >
-              <span className="dev-btn-3d-top flex items-center justify-center p-2.5">
-                <Plus className="w-4 h-4" />
-              </span>
-              <span className="dev-btn-3d-bottom"></span>
-              <span className="dev-btn-3d-base"></span>
+              <div className="frutiger-inner"><span className="frutiger-top-white"></span><span className="frutiger-text flex items-center justify-center"><Plus className="w-4 h-4" /></span></div>
+              
+              
             </button>
           </div>
 
@@ -368,7 +366,7 @@ function NotesContent() {
               placeholder="Buscar título ou categoria..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-muted/40 border border-border rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
+              className="w-full pl-9 pr-3 py-1.5 bg-muted/40 border border-white/10 rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:border-primary transition-all"
             />
           </div>
         </div>
@@ -376,7 +374,7 @@ function NotesContent() {
         <div className="flex-1 overflow-y-auto p-5 space-y-1">
           {isLoading ? (
             [...Array(3)].map((_, i) => (
-              <div key={i} className="h-16 bg-muted/20 animate-pulse rounded-sm border border-border/40" />
+              <div key={i} className="h-16 bg-muted/20 animate-pulse rounded-sm border border-white/10/40" />
             ))
           ) : filteredNotes.length > 0 ? (
             filteredNotes.map((note) => {
@@ -429,13 +427,13 @@ function NotesContent() {
         {selectedNote ? (
           <div className="flex-1 flex flex-col h-full overflow-hidden">
              {/* Cabeçalho Único do Editor — Consolidado e Responsivo (Sem sobreposição) */}
-            <div className="min-h-12 border-b border-border px-3 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0 bg-muted/10">
+            <div className="min-h-12 border-b border-white/10 px-3 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0 bg-muted/10">
               <div className="flex items-center gap-2 flex-wrap">
                 {!isFocusMode && (
                   <button
                     type="button"
                     onClick={() => setShowSidebarOnMobile(true)}
-                    className="md:hidden p-1.5 rounded-lg border border-border text-muted-foreground hover:text-white shrink-0 cursor-pointer"
+                    className="md:hidden p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-white shrink-0 cursor-pointer"
                     title="Voltar para lista"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
@@ -443,7 +441,7 @@ function NotesContent() {
                 )}
                 
                 {/* Write/Preview toggle */}
-                <div className="flex bg-muted/40 border border-border p-0.5 rounded-lg shrink-0">
+                <div className="flex bg-muted/40 border border-white/10 p-0.5 rounded-lg shrink-0">
                   <button
                     onClick={() => setActiveTab("write")}
                     className={`px-2.5 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
@@ -470,7 +468,7 @@ function NotesContent() {
                   className={`p-1.5 rounded-lg border cursor-pointer transition-colors shrink-0 ${
                     selectedNote.isFavorite
                       ? "border-primary/20 bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground hover:text-white hover:bg-muted"
+                      : "border-white/10 text-muted-foreground hover:text-white hover:bg-muted"
                   }`}
                   title="Favoritar"
                 >
@@ -484,7 +482,7 @@ function NotesContent() {
                   className={`p-1.5 rounded-lg border cursor-pointer transition-colors shrink-0 ${
                     isFocusMode
                       ? "border-primary/20 bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground hover:text-white hover:bg-muted"
+                      : "border-white/10 text-muted-foreground hover:text-white hover:bg-muted"
                   }`}
                   title={isFocusMode ? "Sair do Modo Foco" : "Modo Foco"}
                 >
@@ -494,7 +492,7 @@ function NotesContent() {
 
               <div className="flex items-center gap-2 ml-auto">
                 {/* Save status */}
-                <span className="flex items-center gap-1.5 bg-muted/40 border border-border/80 px-2 py-1 rounded-lg shrink-0">
+                <span className="flex items-center gap-1.5 bg-muted/40 border border-white/10/80 px-2 py-1 rounded-lg shrink-0">
                   {saveStatus === "saving" ? (
                     <Loader2 className="w-3 h-3 animate-spin text-primary" />
                   ) : saveStatus === "saved" ? (
@@ -510,7 +508,7 @@ function NotesContent() {
                 {/* Delete button */}
                 <button
                   onClick={() => handleDelete(selectedNote.id)}
-                  className="p-1.5 rounded-lg border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
+                  className="p-1.5 rounded-lg border border-white/10 text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer transition-colors"
                   title="Deletar nota"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -521,7 +519,7 @@ function NotesContent() {
             {/* Wrapper para Título, Categoria e Conteúdo para podermos aplicar o Overlay sobre ambos */}
             <div className="flex-1 flex flex-col overflow-hidden relative">
               {/* Título e Categoria */}
-              <div className="p-4 border-b border-border/60 bg-muted/5 flex flex-col sm:flex-row gap-3 shrink-0">
+              <div className="p-4 border-b border-white/10/60 bg-muted/5 flex flex-col sm:flex-row gap-3 shrink-0">
                 <input
                   type="text"
                   placeholder="Título da Nota"
@@ -537,7 +535,7 @@ function NotesContent() {
                     placeholder="Geral"
                     value={editCategory}
                     onChange={(e) => handleFieldChange("category", e.target.value)}
-                    className="px-3.5 py-1.5 bg-muted/40 border border-border focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-medium max-w-32"
+                    className="px-3.5 py-1.5 bg-muted/40 border border-white/10 focus:border-primary rounded-sm text-white placeholder-muted-foreground text-xs focus:outline-none focus:ring-0 transition-all font-medium max-w-32"
                   />
                 </div>
               </div>
@@ -547,7 +545,7 @@ function NotesContent() {
                 {activeTab === "write" ? (
                   <>
                     {/* Formatting Toolbar */}
-                    <div className="flex items-center gap-2 px-4 py-2 border-b border-border/60 bg-muted/10 overflow-x-auto whitespace-nowrap scrollbar-hide shrink-0">
+                    <div className="flex items-center gap-2 px-4 py-2 border-b border-white/10/60 bg-muted/10 overflow-x-auto whitespace-nowrap scrollbar-hide shrink-0">
                       <button onClick={() => insertFormatting("**", "**")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-primary transition-colors focus:text-primary">
                         <Bold className="w-4 h-4" />
                       </button>
@@ -611,7 +609,7 @@ function NotesContent() {
                       <motion.div 
                         animate={isPressing ? { scale: [1, 1.08, 1] } : {}}
                         transition={{ repeat: Infinity, duration: 0.6 }}
-                        className="w-16 h-16 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary relative z-10"
+                        className="w-16 h-16 rounded-full bg-primary/10 border border-white/20 flex items-center justify-center text-primary relative z-10"
                       >
                         <Fingerprint className="w-8 h-8 neon-pulse" />
                       </motion.div>
@@ -664,14 +662,9 @@ function NotesContent() {
             </p>
             <button
               onClick={handleCreateNote}
-              className="dev-btn-3d mt-4"
-            >
-              <span className="dev-btn-3d-top">
-                Criar Primeira Nota
-              </span>
-              <span className="dev-btn-3d-bottom"></span>
-              <span className="dev-btn-3d-base"></span>
-            </button>
+              className="frutiger-button w-48 mx-auto mt-4">
+  <div className="frutiger-inner"><span className="frutiger-top-white"></span><span className="frutiger-text font-bold">Criar Primeira Nota</span></div>
+</button>
           </div>
         )}
       </div>

@@ -214,15 +214,15 @@ export default function TorrentsPage() {
         <div className="flex flex-wrap gap-4 items-center justify-start">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d shrink-0"
-          >
-            <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-              <Plus className="w-4 h-4" />
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      <Plus className="w-4 h-4" />
               Adicionar Torrent
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+    </span>
+  </div>
+</button>
         </div>
 
       {/* Toolbar */}
@@ -257,7 +257,7 @@ export default function TorrentsPage() {
                 key={item.id}
                 onClick={() => handleSelectTorrent(item)}
                 whileTap={{ scale: 0.99 }}
-                className="flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all"
+                className="flex items-center gap-3 px-3 py-3 rounded-xl nexus-card !p-3 !rounded-xl hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all"
                 
               >
                 <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
@@ -283,7 +283,7 @@ export default function TorrentsPage() {
                   key={item.id}
                   onClick={() => handleSelectTorrent(item)}
                   whileTap={{ scale: 0.97 }}
-                  className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-4.5 flex flex-col justify-between min-h-[120px] h-auto relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-[0_0_20px_rgba(143,227,25,0.04)]"
+                  className="group cursor-pointer nexus-card cursor-pointer group flex flex-col justify-between min-h-[120px] flex flex-col justify-between min-h-[120px] h-auto relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-[0_0_20px_rgba(143,227,25,0.04)]"
                 >
                   {/* Linha superior */}
                   <div className="flex justify-between items-start gap-4">
@@ -334,14 +334,14 @@ export default function TorrentsPage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d mt-4"
-          >
-            <span className="dev-btn-3d-top">
-              Adicionar Primeiro Torrent
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      Adicionar Primeiro Torrent
+    </span>
+  </div>
+</button>
         </div>
       )}
       </div>
@@ -636,10 +636,11 @@ export default function TorrentsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="dev-btn-3d"
-                  >
-                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-                      {isSubmitting ? (
+                    className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      {isSubmitting ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
                           Indexando...
@@ -647,10 +648,9 @@ export default function TorrentsPage() {
                       ) : (
                         "Indexar Torrent"
                       )}
-                    </span>
-                    <span className="dev-btn-3d-bottom"></span>
-                    <span className="dev-btn-3d-base"></span>
-                  </button>
+    </span>
+  </div>
+</button>
                 </div>
               </form>
             </motion.div>

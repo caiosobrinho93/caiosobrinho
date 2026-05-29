@@ -140,7 +140,7 @@ export default function ReceiptsPage() {
   );
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-8">
+    <div className="space-y-6 w-full pb-8">
       {/* Header */}
       <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
         <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
@@ -168,13 +168,15 @@ export default function ReceiptsPage() {
               className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-card/45 border border-border focus:border-primary text-white focus:outline-none placeholder-muted-foreground"
             />
           </div>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="glass-btn glass-btn-primary self-start sm:self-auto cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
+          <button onClick={() => setIsModalOpen(true)} className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      <Plus className="w-4 h-4" />
             Adicionar Recibo
-          </button>
+    </span>
+  </div>
+</button>
         </div>
 
       {/* Content list */}
@@ -191,7 +193,7 @@ export default function ReceiptsPage() {
                 key={receipt.id}
                 layout
                 onClick={() => { setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
-                className="flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer active:scale-[0.99] transition-all"
+                className="flex items-center gap-3 px-3 py-3 rounded-xl nexus-card !p-3 !rounded-xl hover:border-primary/30 hover:bg-card/50 cursor-pointer active:scale-[0.99] transition-all"
                 
               >
                 {/* Icon */}

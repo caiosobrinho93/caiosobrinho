@@ -78,7 +78,7 @@ export default function ProfilePage() {
   const partnerName = profile.username === "caio" ? "Giselle" : "Caio";
 
   return (
-    <div className="w-full max-w-md mx-auto bg-transparent text-foreground pb-24 md:pb-12 px-4 safe-area-bottom gpu-accelerated">
+    <div className="w-full w-full bg-transparent text-foreground pb-24 md:pb-12 px-4 safe-area-bottom gpu-accelerated">
       
       {/* Top Header - Avatar & Name */}
       <motion.div 
@@ -103,7 +103,7 @@ export default function ProfilePage() {
           </div>
           
           {/* Level Tag Overlay */}
-          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-black border border-primary/30 text-white font-mono text-[9px] font-black px-2.5 py-0.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.5)] tracking-wider">
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-black border border-white/20 text-white font-mono text-[9px] font-black px-2.5 py-0.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.5)] tracking-wider">
             LEVEL {profile.level}
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function ProfilePage() {
         </p>
 
         {/* Level / XP Progress Bar */}
-        <div className="mt-5 w-full bg-black/40 border border-white/5 p-3 rounded-2xl">
+        <div className="mt-5 w-full bg-white/5 border border-white/5 p-3 rounded-2xl">
           <div className="flex justify-between items-center text-[10px] font-bold font-mono text-muted-foreground uppercase mb-1.5">
             <span>XP DO NÍVEL</span>
             <span className="text-white">{currentLevelXp} / 1000</span>
@@ -139,15 +139,15 @@ export default function ProfilePage() {
         transition={{ duration: 0.4, delay: 0.1 }}
         className="grid grid-cols-3 gap-2 mb-6"
       >
-        <div className="p-3 bg-black/40 border border-white/5 rounded-2xl text-center flex flex-col justify-center">
+        <div className="p-3 bg-white/5 border border-white/5 rounded-2xl text-center flex flex-col justify-center">
           <span className="text-[18px] font-black text-white leading-tight font-mono">{counts.passwords}</span>
           <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Senhas</span>
         </div>
-        <div className="p-3 bg-black/40 border border-white/5 rounded-2xl text-center flex flex-col justify-center">
+        <div className="p-3 bg-white/5 border border-white/5 rounded-2xl text-center flex flex-col justify-center">
           <span className="text-[18px] font-black text-white leading-tight font-mono">{counts.files}</span>
           <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Arquivos</span>
         </div>
-        <div className="p-3 bg-black/40 border border-white/5 rounded-2xl text-center flex flex-col justify-center">
+        <div className="p-3 bg-white/5 border border-white/5 rounded-2xl text-center flex flex-col justify-center">
           <span className="text-[18px] font-black text-primary leading-tight font-mono">{storageStats.percentUsed}%</span>
           <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Disco</span>
         </div>
@@ -161,7 +161,7 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 15 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden shadow-sm divide-y divide-white/[0.04]"
+          className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm divide-y divide-white/[0.04]"
         >
           <SettingRow 
             icon={User} 
@@ -188,7 +188,7 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 15 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden shadow-sm divide-y divide-white/[0.04]"
+          className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm divide-y divide-white/[0.04]"
         >
           <SettingRow 
             icon={ShieldCheck} 
@@ -215,7 +215,7 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 15 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.4, delay: 0.25 }}
-          className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden shadow-sm divide-y divide-white/[0.04]"
+          className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm divide-y divide-white/[0.04]"
         >
           <SettingRow 
             icon={Moon} 

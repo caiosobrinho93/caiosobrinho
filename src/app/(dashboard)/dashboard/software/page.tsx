@@ -206,15 +206,15 @@ export default function SoftwarePage() {
         <div className="flex flex-wrap gap-4 items-center justify-start">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d shrink-0"
-          >
-            <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-              <Plus className="w-4 h-4" />
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      <Plus className="w-4 h-4" />
               Registrar App
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+    </span>
+  </div>
+</button>
         </div>
  
       {/* Toolbar */}
@@ -309,7 +309,7 @@ export default function SoftwarePage() {
                   key={item.id}
                   onClick={() => handleSelectSoftware(item)}
                   whileTap={{ scale: 0.98 }}
-                  className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-5 flex flex-col justify-between min-h-[110px] h-auto transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-[0_0_20px_rgba(143,227,25,0.04)]"
+                  className="nexus-card group cursor-pointer flex flex-col justify-between min-h-[110px] h-auto"
                 >
                   <div className="flex gap-5.5 items-center">
                     <div className="w-9 h-9 rounded-xl bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
@@ -430,14 +430,14 @@ export default function SoftwarePage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d mt-4"
-          >
-            <span className="dev-btn-3d-top">
-              Vincular Primeiro Software
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      Vincular Primeiro Software
+    </span>
+  </div>
+</button>
         </div>
       )}
       </div>
@@ -711,10 +711,11 @@ export default function SoftwarePage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="dev-btn-3d"
-                  >
-                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-                      {isSubmitting ? (
+                    className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      {isSubmitting ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
                           Salvando...
@@ -722,10 +723,9 @@ export default function SoftwarePage() {
                       ) : (
                         "Registrar App"
                       )}
-                    </span>
-                    <span className="dev-btn-3d-bottom"></span>
-                    <span className="dev-btn-3d-base"></span>
-                  </button>
+    </span>
+  </div>
+</button>
                 </div>
               </form>
             </motion.div>

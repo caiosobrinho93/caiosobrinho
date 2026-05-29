@@ -35,7 +35,8 @@ import {
   Lock,
   Upload,
   X,
-  Code
+  Code,
+  Bell
 } from "lucide-react";
 
 interface Goal {
@@ -116,6 +117,7 @@ export default function DashboardPage() {
   // Estados locais para interações de metas
   const [newGoalTitle, setNewGoalTitle] = useState("");
   const [newGoalXp, setNewGoalXp] = useState(100);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isAddingGoal, setIsAddingGoal] = useState(false);
   // Estados adicionais para Recompensas
   const [rewards, setRewards] = useState<any[]>([]);
@@ -364,7 +366,7 @@ export default function DashboardPage() {
         layout
         key="recent_activities"
         variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-2 block"
+        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-2 block"
       >
         {renderWidgetHeader("Atividades Recentes", <Clock className="w-3.5 h-3.5 text-primary" />, idx, (
           <span className="text-xs text-muted-foreground bg-muted/15 border border-border px-4 py-2 rounded-sm font-bold uppercase tracking-wider font-display">
@@ -416,7 +418,7 @@ export default function DashboardPage() {
         layout
         key="storage"
         variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-2 block"
+        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-2 block"
       >
         {renderWidgetHeader("Armazenamento", <HardDrive className="w-3.5 h-3.5 text-primary" />, idx, (
           <span className="text-muted-foreground text-sm font-mono">
@@ -433,19 +435,19 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 ">
-            <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <div className="p-3 bg-muted/10 border border-border/40 rounded-sm text-center">
               <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Cine Vault</span>
               <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.videosSize || "0 B"}</span>
             </div>
-            <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <div className="p-3 bg-muted/10 border border-border/40 rounded-sm text-center">
               <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Arquivos</span>
               <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.docsSize || "0 B"}</span>
             </div>
-            <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <div className="p-3 bg-muted/10 border border-border/40 rounded-sm text-center">
               <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Imagens</span>
               <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.imagesSize || "0 B"}</span>
             </div>
-            <div className="p-4 bg-muted/10 border border-border/40 rounded-sm text-center">
+            <div className="p-3 bg-muted/10 border border-border/40 rounded-sm text-center">
               <span className="text-xs text-muted-foreground block leading-tight uppercase font-display">Outros</span>
               <span className="text-xs font-bold text-white leading-tight font-mono">{data.storageStats.othersSize || "0 B"}</span>
             </div>
@@ -462,7 +464,7 @@ export default function DashboardPage() {
         layout
         key="goals"
         variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-1 block"
+        className="glass-panel h-full flex flex-col lg:col-span-1 block"
       >
         {renderWidgetHeader(`Central de Metas`, <Trophy className="w-3.5 h-3.5 text-primary " />, idx, (
           <span className="text-xs text-primary bg-primary/10 border border-primary/20 px-4 py-2 rounded-sm font-bold font-mono">
@@ -573,7 +575,7 @@ export default function DashboardPage() {
         layout
         key="rewards"
         variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-1 block"
+        className="glass-panel h-full flex flex-col lg:col-span-1 block"
       >
         {renderWidgetHeader("Baú de Prêmios Pix", <Trophy className="w-3.5 h-3.5 text-primary" />, idx, (
           <span className="text-xs text-muted-foreground uppercase font-bold font-display">
@@ -652,7 +654,7 @@ export default function DashboardPage() {
         layout
         key="shortcuts"
         variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-1 block"
+        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 block"
       >
         {renderWidgetHeader("Atalhos Rápidos", <Zap className="w-3 h-3 text-primary" />, idx)}
         
@@ -660,7 +662,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/dashboard/notes?new=true")}
-            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px] !p-2.5"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
           >
             <Plus className="w-3 h-3 text-primary shrink-0" />
             Criar Nota
@@ -668,7 +670,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/dashboard/passwords?generate=true")}
-            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px] !p-2.5"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
           >
             <Key className="w-3 h-3 text-secondary shrink-0" />
             Nova Senha
@@ -676,7 +678,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/dashboard/torrents")}
-            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px] !p-2.5"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
           >
             <RefreshCw className="w-3 h-3 text-amber shrink-0" />
             Torrent
@@ -684,81 +686,11 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => router.push("/dashboard/files")}
-            className="flex items-center gap-1.5 p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[50px] !p-2.5"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
           >
             <FolderOpen className="w-3 h-3 text-emerald shrink-0" />
             Upload
           </button>
-        </div>
-      </motion.div>
-    );
-  };
-
-  const renderDevComponents = (idx: number) => {
-    return (
-      <motion.div
-        layout
-        key="dev_components_widget"
-        variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-1 block"
-      >
-        {renderWidgetHeader("Biblioteca de Componentes", <Code className="w-3.5 h-3.5 text-primary" />, idx, (
-          <Link href="/dashboard/dev" className="text-xs text-primary hover:underline font-bold font-mono">
-            Ver Todos
-          </Link>
-        ))}
-        <div className="px-[15px] pb-[15px] space-y-4">
-          <p className="text-[10px] text-muted-foreground leading-tight">
-            Seus botões e trechos de código interativos salvos na DEV Central. Toque neles para testar!
-          </p>
-          <div className="flex flex-wrap gap-4 items-center justify-center min-h-[60px] bg-black/20 rounded-xl p-3 border border-white/5 relative overflow-hidden">
-            {isDevLoading ? (
-              <Loader2 className="w-5 h-5 text-primary animate-spin" />
-            ) : devComps.length > 0 ? (
-              devComps.slice(0, 3).map((comp) => {
-                const isDownloadBtn = comp.title.toLowerCase().includes("download");
-                const is3dBtn = comp.title.toLowerCase().includes("3d");
-
-                if (isDownloadBtn) {
-                  return (
-                    <div key={comp.id} className="relative group/btn scale-90 cursor-pointer" onClick={() => alert("Download iniciado (simulado)!")}>
-                      <button className="dev-btn-download pointer-events-none">
-                        <svg className="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path>
-                        </svg>
-                        <span className="icon2"></span>
-                        <span className="tooltip">{comp.title}</span>
-                      </button>
-                    </div>
-                  );
-                }
-
-                if (is3dBtn) {
-                  return (
-                    <div key={comp.id} className="scale-90 h-12 flex items-center justify-center pt-2">
-                      <button type="button" className="dev-btn-3d" onClick={() => alert("3D Click!")}>
-                        <div className="dev-btn-3d-top">Click me!</div>
-                        <div className="dev-btn-3d-bottom"></div>
-                        <div className="dev-btn-3d-base"></div>
-                      </button>
-                    </div>
-                  );
-                }
-
-                return (
-                  <button
-                    key={comp.id}
-                    onClick={() => alert(`Componente "${comp.title}" clicado!`)}
-                    className="px-3.5 py-1.5 rounded-xl bg-secondary/80 hover:bg-secondary text-primary border border-border/80 hover:border-primary/30 text-xs font-bold transition-all"
-                  >
-                    {comp.title}
-                  </button>
-                );
-              })
-            ) : (
-              <p className="text-xs text-muted-foreground/60 text-center py-2">Sem componentes salvos.</p>
-            )}
-          </div>
         </div>
       </motion.div>
     );
@@ -771,7 +703,7 @@ export default function DashboardPage() {
         layout
         key="operations"
         variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-1 block"
+        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 block"
       >
         {renderWidgetHeader("Operações Recentes", <Activity className="w-3 h-3 text-primary" />, idx)}
 
@@ -801,7 +733,7 @@ export default function DashboardPage() {
         layout
         key="favorites"
         variants={itemVariants}
-        className="glass-panel neon-glow-card lg:col-span-1 block"
+        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 block"
       >
         {renderWidgetHeader(`Favoritos (${data.favorites.length})`, <Star className="w-3 h-3 text-primary fill-primary/10" />, idx)}
 
@@ -845,8 +777,49 @@ export default function DashboardPage() {
 
 
 
+      {/* 🔮 Spatial Hero Header */}
+      <motion.div variants={itemVariants} className="glass-panel min-w-[280px] p-5 sm:p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-8 relative overflow-hidden group mb-4 sm:mb-8">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
+        
+        <div className="flex flex-col md:flex-row items-center gap-5 sm:gap-8 z-10 w-full md:w-auto">
+          <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-40 md:h-40 rounded-full border border-white/20 overflow-hidden shrink-0 shadow-[0_0_40px_rgba(255,255,255,0.1)] relative group-hover:scale-105 transition-transform duration-500">
+            <img src={data?.profile?.username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} className="w-full h-full object-cover" alt="User" />
+          </div>
+          
+          <div className="text-center md:text-left">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-black tracking-tight flex flex-col">
+              <span className="text-sm sm:text-lg md:text-xl text-white/50 font-medium mb-1">Bem-vindo(a) de volta,</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">{data?.profile?.username || 'Usuário'}</span>
+            </h1>
+            
+            <div className="mt-4 sm:mt-6 max-w-md w-full mx-auto md:mx-0">
+               {/* XP Bar */}
+               <div className="flex justify-between text-[10px] sm:text-xs font-mono text-white/60 mb-1.5 sm:mb-2">
+                  <span>Nível {data?.profile?.level || 1}</span>
+                  <span className="text-primary font-bold">{currentLevelXp}/1000 XP</span>
+               </div>
+               <div className="w-full h-1 sm:h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-1000" style={{ width: `${xpPercentage}%` }} />
+               </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Right side - Notification */}
+        <div className="z-10 mt-3 md:mt-0 flex items-center justify-center shrink-0">
+           <button type="button" onClick={() => setIsNotificationsOpen(true)}
+             className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full glass-panel !overflow-visible flex items-center justify-center hover:scale-110 transition-all group cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)] hover:border-primary/50"
+           >
+             <Bell className="w-5 h-5 sm:w-7 sm:h-7 text-white/80 group-hover:text-primary transition-colors" />
+             <span className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full border-2 border-[#0a0a0a] flex items-center justify-center text-[9px] sm:text-[11px] font-bold text-white shadow-[0_0_10px_rgba(239,68,68,0.6)]">
+               3
+             </span>
+           </button>
+        </div>
+      </motion.div>
+
       {/* Grade de Métricas Compacta (Horizontal) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 grid">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
         {moduleStats.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -855,19 +828,19 @@ export default function DashboardPage() {
               variants={itemVariants}
               onClick={() => router.push(stat.href)}
               whileTap={{ scale: 0.97 }}
-              className="group cursor-pointer relative overflow-hidden p-3 h-[60px] glass-panel neon-glow-card flex items-center justify-between border border-primary/10 rounded-sm hover:border-primary/45 transition-colors"
+              className="group cursor-pointer relative overflow-hidden p-2 sm:p-3 h-[52px] sm:h-[60px] glass-panel min-w-[120px] flex items-center justify-between border border-primary/10 rounded-sm hover:border-primary/45 transition-colors"
             >
-              <div className="flex items-center gap-5 min-w-0">
-                <div className={`p-4 rounded-sm border ${stat.color} shrink-0`}>
-                  <Icon className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-2 sm:gap-5 min-w-0">
+                <div className={`p-2 sm:p-4 rounded-sm border ${stat.color} shrink-0`}>
+                  <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-sm font-display font-semibold text-white/95 group-hover:text-primary transition-colors leading-tight truncate">{stat.name}</h3>
-                  <p className="text-xs  text-muted-foreground leading-tight mt-0.5 truncate">{stat.details}</p>
+                  <h3 className="text-xs sm:text-sm font-display font-semibold text-white/95 group-hover:text-primary transition-colors leading-tight truncate">{stat.name}</h3>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight mt-0.5 truncate hidden sm:block">{stat.details}</p>
                 </div>
               </div>
-              <div className="text-right shrink-0 ml-2">
-                <span className=" text-base font-bold text-white group-hover:text-primary transition-colors">
+              <div className="text-right shrink-0 ml-1 sm:ml-2">
+                <span className="text-sm sm:text-base font-bold text-white group-hover:text-primary transition-colors">
                   {stat.count}
                 </span>
               </div>
@@ -877,7 +850,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Seções em 2 Colunas (Cockpit Grid) - Organizado e Linear */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {/* Coluna da Esquerda (Largura 2) - Principais Módulos */}
         <div className="lg:col-span-2 space-y-4">
           {renderRecentActivities(0)}
@@ -887,7 +860,7 @@ export default function DashboardPage() {
         {/* Coluna da Direita (Largura 1) - Atalhos, Util e Info */}
         <div className="space-y-4">
           {renderShortcuts(5)}
-          {renderDevComponents(6)}
+          
           <RssTechWidget
             key="rss_tech"
             idx={7}
@@ -898,6 +871,56 @@ export default function DashboardPage() {
           {renderFavorites(9)}
         </div>
       </div>
+
+      {/* Notifications Modal */}
+      <AnimatePresence>
+        {isNotificationsOpen && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
+              onClick={() => setIsNotificationsOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md glass-panel p-6 flex flex-col z-10 shadow-[0_0_50px_rgba(var(--primary-rgb),0.2)]"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                    <Bell className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-xl font-bold text-white">Notificações</h2>
+                </div>
+                <button onClick={() => setIsNotificationsOpen(false)} className="text-white/50 hover:text-white transition-colors cursor-pointer">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4 max-h-[60vh] overflow-y-auto scrollbar-none">
+                {[
+                  { id: 1, title: 'Nova Meta Adicionada', desc: 'Sua meta foi criada.', time: 'Agora mesmo', read: false },
+                  { id: 2, title: 'Atualização do Sistema', desc: 'Nexus Vault v2.0 disponível.', time: 'Há 2 horas', read: false },
+                  { id: 3, title: 'Backup Concluído', desc: 'Seu cofre foi salvo com sucesso.', time: 'Ontem', read: false }
+                ].map((notif) => (
+                  <div key={notif.id} className={`p-4 rounded-xl border ${notif.read ? 'bg-white/5 border-white/10' : 'bg-primary/10 border-primary/30'} flex flex-col gap-1`}>
+                    <div className="flex justify-between items-start">
+                      <span className="font-bold text-white text-sm">{notif.title}</span>
+                      {!notif.read && <span className="w-2 h-2 rounded-full bg-primary mt-1"></span>}
+                    </div>
+                    <span className="text-white/60 text-xs">{notif.desc}</span>
+                    <span className="text-white/40 text-[10px] mt-1 font-mono">{notif.time}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

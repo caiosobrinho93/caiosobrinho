@@ -167,7 +167,7 @@ export default function BillsPage() {
     .reduce((sum, b) => sum + b.amount, 0);
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-8">
+    <div className="space-y-6 w-full pb-8">
       {/* Header */}
       <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
         <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
@@ -183,13 +183,15 @@ export default function BillsPage() {
       <div className="space-y-6 px-5 sm:px-0">
         {/* Opções e Botões */}
         <div className="flex flex-wrap gap-4 items-center justify-start">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="glass-btn glass-btn-primary cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
+          <button onClick={() => setIsModalOpen(true)} className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      <Plus className="w-4 h-4" />
             Nova Conta
-          </button>
+    </span>
+  </div>
+</button>
         </div>
 
       {/* Totais Cards - compact 3-col on mobile */}
@@ -295,7 +297,7 @@ export default function BillsPage() {
                 <motion.div
                   key={bill.id}
                   layout
-                  className={`backdrop-blur-md rounded-2xl p-5 border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300 hover:shadow-primary/5 ${
+                  className={`nexus-card flex flex-col md:flex-row md:items-center justify-between gap-4 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300 hover:shadow-primary/5 ${
                     isCompleted 
                       ? "border-border/30 opacity-60 bg-card/10" 
                       : bill.type === "pagar" 

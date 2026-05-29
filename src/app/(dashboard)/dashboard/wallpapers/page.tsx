@@ -167,15 +167,15 @@ export default function WallpapersPage() {
         <div className="flex flex-wrap gap-4 items-center justify-start">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d shrink-0"
-          >
-            <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-              <Plus className="w-4 h-4" />
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      <Plus className="w-4 h-4" />
               Adicionar Wallpaper
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+    </span>
+  </div>
+</button>
         </div>
  
       {/* Toolbar */}
@@ -287,14 +287,14 @@ export default function WallpapersPage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="dev-btn-3d mt-4"
-          >
-            <span className="dev-btn-3d-top">
-              Adicionar Wallpaper
-            </span>
-            <span className="dev-btn-3d-bottom"></span>
-            <span className="dev-btn-3d-base"></span>
-          </button>
+            className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      Adicionar Wallpaper
+    </span>
+  </div>
+</button>
         </div>
       )}
       </div>
@@ -415,10 +415,11 @@ export default function WallpapersPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="dev-btn-3d"
-                  >
-                    <span className="dev-btn-3d-top flex items-center justify-center gap-2">
-                      {isSubmitting ? (
+                    className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner px-6 py-2.5 rounded-xl flex items-center justify-center gap-2">
+    <div className="frutiger-top-white"></div>
+    <span className="frutiger-text flex items-center justify-center gap-2 font-bold drop-shadow-md text-sm">
+      {isSubmitting ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
                           Salvando...
@@ -426,10 +427,9 @@ export default function WallpapersPage() {
                       ) : (
                         "Salvar Imagem"
                       )}
-                    </span>
-                    <span className="dev-btn-3d-bottom"></span>
-                    <span className="dev-btn-3d-base"></span>
-                  </button>
+    </span>
+  </div>
+</button>
                 </div>
               </form>
             </motion.div>

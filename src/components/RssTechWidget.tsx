@@ -122,7 +122,7 @@ export default function RssTechWidget({ idx, renderHeader, itemVariants }: RssTe
   const displayedArticles = subTab === "feed" ? articles : favorites;
 
   return (
-    <div className="glass-panel lg:col-span-1 block">
+    <div className="glass-panel min-w-[280px] lg:col-span-1 block">
       {renderHeader("Feed de Notícias", <Newspaper className="w-3.5 h-3.5 text-primary" />, idx, (
         <div className="flex items-center gap-1.5">
           {subTab === "feed" ? (

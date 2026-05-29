@@ -66,92 +66,81 @@ function BottomBar({
   const displayName = username === "caio" ? "Caio" : username === "giselle" ? "Giselle" : username;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-[50px] flex items-center justify-between px-3 border-t border-white/[0.06] bg-black backdrop-blur-xl" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      {/* Left: Menu button + Home button */}
-      <div className="flex items-center gap-1.5">
-        <motion.button
-          onClick={() => setIsCentralOptionsOpen((v) => !v)}
-          whileTap={{ scale: 0.88 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all cursor-pointer ${
-            isCentralOptionsOpen ? "text-white" : "text-white/60"
-          }`}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {isCentralOptionsOpen ? (
-              <motion.span
-                key="close"
-                initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
-                animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                <X className="w-5 h-5" />
-              </motion.span>
-            ) : (
-              <motion.span
-                key="menu"
-                initial={{ rotate: 90, opacity: 0, scale: 0.8 }}
-                animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                exit={{ rotate: -90, opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                <LayoutGrid className="w-5 h-5" />
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
-
+    <div className="min-[1200px]:hidden fixed bottom-0 left-0 right-0 z-30 h-[50px] flex items-center justify-between px-3 border-t border-white/[0.06] bg-[#1a1b26] backdrop-blur-xl" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      {/* Left: Home */}
+      <div className="flex items-center justify-start w-1/3">
         <Link
           href="/dashboard"
           onClick={() => { playClickSound(); }}
-          className="flex items-center justify-center w-9 h-9 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer"
+          className="flex items-center justify-center w-10 h-10 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer"
           title="Início"
         >
           <Home className="w-5 h-5" />
         </Link>
       </div>
 
-      {/* Right: Search + Notification + User Profile */}
-      <div className="flex items-center gap-1">
-        <button
-          onClick={onSearchOpen}
-          className="flex items-center justify-center w-9 h-9 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer"
-          title="Buscar"
+      {/* Center: Apps / Menu */}
+      <div className="flex items-center justify-center w-1/3">
+        <motion.button
+          onClick={() => setIsCentralOptionsOpen((v) => !v)}
+          whileTap={{ scale: 0.92 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          className={
+            isCentralOptionsOpen 
+              ? "flex items-center justify-center w-[48px] h-[48px] rounded-full shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] bg-primary text-black border border-primary font-bold cursor-pointer transition-all" 
+              : "frutiger-button w-[48px] h-[48px] rounded-full flex items-center justify-center"
+          }
         >
-          <Search className="w-4.5 h-4.5" />
-        </button>
+          {isCentralOptionsOpen ? (
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key="close"
+                initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.18 }}
+                className="flex items-center justify-center w-full h-full"
+              >
+                <X className="w-6 h-6" />
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            <div className="frutiger-inner">
+              <div className="frutiger-top-white"></div>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.18 }}
+                  className="frutiger-text flex items-center justify-center w-full h-full drop-shadow-md"
+                >
+                  <LayoutGrid className="w-5 h-5 text-white" style={{ filter: 'drop-shadow(0px 1px 2px rgba(0,0,0,0.5))' }} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
+        </motion.button>
+      </div>
+
+      {/* Right: Notification + Profile (Search removed) */}
+      <div className="flex items-center justify-end w-1/3 gap-1">
         <button
           onClick={onNotificationsOpen}
-          className="relative flex items-center justify-center w-9 h-9 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer mr-1"
+          className="relative flex items-center justify-center w-10 h-10 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer mr-1"
           title="Notificações"
         >
-          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+          <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
         </button>
 
-        <Link href="/dashboard/profile" className="flex items-center gap-2 cursor-pointer max-w-[120px] ml-1">
-          <div className="flex flex-col items-end justify-center min-w-0">
-            <span className="text-[11px] font-black text-white leading-tight capitalize truncate max-w-[70px]">{displayName}</span>
-            <div className="flex items-center gap-1 mt-0.5 shrink-0">
-              <span className="text-[8px] font-bold text-primary">Lv {level}</span>
-              <div className="w-10 h-0.5 rounded-full bg-white/10 overflow-hidden">
-                <motion.div
-                  className="h-full bg-primary rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${xpPct}%` }}
-                  transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="w-7 h-7 rounded-full overflow-hidden border border-primary/30 shrink-0">
-            <img
-              src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"}
-              alt={displayName}
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <Link href="/dashboard/profile" className="flex items-center gap-2 cursor-pointer w-7 h-7 rounded-full overflow-hidden border border-primary/30 shrink-0">
+          <img
+            src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"}
+            alt={displayName}
+            className="w-full h-full object-cover"
+          />
         </Link>
       </div>
     </div>
@@ -168,7 +157,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const router = useRouter();
   
   const { accentColor, density, themePreset, customTheme } = useSettingsStore();
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCentralOptionsOpen, setIsCentralOptionsOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
@@ -182,7 +171,26 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   useEffect(() => {
     setMounted(true);
     useStatsStore.getState().fetchStats();
-  }, []);
+    if (username) {
+      document.body.setAttribute('data-user', username.toLowerCase());
+    }
+  }, [username]);
+
+  // Auto-collapse sidebar based on window width
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const handleResize = () => {
+      // Force collapse on window resize if window is small, otherwise keep whatever state the user set.
+      if (window.innerWidth < 1450) {
+        setIsSidebarCollapsed(true);
+      }
+    };
+    
+    // We already initialize to true, so no need to call handleResize() on mount unless we want to force it.
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [mounted]);
 
   // Verifica se há uma nova versão disponível no servidor (Vercel) comparando com a atual (Local)
   useEffect(() => {
@@ -316,6 +324,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   let animationSpeedClass = "animation-speed-normal";
   let gridStyleClass = "grid-style-fine";
   let customStyle: React.CSSProperties = {};
+  const isGiselle = username?.toLowerCase() === "giselle";
 
   if (mounted) {
     if (themePreset === "synth-violet") {
@@ -375,7 +384,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   return (
     <div 
       style={customStyle}
-      className={`theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${themeBgClass} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
+      className={`${isGiselle ? 'user-giselle' : ''} theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${themeBgClass} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
     >
       
       {/* Background Cyber Grid Layer */}
@@ -397,7 +406,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       <motion.aside
         animate={{ width: isSidebarCollapsed ? 76 : 260 }}
         transition={{ duration: 0.3, ease: [0.25, 0.8, 0.25, 1] }}
-        className="hidden md:flex flex-col h-screen border-r border-border bg-card/45 backdrop-blur-xl relative shrink-0 z-30"
+        className="hidden min-[1200px]:flex flex-col h-screen border-r border-border bg-card/45 backdrop-blur-xl absolute left-0 top-0 bottom-0 shrink-0 z-40"
       >
         {/* Header */}
         <div className="h-14 flex items-center justify-between px-3 border-b border-border/80 bg-background/40">
@@ -426,11 +435,12 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             return (
               <Link key={item.name} href={item.href}>
                 <div
+                  title={item.name}
                   onClick={playClickSound}
                   onMouseEnter={playHoverSound}
-                  className={`flex items-center gap-3 px-3 py-2 text-sm font-display tracking-wider transition-all group relative cursor-pointer border ${
+                  className={`flex items-center gap-3 px-3 py-3 text-sm font-display tracking-wider transition-all group relative cursor-pointer border rounded-md ${
                     isActive
-                      ? "bg-primary/5 text-primary border-primary/25 border-l-[3px] border-l-primary"
+                      ? "bg-primary/10 text-primary border-primary/25"
                       : "text-muted-foreground hover:text-white hover:bg-muted/15 border-transparent hover:border-border/30"
                   }`}
                 >
@@ -445,12 +455,6 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                       {item.name}
                     </motion.span>
                   )}
-                  
-                  {isSidebarCollapsed && (
-                    <div className="absolute left-16 scale-0 group-hover:scale-100 px-3 py-1.5 rounded-sm bg-popover border border-border text-sm text-white shadow-lg pointer-events-none transition-transform origin-left whitespace-nowrap z-50 font-display tracking-wider">
-                      {item.name}
-                    </div>
-                  )}
                 </div>
               </Link>
             );
@@ -458,24 +462,20 @@ export default function DashboardShell({ children, username }: DashboardShellPro
         </nav>
 
         {/* Footer info & Logout */}
-        <div className="p-5 border-t border-border flex flex-col gap-2 bg-muted/10  text-sm">
-          {isUpdateAvailable && (
+        <div className={`p-3 flex flex-col gap-2 border-t border-border bg-muted/10 text-sm ${!isSidebarCollapsed ? "px-4" : ""}`}>
+          {isUpdateAvailable && !isSidebarCollapsed && (
             <button
               onClick={handleUpdateApp}
               disabled={isUpdating}
-              className="w-full flex items-center justify-center gap-4 py-1.5 rounded bg-primary text-black font-bold border border-primary text-xs cursor-pointer  disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 py-2 rounded bg-primary text-black font-bold border border-primary text-xs cursor-pointer disabled:opacity-50"
             >
               <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
-              <span>{isUpdating ? "Instalando..." : "Nova Versão - Atualizar"}</span>
+              <span>Atualizar App</span>
             </button>
           )}
 
-          <Link href="/dashboard/profile" className="flex items-center gap-5 px-4 py-1 overflow-hidden hover:bg-muted/10 border border-transparent hover:border-border/30 transition-all rounded cursor-pointer w-full">
-            <div className={`w-7 h-7 rounded-sm overflow-hidden flex items-center justify-center border shrink-0 ${
-              username === "caio"
-                ? "border-border/50 "
-                : "border-border/50 "
-            }`}>
+          <Link href="/dashboard/profile" title="Perfil" className={`flex items-center justify-center overflow-hidden hover:bg-muted/10 border border-transparent hover:border-border/30 transition-all rounded cursor-pointer w-full ${isSidebarCollapsed ? 'py-3' : 'gap-3 px-3 py-2'}`}>
+            <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border border-white/20 shrink-0">
               <img 
                 src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
                 className="w-full h-full object-cover" 
@@ -483,30 +483,30 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               />
             </div>
             {!isSidebarCollapsed && (
-              <div className="flex flex-col min-w-0">
+              <div className="flex flex-col min-w-0 flex-1">
                 <span className="text-sm text-white font-bold truncate leading-tight capitalize">{username}</span>
-                <span className="text-xs text-muted-foreground truncate leading-none uppercase tracking-wide">Cofre Compartilhado</span>
+                <span className="text-[10px] text-muted-foreground truncate uppercase tracking-wider">Cofre</span>
               </div>
             )}
           </Link>
           
-          <div className="flex items-center gap-0.5">
+          <div className={`flex items-center ${isSidebarCollapsed ? 'flex-col gap-2' : 'gap-1'}`}>
             <button
               onClick={handleLogout}
-              className={`flex items-center justify-center text-muted-foreground hover:text-destructive p-5 rounded hover:bg-muted/20 transition-colors w-full cursor-pointer text-sm font-display tracking-wider gap-4 ${
-                isSidebarCollapsed ? "" : "justify-start px-2"
-              }`}
+              title="Sair / Bloquear"
+              className={`flex items-center justify-center text-muted-foreground hover:text-white hover:bg-destructive/60 transition-colors rounded cursor-pointer border border-transparent hover:border-destructive/50 ${isSidebarCollapsed ? 'p-3 w-full' : 'px-3 py-2.5 w-full justify-start gap-3'}`}
             >
-              <LogOut className="w-3.5 h-3.5" />
-              {!isSidebarCollapsed && <span className="font-semibold">Bloquear</span>}
+              <LogOut className="w-4 h-4" />
+              {!isSidebarCollapsed && <span className="font-semibold text-xs uppercase tracking-wider">Sair</span>}
             </button>
 
             {!isSidebarCollapsed && (
               <button
                 onClick={() => setIsSidebarCollapsed(true)}
-                className="p-5 rounded hover:bg-muted/20 text-muted-foreground hover:text-white cursor-pointer ml-auto"
+                title="Colapsar Menu"
+                className="p-2.5 rounded hover:bg-muted/20 text-muted-foreground hover:text-white cursor-pointer ml-auto"
               >
-                <ChevronLeft className="w-3.5 h-3.5" />
+                <ChevronLeft className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -514,33 +514,34 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           {isSidebarCollapsed && (
             <button
               onClick={() => setIsSidebarCollapsed(false)}
-              className="p-4 flex items-center justify-center rounded hover:bg-muted/20 text-muted-foreground hover:text-white cursor-pointer w-full mt-0.5 border border-border/50"
+              title="Expandir Menu"
+              className="p-3 flex items-center justify-center rounded hover:bg-muted/20 text-muted-foreground hover:text-white cursor-pointer w-full mt-1 border border-border/50"
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           )}
         </div>
       </motion.aside>
 
       {/* 2. MAIN VIEW PANEL */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden min-[1200px]:ml-[76px]">
         
         {/* Top Header */}
-        <header className="h-14 border-b border-border/80 bg-background/25 backdrop-blur-xl hidden md:flex items-center justify-between px-5 shrink-0 z-20">
+        <header className="h-14 border-b border-border/80 bg-background/25 backdrop-blur-xl hidden min-[1200px]:flex items-center justify-between px-5 shrink-0 z-20">
           
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-4 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-white cursor-pointer"
+              className="min-[1200px]:hidden p-4 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-white cursor-pointer"
             >
               <Menu className="w-4.5 h-4.5" />
             </button>
-            <div className="hidden md:flex items-center gap-5 text-xs font-semibold uppercase tracking-wider">
+            <div className="hidden min-[1200px]:flex items-center gap-5 text-xs font-semibold uppercase tracking-wider">
               <span className="text-muted-foreground">Cofre</span>
               <span className="text-muted-foreground/30">/</span>
               <span className="text-primary font-display">{currentItem.name}</span>
             </div>
-            <span className="md:hidden text-primary font-display text-xs">
+            <span className="min-[1200px]:hidden text-primary font-display text-xs">
               {currentItem.name}
             </span>
           </div>
@@ -574,7 +575,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               onClick={() => { playClickSound(); setIsCalculatorOpen(prev => !prev); }}
               onMouseEnter={playHoverSound}
               title="Calculadora HUD"
-              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+              className={`hidden min-[1200px]:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isCalculatorOpen 
                   ? "bg-primary/20 border-primary/45 text-primary " 
                   : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
@@ -590,7 +591,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               onClick={() => { playClickSound(); setIsRadioOpen(prev => !prev); }}
               onMouseEnter={playHoverSound}
               title="Rádio Synthwave"
-              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
+              className={`hidden min-[1200px]:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isRadioOpen 
                   ? "bg-primary/20 border-primary/45 text-primary " 
                   : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
@@ -638,7 +639,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </div>
         </header>
  
-        <main className="flex-1 overflow-y-auto bg-background/35 relative pt-6 px-4 md:p-8 lg:p-10 pb-[70px] md:pb-8">
+        <main className="flex-1 overflow-y-auto bg-background/35 relative pt-4 px-3 sm:pt-6 sm:px-4 md:p-8 lg:p-10 pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-8">
           <motion.div
             key={pathname}
             initial={{ opacity: 0, y: 6 }}
@@ -670,7 +671,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black z-40 md:hidden"
+              className="fixed inset-0 bg-black/80 backdrop-blur z-40 min-[1200px]:hidden"
             />
             
             <motion.div
@@ -678,7 +679,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-              className="fixed inset-y-0 left-0 w-72 bg-card border-r border-border p-5 flex flex-col z-50 md:hidden"
+              className="fixed inset-y-0 left-0 w-72 bg-[#1a1b26] border-r border-border p-5 flex flex-col z-50 min-[1200px]:hidden"
             >
               <div className="flex items-center justify-between pb-5 border-b border-border">
                 <div className="flex items-center gap-3">

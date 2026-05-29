@@ -122,7 +122,7 @@ export default function DevPage() {
   return (
     <div className="flex flex-col h-full space-y-6 pb-8">
       {/* HEADER */}
-      <div className="p-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+      <div className="p-5 flex flex-col items-start text-left border-b border-white/10/40 mb-6">
         <h1 className="text-xl font-display font-bold text-white flex items-center gap-5">
           <Code className="w-6 h-6 text-primary" />
           DEV Central
@@ -144,7 +144,7 @@ export default function DevPage() {
               className="w-full pl-9 pr-4 py-2 bg-black/20 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-primary/50 text-white transition-all"
             />
           </div>
-          <button onClick={handleOpenNew} className="glass-btn glass-btn-primary shrink-0 self-start sm:self-auto">
+          <button onClick={handleOpenNew} className="glass-button-primary">
             <Plus className="w-4 h-4" />
             <span>Adicionar</span>
           </button>
@@ -164,7 +164,7 @@ export default function DevPage() {
               className="glass-panel group cursor-pointer overflow-hidden flex flex-col h-48 hover:-translate-y-1 transition-all"
             >
               {/* Mini Preview iframe (disabled interactions) */}
-              <div className="flex-1 bg-black/40 relative overflow-hidden pointer-events-none">
+              <div className="flex-1 bg-white/5 relative overflow-hidden pointer-events-none">
                 <iframe 
                   className="absolute inset-0 w-full h-full transform scale-[0.6] origin-top-left" 
                   style={{ width: '166.66%', height: '166.66%' }}
@@ -228,7 +228,7 @@ export default function DevPage() {
                       <Trash2 className="w-5 h-5" />
                     </button>
                   )}
-                  <button onClick={handleSave} className="glass-btn glass-btn-primary">
+                  <button onClick={handleSave} className="glass-button-primary">
                     <Save className="w-4 h-4" />
                     <span className="hidden sm:inline">Salvar</span>
                   </button>
@@ -242,7 +242,7 @@ export default function DevPage() {
               <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
                 
                 {/* Left: Code Editor */}
-                <div className="w-full lg:w-1/2 flex flex-col border-r border-white/10 bg-black/40">
+                <div className="w-full lg:w-1/2 flex flex-col border-r border-white/10 bg-white/5">
                   <div className="flex border-b border-white/10 px-2 py-2 gap-2 bg-black/20">
                     <button 
                       onClick={() => setActiveTab("html")}
