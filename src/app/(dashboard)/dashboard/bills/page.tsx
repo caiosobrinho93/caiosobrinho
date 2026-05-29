@@ -167,26 +167,30 @@ export default function BillsPage() {
     .reduce((sum, b) => sum + b.amount, 0);
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto p-4">
+    <div className="space-y-6 max-w-6xl mx-auto pb-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4 mb-8">
-        <div>
-          <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
-            <CreditCard className="w-5 h-5 text-primary" />
-            Contas Compartilhadas
-          </h1>
-          <p className="text-xs text-muted-foreground mt-1.5">
-            Gerencie contas a pagar, receber e agendamentos familiares.
-          </p>
-        </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="glass-btn glass-btn-primary self-start sm:self-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          Nova Conta
-        </button>
+      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
+          <CreditCard className="w-5 h-5 text-primary" />
+          Contas Compartilhadas
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1.5">
+          Gerencie contas a pagar, receber e agendamentos familiares.
+        </p>
       </div>
+
+      {/* Conteúdo com Padding */}
+      <div className="space-y-6 px-5 sm:px-0">
+        {/* Opções e Botões */}
+        <div className="flex flex-wrap gap-4 items-center justify-start">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="glass-btn glass-btn-primary cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Nova Conta
+          </button>
+        </div>
 
       {/* Totais Cards - compact 3-col on mobile */}
       <div className="grid grid-cols-3 gap-5 sm:grid-cols-3 sm:gap-6">
@@ -291,14 +295,14 @@ export default function BillsPage() {
                 <motion.div
                   key={bill.id}
                   layout
-                  className={`glass-panel p-5 border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ${
+                  className={`backdrop-blur-md rounded-2xl p-5 border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300 hover:shadow-primary/5 ${
                     isCompleted 
-                      ? "border-border/30 opacity-60" 
+                      ? "border-border/30 opacity-60 bg-card/10" 
                       : bill.type === "pagar" 
-                        ? "border-red-500/15" 
+                        ? "border-red-500/20 bg-card/20 hover:border-red-500/40" 
                         : bill.type === "receber"
-                          ? "border-emerald-500/15"
-                          : "border-amber-500/15"
+                          ? "border-emerald-500/20 bg-card/20 hover:border-emerald-500/40"
+                          : "border-amber-500/20 bg-card/20 hover:border-amber-500/40"
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -388,6 +392,7 @@ export default function BillsPage() {
           <p className="text-xs text-muted-foreground mt-1">Crie contas a pagar ou receber para organizar suas finanças.</p>
         </div>
       )}
+      </div>
 
       {/* Modal Add Bill */}
       <AnimatePresence>
@@ -556,7 +561,7 @@ export default function BillsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-sm text-xs bg-[#8fe319] hover:bg-[#8fe319]/90 text-black font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-[#8fe319]/10"
+                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/90 text-black font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -663,7 +668,7 @@ export default function BillsPage() {
                   className={`flex-1 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition-colors cursor-pointer ${
                     selectedBill.status === 'pago' || selectedBill.status === 'recebido'
                       ? 'bg-muted/20 border-border text-muted-foreground'
-                      : 'bg-[#8fe319]/10 border-[#8fe319]/20 text-[#8fe319] hover:bg-[#8fe319]/20'
+                      : 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20'
                   }`}
                 >
                   <Check className="w-4 h-4" />

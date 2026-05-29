@@ -55,7 +55,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
   const items = [
     // Navegação
     { id: "nav-dash", label: "Ir para o Painel Geral", category: "Navegação", icon: LayoutDashboard, action: () => router.push("/dashboard") },
-    { id: "nav-vid", label: "Ir para o Cine Vault (Vídeos)", category: "Navegação", icon: Video, action: () => router.push("/dashboard/videos") },
+    { id: "nav-vid", label: "Ir para o Netfrix (Vídeos)", category: "Navegação", icon: Video, action: () => router.push("/dashboard/netfrix") },
     { id: "nav-pass", label: "Ir para as Senhas", category: "Navegação", icon: Key, action: () => router.push("/dashboard/passwords") },
     { id: "nav-wall", label: "Ir para as Imagens (Wallpapers)", category: "Navegação", icon: ImageIcon, action: () => router.push("/dashboard/wallpapers") },
     { id: "nav-torr", label: "Ir para os Torrents", category: "Navegação", icon: DownloadCloud, action: () => router.push("/dashboard/torrents") },
@@ -179,12 +179,12 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                                 }}
                                 className={`flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer select-none transition-all group ${
                                   isSelected
-                                    ? "bg-primary text-white shadow-md shadow-primary/10"
+                                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/10"
                                     : "text-muted-foreground hover:bg-muted/40 hover:text-white"
                                 }`}
                               >
                                 <div className="flex items-center gap-3">
-                                  <Icon className={`w-4 h-4 ${isSelected ? "text-white" : "text-muted-foreground group-hover:text-white"}`} />
+                                  <Icon className={`w-4 h-4 ${isSelected ? "text-primary-foreground" : "text-muted-foreground group-hover:text-white"}`} />
                                   <span className="text-sm font-medium">{item.label}</span>
                                 </div>
                                 {isSelected && (

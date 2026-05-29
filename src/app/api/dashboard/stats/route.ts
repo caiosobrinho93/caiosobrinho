@@ -437,11 +437,12 @@ export async function GET() {
 
     let localUploadsSizeBytes = 0;
     try {
-      const getDirSize = (dirPath: string): number => {
+      const getDirSize = (dirPath: string, isRoot = false): number => {
         let size = 0;
         if (!fs.existsSync(dirPath)) return 0;
         const files = fs.readdirSync(dirPath);
         for (const file of files) {
+          if (isRoot && file === "files") continue; // Exclude the database-backed files directory from local scan
           const filePath = path.join(dirPath, file);
           const stats = fs.statSync(filePath);
           if (stats.isDirectory()) {
@@ -454,7 +455,7 @@ export async function GET() {
       };
 
       const uploadDir = path.join(process.cwd(), "public", "uploads");
-      localUploadsSizeBytes = getDirSize(uploadDir);
+      localUploadsSizeBytes = getDirSize(uploadDir, true);
     } catch (e) {
       console.error("Erro ao ler uploads locais:", e);
     }

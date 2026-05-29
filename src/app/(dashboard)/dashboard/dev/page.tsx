@@ -120,19 +120,21 @@ export default function DevPage() {
   );
 
   return (
-    <div className="flex flex-col h-full space-y-6">
+    <div className="flex flex-col h-full space-y-6 pb-8">
       {/* HEADER */}
-      <div className="glass-panel p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-5">
-            <Code className="w-6 h-6 text-primary" />
-            DEV Central
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">Sua biblioteca pessoal de componentes e snippets HTML/CSS/JS.</p>
-        </div>
-        
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-64">
+      <div className="p-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="text-xl font-display font-bold text-white flex items-center gap-5">
+          <Code className="w-6 h-6 text-primary" />
+          DEV Central
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1.5">Sua biblioteca pessoal de componentes e snippets HTML/CSS/JS.</p>
+      </div>
+
+      {/* Conteúdo com Padding */}
+      <div className="space-y-6 px-5 sm:px-0 flex-1 flex flex-col">
+        {/* Opções e Botões */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input 
               type="text" 
@@ -142,12 +144,11 @@ export default function DevPage() {
               className="w-full pl-9 pr-4 py-2 bg-black/20 border border-white/10 rounded-xl text-sm focus:outline-none focus:border-primary/50 text-white transition-all"
             />
           </div>
-          <button onClick={handleOpenNew} className="glass-btn glass-btn-primary shrink-0">
+          <button onClick={handleOpenNew} className="glass-btn glass-btn-primary shrink-0 self-start sm:self-auto">
             <Plus className="w-4 h-4" />
             <span>Adicionar</span>
           </button>
         </div>
-      </div>
 
       {/* GRID DE COMPONENTES */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-6">
@@ -313,6 +314,7 @@ export default function DevPage() {
           </div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }

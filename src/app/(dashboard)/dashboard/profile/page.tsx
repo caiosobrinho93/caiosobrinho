@@ -64,7 +64,7 @@ export default function ProfilePage() {
   if (isLoading || !data) {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-5 min-h-[50vh]">
-        <div className="w-9 h-9 border-[3px] border-[#8fe319] border-t-transparent rounded-full animate-spin" />
+        <div className="w-9 h-9 border-[3px] border-primary border-t-transparent rounded-full animate-spin" />
         <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest animate-pulse">Estabelecendo Conexão...</span>
       </div>
     );
@@ -89,10 +89,10 @@ export default function ProfilePage() {
       >
         <div className="relative group select-none">
           {/* Neon Ring Glow */}
-          <div className="absolute inset-0 rounded-full bg-[#8fe319]/25 blur-xl group-hover:bg-[#8fe319]/40 transition-all duration-500 scale-105" />
+          <div className="absolute inset-0 rounded-full bg-primary/25 blur-xl group-hover:bg-primary/40 transition-all duration-500 scale-105" />
           
           {/* Avatar Outer Ring */}
-          <div className="relative w-28 h-28 rounded-full p-[3px] bg-gradient-to-tr from-[#8fe319] via-[#8fe319]/40 to-[#8fe319] shadow-[0_0_20px_rgba(143,227,25,0.25)]">
+          <div className="relative w-28 h-28 rounded-full p-[3px] bg-gradient-to-tr from-primary via-primary/40 to-primary shadow-[0_0_20px_var(--primary)]">
             <div className="w-full h-full rounded-full bg-black overflow-hidden relative">
               <img 
                 src={profile.username === "Giselle" ? "/avatar-giselle.png" : "/avatar-caio.png"} 
@@ -103,7 +103,7 @@ export default function ProfilePage() {
           </div>
           
           {/* Level Tag Overlay */}
-          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-black border border-[#8fe319]/30 text-white font-mono text-[9px] font-black px-2.5 py-0.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.5)] tracking-wider">
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-black border border-primary/30 text-white font-mono text-[9px] font-black px-2.5 py-0.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.5)] tracking-wider">
             LEVEL {profile.level}
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function ProfilePage() {
         <h1 className="text-xl font-black text-white tracking-wider uppercase mt-4 font-display">
           {profile.username}
         </h1>
-        <p className="text-[9px] font-bold text-[#8fe319] bg-[#8fe319]/10 border border-[#8fe319]/20 px-3 py-1 rounded-full uppercase tracking-widest mt-1.5 leading-none">
+        <p className="text-[9px] font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full uppercase tracking-widest mt-1.5 leading-none">
           Co-op Administrator
         </p>
 
@@ -126,7 +126,7 @@ export default function ProfilePage() {
               initial={{ width: 0 }}
               animate={{ width: `${xpPercentage}%` }}
               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-              className="h-full bg-gradient-to-r from-[#8fe319] to-emerald-400 xp-bar-fill shadow-[0_0_8px_rgba(143,227,25,0.5)]"
+              className="h-full bg-gradient-to-r from-primary to-emerald-400 xp-bar-fill shadow-primary/50"
             />
           </div>
         </div>
@@ -148,7 +148,7 @@ export default function ProfilePage() {
           <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Arquivos</span>
         </div>
         <div className="p-3 bg-black/40 border border-white/5 rounded-2xl text-center flex flex-col justify-center">
-          <span className="text-[18px] font-black text-[#8fe319] leading-tight font-mono">{storageStats.percentUsed}%</span>
+          <span className="text-[18px] font-black text-primary leading-tight font-mono">{storageStats.percentUsed}%</span>
           <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">Disco</span>
         </div>
       </motion.div>
@@ -310,7 +310,7 @@ function SettingRow({
       className="w-full flex items-center justify-between px-4 py-3 bg-transparent hover:bg-white/[0.02] active:bg-white/[0.04] transition-colors text-left cursor-pointer"
     >
       <div className="flex items-center gap-3.5 min-w-0">
-        <div className="p-2 bg-[#8fe319]/10 border border-[#8fe319]/20 rounded-xl text-[#8fe319] shrink-0">
+        <div className="p-2 bg-primary/10 border border-primary/20 rounded-xl text-primary shrink-0">
           <Icon className="w-4 h-4" />
         </div>
         <div className="min-w-0">

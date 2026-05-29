@@ -149,26 +149,30 @@ export default function WallpapersPage() {
     return columns;
   };
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/40 pb-3 mb-8">
-        <div>
-          <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-5">
-            <ImageIcon className="w-5 h-5 text-primary" />
-            IMAGENS
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
-            Papéis de Parede Widescreen de Alta Definição
-          </p>
-        </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer  shrink-0"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          Adicionar Wallpaper
-        </button>
+      <div className="p-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="font-display text-xs tracking-widest text-white leading-tight flex items-center gap-5">
+          <ImageIcon className="w-5 h-5 text-primary" />
+          IMAGENS
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1.5 font-medium uppercase tracking-wide">
+          Papéis de Parede Widescreen de Alta Definição
+        </p>
       </div>
+
+      {/* Conteúdo com Padding */}
+      <div className="space-y-6 px-5 sm:px-0">
+        {/* Opções e Botões */}
+        <div className="flex flex-wrap gap-4 items-center justify-start">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer shrink-0"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Adicionar Wallpaper
+          </button>
+        </div>
  
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5.5">
@@ -238,7 +242,7 @@ export default function WallpapersPage() {
                         onClick={(e) => handleToggleFavorite(item, e)}
                         className="p-1.5 sm:p-2 rounded-md bg-black/60 hover:bg-black/80 border border-white/10 text-white transition-colors cursor-pointer backdrop-blur-sm"
                       >
-                        <Star className={`w-3 h-3 sm:w-4 sm:h-4 ${item.isFavorite ? "text-[#8fe319] fill-[#8fe319]" : ""}`} />
+                        <Star className={`w-3 h-3 sm:w-4 sm:h-4 ${item.isFavorite ? "text-primary fill-primary" : ""}`} />
                       </button>
                       <button
                         onClick={(e) => handleDelete(item.id, e)}
@@ -279,12 +283,13 @@ export default function WallpapersPage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-4 px-3.5 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+            className="mt-4 px-3.5 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
           >
             Adicionar Wallpaper
           </button>
         </div>
       )}
+      </div>
 
       {/* MODAL ADICIONAR WALLPAPER */}
       <AnimatePresence>
@@ -402,7 +407,7 @@ export default function WallpapersPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-primary-foreground font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -461,7 +466,7 @@ export default function WallpapersPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     download={activeWallpaper.title}
-                    className="flex-1 sm:flex-none px-4 py-3.5 sm:px-6 sm:py-4 rounded-xl bg-[#8fe319] hover:bg-[#8fe319]/90 text-black cursor-pointer flex items-center justify-center gap-2 sm:gap-3 text-sm font-bold transition-colors shadow-lg shadow-[#8fe319]/20"
+                    className="flex-1 sm:flex-none px-4 py-3.5 sm:px-6 sm:py-4 rounded-xl bg-primary hover:bg-primary/90 text-black cursor-pointer flex items-center justify-center gap-2 sm:gap-3 text-sm font-bold transition-colors shadow-lg shadow-primary/20"
                   >
                     <Download className="w-5 h-5" />
                     Baixar
@@ -470,7 +475,7 @@ export default function WallpapersPage() {
                     onClick={(e) => handleToggleFavorite(activeWallpaper, e)}
                     className="p-3.5 sm:p-4 rounded-xl bg-black/60 hover:bg-black/80 text-white border border-white/10 cursor-pointer flex items-center justify-center transition-colors backdrop-blur-sm"
                   >
-                    <Star className={`w-5 h-5 ${activeWallpaper.isFavorite ? "text-[#8fe319] fill-[#8fe319]" : ""}`} />
+                    <Star className={`w-5 h-5 ${activeWallpaper.isFavorite ? "text-primary fill-primary" : ""}`} />
                   </button>
                   <button
                     onClick={(e) => handleDelete(activeWallpaper.id, e)}

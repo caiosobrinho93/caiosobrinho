@@ -11,7 +11,15 @@ export async function GET() {
   try {
     const softwareList = await db.software.findMany({
       orderBy: { name: "asc" },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        version: true,
+        iconUrl: true,
+        category: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           select: {
             username: true,
@@ -19,7 +27,17 @@ export async function GET() {
         },
       },
     });
-    return NextResponse.json(softwareList);
+
+    const minimalSoftware = softwareList.map((s) => ({
+      ...s,
+      description: "",
+      downloadUrl: "",
+      platform: "",
+      notes: "",
+      createdBy: s.user.username,
+    }));
+
+    return NextResponse.json(minimalSoftware);
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch software list" }, { status: 500 });
   }

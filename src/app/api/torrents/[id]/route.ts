@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-export async function PATCH(
+export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -11,52 +11,28 @@ export async function PATCH(
 
   try {
     const { id } = await params;
-    const { status, progress, downloadSpeed, uploadSpeed } = await request.json();
 
-    // Check ownership
-    const existing = await db.torrent.findUnique({ where: { id } });
-    if (!existing || existing.userId !== session.userId) {
-      return NextResponse.json({ error: "Record not found" }, { status: 404 });
-    }
-
-    const data: any = {};
-    if (status !== undefined) data.status = status;
-    if (progress !== undefined) data.progress = parseFloat(progress);
-    if (downloadSpeed !== undefined) data.downloadSpeed = parseFloat(downloadSpeed);
-    if (uploadSpeed !== undefined) data.uploadSpeed = parseFloat(uploadSpeed);
-
-    const updated = await db.torrent.update({
+    const torrent = await db.torrent.findUnique({
       where: { id },
-      data,
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(updated);
-  } catch (error) {
-    console.error("PATCH torrent error:", error);
-    return NextResponse.json({ error: "Failed to update torrent" }, { status: 500 });
-  }
-}
-
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  try {
-    const { id } = await params;
-
-    // Check ownership
-    const existing = await db.torrent.findUnique({ where: { id } });
-    if (!existing || existing.userId !== session.userId) {
-      return NextResponse.json({ error: "Record not found" }, { status: 404 });
+    if (!torrent || torrent.userId !== session.userId) {
+      return NextResponse.json({ error: "Torrent not found" }, { status: 404 });
     }
 
-    await db.torrent.delete({ where: { id } });
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      ...torrent,
+      createdBy: torrent.user.username,
+    });
   } catch (error) {
-    console.error("DELETE torrent error:", error);
-    return NextResponse.json({ error: "Failed to delete torrent" }, { status: 500 });
+    console.error("GET torrent error:", error);
+    return NextResponse.json({ error: "Failed to fetch torrent details" }, { status: 500 });
   }
 }

@@ -31,9 +31,11 @@ import {
   Pin,
   Music,
   LayoutGrid,
-  Star
+  Star,
+  Home
 } from "lucide-react";
 import CommandPalette from "./CommandPalette";
+import NeonParticles from "./NeonParticles";
 
 import { useSettingsStore } from "@/stores/settingsStore";
 import { APP_VERSION } from "@/lib/version";
@@ -42,7 +44,6 @@ import { useDataStore } from "@/stores/dataStore";
 import { playClickSound, playHoverSound } from "./CyberAudio";
 import SynthwaveRadio from "./SynthwaveRadio";
 import CyberCalculator from "./CyberCalculator";
-import FloatingHUDNotes from "./FloatingHUDNotes";
 
 // BottomBar sub-component
 function BottomBar({
@@ -66,42 +67,53 @@ function BottomBar({
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-[50px] flex items-center justify-between px-3 border-t border-white/[0.06] bg-black backdrop-blur-xl" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      {/* Left: Menu button */}
-      <motion.button
-        onClick={() => setIsCentralOptionsOpen((v) => !v)}
-        whileTap={{ scale: 0.88 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all cursor-pointer ${
-          isCentralOptionsOpen ? "text-white" : "text-white/60"
-        }`}
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          {isCentralOptionsOpen ? (
-            <motion.span
-              key="close"
-              initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
-              animate={{ rotate: 0, opacity: 1, scale: 1 }}
-              exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <X className="w-5 h-5" />
-            </motion.span>
-          ) : (
-            <motion.span
-              key="menu"
-              initial={{ rotate: 90, opacity: 0, scale: 0.8 }}
-              animate={{ rotate: 0, opacity: 1, scale: 1 }}
-              exit={{ rotate: -90, opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <LayoutGrid className="w-5 h-5" />
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.button>
+      {/* Left: Menu button + Home button */}
+      <div className="flex items-center gap-1.5">
+        <motion.button
+          onClick={() => setIsCentralOptionsOpen((v) => !v)}
+          whileTap={{ scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all cursor-pointer ${
+            isCentralOptionsOpen ? "text-white" : "text-white/60"
+          }`}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {isCentralOptionsOpen ? (
+              <motion.span
+                key="close"
+                initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <X className="w-5 h-5" />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="menu"
+                initial={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <LayoutGrid className="w-5 h-5" />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
 
-      {/* Center: Search + Notification */}
-      <div className="flex items-center gap-0.5">
+        <Link
+          href="/dashboard"
+          onClick={() => { playClickSound(); }}
+          className="flex items-center justify-center w-9 h-9 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer"
+          title="Início"
+        >
+          <Home className="w-5 h-5" />
+        </Link>
+      </div>
+
+      {/* Right: Search + Notification + User Profile */}
+      <div className="flex items-center gap-1">
         <button
           onClick={onSearchOpen}
           className="flex items-center justify-center w-9 h-9 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer"
@@ -111,38 +123,37 @@ function BottomBar({
         </button>
         <button
           onClick={onNotificationsOpen}
-          className="relative flex items-center justify-center w-9 h-9 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer"
+          className="relative flex items-center justify-center w-9 h-9 rounded-xl text-white/50 hover:text-white transition-colors cursor-pointer mr-1"
           title="Notificações"
         >
-          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#8fe319] animate-pulse" />
+          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
         </button>
-      </div>
 
-      {/* Right: Avatar + Name + Level + XP bar */}
-      <Link href="/dashboard/profile" className="flex items-center gap-2 cursor-pointer max-w-[50%]">
-        <div className="flex flex-col items-end justify-center min-w-0">
-          <span className="text-[11px] font-black text-white leading-tight capitalize truncate max-w-[80px]">{displayName}</span>
-          <div className="flex items-center gap-1 mt-0.5 shrink-0">
-            <span className="text-[8px] font-bold text-primary">Lv {level}</span>
-            <div className="w-12 h-0.5 rounded-full bg-white/10 overflow-hidden">
-              <motion.div
-                className="h-full bg-primary rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${xpPct}%` }}
-                transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-              />
+        <Link href="/dashboard/profile" className="flex items-center gap-2 cursor-pointer max-w-[120px] ml-1">
+          <div className="flex flex-col items-end justify-center min-w-0">
+            <span className="text-[11px] font-black text-white leading-tight capitalize truncate max-w-[70px]">{displayName}</span>
+            <div className="flex items-center gap-1 mt-0.5 shrink-0">
+              <span className="text-[8px] font-bold text-primary">Lv {level}</span>
+              <div className="w-10 h-0.5 rounded-full bg-white/10 overflow-hidden">
+                <motion.div
+                  className="h-full bg-primary rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${xpPct}%` }}
+                  transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-7 h-7 rounded-full overflow-hidden border border-primary/30 shrink-0">
-          <img
-            src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"}
-            alt={displayName}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </Link>
+          <div className="w-7 h-7 rounded-full overflow-hidden border border-primary/30 shrink-0">
+            <img
+              src={username === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"}
+              alt={displayName}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -165,7 +176,6 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
-  const [isStickyNotesOpen, setIsStickyNotesOpen] = useState(false);
   const [isRadioOpen, setIsRadioOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
@@ -285,7 +295,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
 
   const navItems = [
     { name: "Painel Geral", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Cine Vault", href: "/dashboard/videos", icon: Video },
+    { name: "Netfrix", href: "/dashboard/netfrix", icon: Video },
     { name: "Senhas", href: "/dashboard/passwords", icon: Key },
     { name: "Imagens", href: "/dashboard/wallpapers", icon: ImageIcon },
     { name: "Torrents", href: "/dashboard/torrents", icon: DownloadCloud },
@@ -370,6 +380,18 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       
       {/* Background Cyber Grid Layer */}
       <div className={`absolute inset-0 pointer-events-none z-0 ${gridStyleClass}`} />
+      
+      {/* Dynamic Cyberpunk Particle Canvas */}
+      {mounted && <NeonParticles />}
+      
+      {/* Floating Aurora Gradient Blobs (Looping Animations) */}
+      {mounted && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/10 blur-[100px] animate-blob-1" />
+          <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-accent/10 blur-[100px] animate-blob-2" />
+          <div className="absolute top-1/2 left-1/3 w-80 h-80 rounded-full bg-secondary/15 blur-[120px] animate-blob-3" />
+        </div>
+      )}
       
       {/* 1. SIDEBAR DESKTOP */}
       <motion.aside
@@ -554,26 +576,14 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               title="Calculadora HUD"
               className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isCalculatorOpen 
-                  ? "bg-[#8fe319]/20 border-[#8fe319]/45 text-[#8fe319] " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319]"
+                  ? "bg-primary/20 border-primary/45 text-primary " 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
               }`}
             >
               <Calculator className="w-4 h-4" />
             </button>
 
-            {/* Sticky Notes Trigger */}
-            <button
-              onClick={() => { playClickSound(); setIsStickyNotesOpen(prev => !prev); }}
-              onMouseEnter={playHoverSound}
-              title="Notas HUD"
-              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
-                isStickyNotesOpen 
-                  ? "bg-[#8fe319]/20 border-[#8fe319]/45 text-[#8fe319] " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319]"
-              }`}
-            >
-              <Pin className="w-4 h-4" />
-            </button>
+
 
             {/* Synth Radio Trigger */}
             <button
@@ -582,8 +592,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               title="Rádio Synthwave"
               className={`hidden md:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
                 isRadioOpen 
-                  ? "bg-[#8fe319]/20 border-[#8fe319]/45 text-[#8fe319] " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319]"
+                  ? "bg-primary/20 border-primary/45 text-primary " 
+                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
               }`}
             >
               <Music className="w-4 h-4" />
@@ -593,9 +603,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             <button
               onClick={() => { playClickSound(); setIsNotificationsOpen(true); }}
               title="Notificações"
-              className="relative flex items-center justify-center w-8 h-8 rounded-full bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-[#8fe319] transition-all cursor-pointer shrink-0"
+              className="relative flex items-center justify-center w-8 h-8 rounded-full bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary transition-all cursor-pointer shrink-0"
             >
-              <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-[#8fe319] text-[8px] font-bold text-black">
+              <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-black">
                 2
               </span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -790,49 +800,44 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                 </button>
               </div>
 
-              {/* Sections — Colorful icon grid */}
+              {/* Sections — Clean unified icon grid */}
               <div className="flex-1 px-4 pb-8 space-y-5">
                 {[
                   {
                     label: "Finanças",
-                    color: "text-emerald-400",
                     items: [
-                      { href: "/dashboard/bills", icon: CreditCard, name: "Contas", color: "bg-emerald-500/15 border-emerald-500/20 text-emerald-400" },
-                      { href: "/dashboard/receipts", icon: FileCheck, name: "Comprovantes", color: "bg-teal-500/15 border-teal-500/20 text-teal-400" },
+                      { href: "/dashboard/bills", icon: CreditCard, name: "Contas" },
+                      { href: "/dashboard/receipts", icon: FileCheck, name: "Comprovantes" },
                     ],
                   },
                   {
                     label: "Arquivos & Mídia",
-                    color: "text-blue-400",
                     items: [
-                      { href: "/dashboard/files", icon: FolderOpen, name: "Arquivos", color: "bg-blue-500/15 border-blue-500/20 text-blue-400" },
-                      { href: "/dashboard/videos", icon: Video, name: "Cine Vault", color: "bg-violet-500/15 border-violet-500/20 text-violet-400" },
-                      { href: "/dashboard/wallpapers", icon: ImageIcon, name: "Imagens", color: "bg-pink-500/15 border-pink-500/20 text-pink-400" },
-                      { href: "/dashboard/torrents", icon: DownloadCloud, name: "Torrents", color: "bg-amber-500/15 border-amber-500/20 text-amber-400" },
+                      { href: "/dashboard/files", icon: FolderOpen, name: "Arquivos" },
+                      { href: "/dashboard/netfrix", icon: Video, name: "Netfrix" },
+                      { href: "/dashboard/wallpapers", icon: ImageIcon, name: "Imagens" },
+                      { href: "/dashboard/torrents", icon: DownloadCloud, name: "Torrents" },
                     ],
                   },
                   {
                     label: "Segurança & Produtividade",
-                    color: "text-primary",
                     items: [
-                      { href: "/dashboard/passwords", icon: Key, name: "Senhas", color: "bg-primary/15 border-primary/20 text-primary" },
-                      { href: "/dashboard/notes", icon: FileText, name: "Notas", color: "bg-yellow-500/15 border-yellow-500/20 text-yellow-400" },
-                      { href: "/dashboard/software", icon: Cpu, name: "Softwares", color: "bg-indigo-500/15 border-indigo-500/20 text-indigo-400" },
-                      { href: "/dashboard/dev", icon: Code, name: "DEV Central", color: "bg-orange-500/15 border-orange-500/20 text-orange-400" },
+                      { href: "/dashboard/passwords", icon: Key, name: "Senhas" },
+                      { href: "/dashboard/notes", icon: FileText, name: "Notas" },
+                      { href: "/dashboard/software", icon: Cpu, name: "Softwares" },
+                      { href: "/dashboard/dev", icon: Code, name: "DEV Central" },
                     ],
                   },
                   {
                     label: "Utilitários",
-                    color: "text-white/50",
                     items: [
-                      { onClick: () => setIsCalculatorOpen(v => !v), icon: Calculator, name: "Calculadora", color: "bg-white/8 border-white/10 text-white/60" },
-                      { onClick: () => setIsStickyNotesOpen(v => !v), icon: Pin, name: "Rascunho", color: "bg-white/8 border-white/10 text-white/60" },
-                      { onClick: () => setIsRadioOpen(v => !v), icon: Music, name: "Rádio Synth", color: "bg-white/8 border-white/10 text-white/60" },
+                      { onClick: () => setIsCalculatorOpen(v => !v), icon: Calculator, name: "Calculadora" },
+                      { onClick: () => setIsRadioOpen(v => !v), icon: Music, name: "Rádio Synth" },
                     ] as any[],
                   },
                 ].map((section, sIdx) => (
                   <div key={section.label}>
-                    <p className={`text-[10px] font-bold uppercase tracking-[0.2em] mb-2.5 px-1 ${section.color}`}>{section.label}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2.5 px-1 text-white/40">{section.label}</p>
                     <div className="grid grid-cols-2 gap-2">
                       {section.items.map((item: any, iIdx: number) => {
                         const Icon = item.icon;
@@ -843,14 +848,16 @@ export default function DashboardShell({ children, username }: DashboardShellPro
                             whileTap={{ scale: 0.95 }}
                             className={`flex items-center gap-3 px-3.5 py-3 rounded-2xl border transition-all cursor-pointer select-none ${
                               isActive
-                                ? `${item.color} ring-1 ring-current/20 brightness-110`
-                                : `${item.color} opacity-70 hover:opacity-100`
+                                ? "bg-primary/10 border-primary/30 text-primary shadow-[0_0_12px_rgba(var(--primary-color-rgb),0.15)] font-bold"
+                                : "bg-white/[0.03] border-white/5 text-white/70 hover:bg-white/[0.06] hover:text-white"
                             }`}
                           >
-                            <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-black/20">
+                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                              isActive ? "bg-primary/15 text-primary" : "bg-black/25 text-white/50"
+                            }`}>
                               <Icon className="w-4 h-4" />
                             </div>
-                            <span className="text-[13px] font-semibold truncate text-white">{item.name}</span>
+                            <span className={`text-[13px] font-semibold truncate ${isActive ? "text-primary" : "text-white"}`}>{item.name}</span>
                           </motion.div>
                         );
 
@@ -980,7 +987,6 @@ export default function DashboardShell({ children, username }: DashboardShellPro
 
       <SynthwaveRadio isOpen={isRadioOpen} onClose={() => setIsRadioOpen(false)} />
       <CyberCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} />
-      <FloatingHUDNotes isOpen={isStickyNotesOpen} onClose={() => setIsStickyNotesOpen(false)} />
     </div>
   );
 }

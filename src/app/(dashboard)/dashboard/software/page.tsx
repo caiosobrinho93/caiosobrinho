@@ -43,7 +43,9 @@ export default function SoftwarePage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSoftwareId, setSelectedSoftwareId] = useState<string | null>(null);
+  const [detailSoftware, setDetailSoftware] = useState<SoftwareItem | null>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   // Estados do formulário
   const [formName, setFormName] = useState("");
@@ -64,6 +66,23 @@ export default function SoftwarePage() {
   useEffect(() => {
     useDataStore.getState().fetchSoftware();
   }, []);
+
+  const handleSelectSoftware = async (item: SoftwareItem) => {
+    setSelectedSoftwareId(item.id);
+    setDetailSoftware(item);
+    setIsDetailLoading(true);
+    try {
+      const res = await fetch(`/api/software/${item.id}`);
+      if (res.ok) {
+        const fullData = await res.json();
+        setDetailSoftware(fullData);
+      }
+    } catch (err) {
+      console.error("Error loading software details:", err);
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,6 +147,8 @@ export default function SoftwarePage() {
     }
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza de que deseja excluir este software do catálogo?")) return;
 
@@ -137,6 +158,8 @@ export default function SoftwarePage() {
         // Atualiza a store global localmente
         useStatsStore.getState().deleteSoftware();
         useDataStore.getState().deleteSoftware(id);
+        setSelectedSoftwareId(null);
+        setDetailSoftware(null);
       }
     } catch (err) {
       console.error(err);
@@ -165,26 +188,30 @@ export default function SoftwarePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4 mb-8">
-        <div>
-          <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
-            <Cpu className="w-5 h-5 text-primary" />
-            SOFTWARES
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
-            Instaladores, Licenças e Versões de Aplicativos
-          </p>
-        </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer shrink-0 "
-        >
-          <Plus className="w-3.5 h-3.5" />
-          Registrar App
-        </button>
+      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
+          <Cpu className="w-5 h-5 text-primary" />
+          SOFTWARES
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1.5 font-medium uppercase tracking-wide">
+          Instaladores, Licenças e Versões de Aplicativos
+        </p>
       </div>
+
+      {/* Conteúdo com Padding */}
+      <div className="space-y-6 px-5 sm:px-0">
+        {/* Opções e Botões */}
+        <div className="flex flex-wrap gap-4 items-center justify-start">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer shrink-0"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Registrar App
+          </button>
+        </div>
  
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5.5">
@@ -251,123 +278,71 @@ export default function SoftwarePage() {
               {filteredSoftware.map((item) => (
                 <motion.div
                   key={item.id}
+                  onClick={() => handleSelectSoftware(item)}
                   whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all group"
-                  
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all group animate-fadeIn"
                 >
-                  {/* Icon */}
                   <div className="w-9 h-9 rounded-lg bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden">
                     {item.iconUrl ? <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" /> : <Cpu className="w-4 h-4 text-primary" />}
                   </div>
-                  {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-4">
                       <p className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">{item.name}</p>
                       <span className="text-xs font-mono text-primary shrink-0">v{item.version}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground truncate leading-tight">{item.category || 'Geral'}</p>
+                    <p className="text-sm text-muted-foreground truncate leading-tight mt-0.5">{item.category || 'Geral'}</p>
                   </div>
-                  {/* Actions */}
                   <div className="flex items-center gap-4 shrink-0">
-                    {item.downloadUrl && (
-                      <a href={item.downloadUrl} target="_blank" rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-4 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors">
-                        <Download className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}
-                      className="p-4 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors">
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <span className="text-[10px] font-bold text-primary uppercase font-mono tracking-wider">Ver</span>
                   </div>
                 </motion.div>
               ))}
             </div>
             {/* Desktop grid */}
-            <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 gap-5.5">
+            <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5.5">
               {filteredSoftware.map((item) => (
                 <motion.div
                   key={item.id}
-                  layoutId={item.id}
+                  onClick={() => handleSelectSoftware(item)}
                   whileTap={{ scale: 0.98 }}
-                  className="glass-panel flex flex-col justify-between hover:border-primary/45 transition-colors cursor-pointer group rounded-sm p-5.5"
+                  className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-5 flex flex-col justify-between min-h-[110px] h-auto transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-[0_0_20px_rgba(143,227,25,0.04)]"
                 >
-                  <div>
-                    <div className="flex gap-5.5">
-                      <div className="w-8 h-8 rounded-sm bg-muted border border-border/80 flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
-                        {item.iconUrl ? (
-                          <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <Cpu className="w-4 h-4 text-primary" />
-                        )}
-                      </div>
- 
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-baseline gap-4 min-w-0 flex-wrap ">
-                            <h3 className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
-                              {item.name}
-                            </h3>
-                            <span className="text-xs font-mono text-primary font-bold shrink-0">
-                              v{item.version}
-                            </span>
-                          </div>
- 
-                          <div className="flex items-center gap-4 shrink-0">
-                            {item.user?.username && (
-                              <span className={`user-tag user-tag-${item.user.username}`}>
-                                {item.user.username === "caio" ? "Caio" : "Giselle"}
-                              </span>
-                            )}
-                            <span className="text-xs px-4 py-2 bg-muted rounded-sm border border-border/80 text-muted-foreground font-bold uppercase">
-                              {item.category || "Geral"}
-                            </span>
-                          </div>
-                        </div>
- 
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-5 leading-tight font-medium ">
-                          {item.description || "Nenhuma descrição fornecida."}
-                        </p>
-                      </div>
-                    </div>
- 
-                    <div className="mt-2.5 flex items-center gap-4 flex-wrap border-t border-border/40 pt-2 ">
-                      {item.platform.split(",").map((plat) => (
-                        <span
-                          key={plat}
-                          className="text-xs bg-muted/30 text-white border border-border/80 px-1 py-2 rounded-sm flex items-center gap-0.5 font-bold uppercase"
-                        >
-                          {getPlatformIcon(plat)}
-                          {plat.trim()}
-                        </span>
-                      ))}
-                      {item.notes && (
-                        <p className="text-xs text-muted-foreground/60 leading-none truncate max-w-full italic mt-1 sm:mt-0 sm:ml-auto font-bold uppercase tracking-wide">
-                          // {item.notes}
-                        </p>
+                  <div className="flex gap-5.5 items-center">
+                    <div className="w-9 h-9 rounded-xl bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
+                      {item.iconUrl ? (
+                        <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <Cpu className="w-4 h-4 text-primary" />
                       )}
                     </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-baseline gap-4 min-w-0 flex-wrap ">
+                          <h3 className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
+                            {item.name}
+                          </h3>
+                          <span className="text-xs font-mono text-primary font-bold shrink-0">
+                            v{item.version}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-4 shrink-0">
+                          {item.user?.username && (
+                            <span className={`user-tag user-tag-${item.user.username}`}>
+                              {item.user.username === "caio" ? "Caio" : "Giselle"}
+                            </span>
+                          )}
+                          <span className="text-[10px] px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-lg text-muted-foreground font-bold uppercase font-mono">
+                            {item.category || "Geral"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
- 
-                  <div className="flex items-center justify-end gap-4 border-t border-border/40 mt-2.5 pt-2 select-none ">
-                    {item.downloadUrl && (
-                      <a
-                        href={item.downloadUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-2.5 py-1.5 rounded-sm text-xs font-bold glass-btn glass-btn-primary flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <Download className="w-3 h-3" />
-                        Baixar App
-                      </a>
-                    )}
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="p-1 rounded-sm border border-border text-muted-foreground hover:text-destructive glass-btn cursor-pointer flex items-center justify-center"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
+                  <div className="text-[11px] text-muted-foreground flex justify-between items-center mt-4 pt-2 border-t border-border/20">
+                    <span className="font-semibold text-white/40">Clique para ver detalhes</span>
+                    <span className="font-mono text-primary font-bold text-[10px]">HUD Info</span>
                   </div>
                 </motion.div>
               ))}
@@ -381,9 +356,9 @@ export default function SoftwarePage() {
               {filteredSoftware.map((item) => (
                 <motion.div
                   key={item.id}
+                  onClick={() => handleSelectSoftware(item)}
                   whileTap={{ scale: 0.98 }}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all group"
-                  
                 >
                   <div className="w-9 h-9 rounded-lg bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden">
                     {item.iconUrl ? <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" /> : <Cpu className="w-4 h-4 text-primary" />}
@@ -396,17 +371,7 @@ export default function SoftwarePage() {
                     <p className="text-sm text-muted-foreground truncate leading-tight">{item.category || 'Geral'}</p>
                   </div>
                   <div className="flex items-center gap-4 shrink-0">
-                    {item.downloadUrl && (
-                      <a href={item.downloadUrl} target="_blank" rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="p-4 rounded-lg bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors">
-                        <Download className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}
-                      className="p-4 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors">
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <span className="text-[10px] font-bold text-primary uppercase font-mono tracking-wider">Ver</span>
                   </div>
                 </motion.div>
               ))}
@@ -417,14 +382,17 @@ export default function SoftwarePage() {
                 <thead>
                   <tr className="border-b border-border text-muted-foreground font-semibold uppercase tracking-wider bg-muted/20">
                     <th className="p-4">Nome do App</th>
-                    <th className="p-4">Plataformas</th>
                     <th className="p-4">Categoria</th>
-                    <th className="p-4 text-right">Ações</th>
+                    <th className="p-4 text-right">Opções</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredSoftware.map((item) => (
-                    <tr key={item.id} className="border-b border-border/40 hover:bg-muted/30 group">
+                    <tr
+                      key={item.id}
+                      onClick={() => handleSelectSoftware(item)}
+                      className="border-b border-border/40 hover:bg-muted/30 group cursor-pointer"
+                    >
                       <td className="p-4 flex items-center gap-3">
                         <div className="w-7 h-7 rounded bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden">
                           {item.iconUrl ? (
@@ -438,32 +406,10 @@ export default function SoftwarePage() {
                             <span className="font-semibold text-white leading-tight group-hover:text-primary transition-colors">{item.name}</span>
                             <span className="text-xs font-mono text-primary font-semibold">v{item.version}</span>
                           </div>
-                          <span className="text-sm text-muted-foreground mt-0.5 block truncate max-w-[120px] xs:max-w-[180px] sm:max-w-72 font-medium">{item.description}</span>
                         </div>
                       </td>
-                      <td className="p-4 text-white font-semibold">{item.platform}</td>
                       <td className="p-4 text-muted-foreground font-semibold">{item.category}</td>
-                      <td className="p-4 text-right">
-                        <div className="flex items-center justify-end gap-5.5">
-                          {item.downloadUrl && (
-                            <a
-                              href={item.downloadUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="p-4 rounded-xl border border-border/80 hover:bg-primary/10 hover:text-primary hover:border-primary/20 text-white cursor-pointer"
-                              title="Link de Download"
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                            </a>
-                          )}
-                          <button
-                            onClick={() => handleDelete(item.id)}
-                            className="p-4 rounded-xl border border-border text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20 cursor-pointer"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
+                      <td className="p-4 text-right font-mono text-primary font-bold text-[10px]">Acessar HUD</td>
                     </tr>
                   ))}
                 </tbody>
@@ -480,12 +426,13 @@ export default function SoftwarePage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-4 px-3.5 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+            className="mt-4 px-3.5 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
           >
             Vincular Primeiro Software
           </button>
         </div>
       )}
+      </div>
 
       {/* MODAL REGISTRAR APP */}
       <AnimatePresence>
@@ -756,7 +703,7 @@ export default function SoftwarePage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-primary-foreground font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -769,6 +716,127 @@ export default function SoftwarePage() {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* MODAL DETALHES DO SOFTWARE */}
+      <AnimatePresence>
+        {detailSoftware && (
+          <div className="fixed inset-0 w-full h-full z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setDetailSoftware(null)}
+              className="absolute inset-0 bg-black"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl relative z-10 overflow-hidden"
+            >
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/80">
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  <Cpu className="w-5 h-5 text-primary" />
+                  Detalhes do Aplicativo
+                </h2>
+                <button
+                  onClick={() => setDetailSoftware(null)}
+                  className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {isDetailLoading ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-3">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary animate-pulse" />
+                  <p className="text-xs text-muted-foreground">Carregando detalhes do banco de dados...</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden">
+                      {detailSoftware.iconUrl ? (
+                        <img src={detailSoftware.iconUrl} alt={detailSoftware.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <Cpu className="w-6 h-6 text-primary" />
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white leading-tight">{detailSoftware.name}</h3>
+                      <p className="text-xs text-muted-foreground mt-0.5">Versão {detailSoftware.version}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="p-3 bg-muted/20 border border-border/40 rounded-xl">
+                      <span className="text-muted-foreground block text-[10px] uppercase font-bold">Categoria</span>
+                      <span className="text-white font-medium">{detailSoftware.category || "Geral"}</span>
+                    </div>
+                    <div className="p-3 bg-muted/20 border border-border/40 rounded-xl">
+                      <span className="text-muted-foreground block text-[10px] uppercase font-bold">Plataforma</span>
+                      <span className="text-white font-medium">{detailSoftware.platform}</span>
+                    </div>
+                  </div>
+
+                  {detailSoftware.description && (
+                    <div className="p-3 bg-muted/20 border border-border/40 rounded-xl text-xs">
+                      <span className="text-muted-foreground block text-[10px] uppercase font-bold mb-1">Descrição</span>
+                      <p className="text-white/80 leading-relaxed">{detailSoftware.description}</p>
+                    </div>
+                  )}
+
+                  {detailSoftware.notes && (
+                    <div className="p-3 bg-muted/20 border border-border/40 rounded-xl text-xs">
+                      <span className="text-muted-foreground block text-[10px] uppercase font-bold mb-1">Anotações</span>
+                      <p className="text-white/80 leading-relaxed whitespace-pre-wrap">{detailSoftware.notes}</p>
+                    </div>
+                  )}
+
+                  <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => {
+                        if (confirm("Deseja realmente excluir este software?")) {
+                          handleDelete(detailSoftware.id);
+                          setDetailSoftware(null);
+                        }
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Excluir
+                    </button>
+
+                    <div className="flex items-center gap-3">
+                      {detailSoftware.downloadUrl && (
+                        <a
+                          href={detailSoftware.downloadUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="dev-btn-download flex items-center justify-center"
+                        >
+                          <svg className="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path>
+                          </svg>
+                          <span className="icon2"></span>
+                          <span className="tooltip">Download</span>
+                        </a>
+                      )}
+                      <button
+                        onClick={() => setDetailSoftware(null)}
+                        className="px-4 py-2 border border-border text-muted-foreground hover:text-white hover:bg-muted/40 text-xs font-semibold rounded-xl cursor-pointer transition-colors"
+                      >
+                        Fechar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </div>
         )}

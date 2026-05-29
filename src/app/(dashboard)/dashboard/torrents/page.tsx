@@ -46,7 +46,9 @@ export default function TorrentsPage() {
   const { data: torrents, isLoading } = useDataStore(s => s.torrents);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTorrent, setSelectedTorrent] = useState<TorrentItem | null>(null);
+  const [selectedTorrentId, setSelectedTorrentId] = useState<string | null>(null);
+  const [detailTorrent, setDetailTorrent] = useState<TorrentItem | null>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Estados do formulário
@@ -74,7 +76,22 @@ export default function TorrentsPage() {
     useDataStore.getState().fetchTorrents();
   }, []);
 
-
+  const handleSelectTorrent = async (item: TorrentItem) => {
+    setSelectedTorrentId(item.id);
+    setDetailTorrent(item);
+    setIsDetailLoading(true);
+    try {
+      const res = await fetch(`/api/torrents/${item.id}`);
+      if (res.ok) {
+        const fullData = await res.json();
+        setDetailTorrent(fullData);
+      }
+    } catch (err) {
+      console.error("Error loading torrent details:", err);
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,7 +150,8 @@ export default function TorrentsPage() {
       const res = await fetch(`/api/torrents/${id}`, { method: "DELETE" });
       if (res.ok) {
         useDataStore.getState().deleteTorrent(id);
-        setSelectedTorrent(null);
+        setSelectedTorrentId(null);
+        setDetailTorrent(null);
 
         // Atualiza a store global localmente
         useStatsStore.getState().deleteTorrent();
@@ -175,29 +193,33 @@ export default function TorrentsPage() {
   );
 
   // Achar o torrent selecionado ativo na simulação
-  const activeSelected = selectedTorrent ? torrents.find(t => t.id === selectedTorrent.id) || selectedTorrent : null;
+  const activeSelected = selectedTorrentId ? detailTorrent : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-5.5">
-            <DownloadCloud className="w-6 h-6 text-primary" />
-            Torrents
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Lista de downloads de arquivos do cofre digital. Clique no título para gerenciar transferências e obter os arquivos.
-          </p>
-        </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-5 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          Adicionar Torrent
-        </button>
+      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-5.5">
+          <DownloadCloud className="w-6 h-6 text-primary" />
+          Torrents
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1.5">
+          Lista de downloads de arquivos do cofre digital. Clique no título para gerenciar transferências e obter os arquivos.
+        </p>
       </div>
+
+      {/* Conteúdo com Padding */}
+      <div className="space-y-6 px-5 sm:px-0">
+        {/* Opções e Botões */}
+        <div className="flex flex-wrap gap-4 items-center justify-start">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center justify-center gap-5 px-4 py-2 bg-primary text-primary-foreground text-sm font-semibold rounded-sm hover:bg-primary/95 transition-all cursor-pointer shadow-lg shadow-primary/10 shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            Adicionar Torrent
+          </button>
+        </div>
 
       {/* Toolbar */}
       <div className="flex justify-end gap-4">
@@ -229,7 +251,7 @@ export default function TorrentsPage() {
             {filteredTorrents.map((item) => (
               <motion.div
                 key={item.id}
-                onClick={() => setSelectedTorrent(item)}
+                onClick={() => handleSelectTorrent(item)}
                 whileTap={{ scale: 0.99 }}
                 className="flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all"
                 
@@ -250,45 +272,47 @@ export default function TorrentsPage() {
           </div>
 
           {/* DESKTOP: original card grid */}
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {filteredTorrents.map((item) => {
               return (
                 <motion.div
                   key={item.id}
-                  onClick={() => setSelectedTorrent(item)}
+                  onClick={() => handleSelectTorrent(item)}
                   whileTap={{ scale: 0.97 }}
-                  className="group cursor-pointer bg-card/45 backdrop-blur-xl border border-border rounded-sm p-4.5 flex flex-col justify-between h-28 relative overflow-hidden hover-card-effects"
+                  className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-4.5 flex flex-col justify-between min-h-[120px] h-auto relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-[0_0_20px_rgba(143,227,25,0.04)]"
                 >
                   {/* Linha superior */}
-                  <div className="flex justify-between items-start gap-5.5">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[120px] xs:max-w-[160px] sm:max-w-[200px] md:max-w-full">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[150px]">
                           {item.title}
                         </h3>
                         {item.user?.username && (
-                          <span className={`user-tag user-tag-${item.user.username}`}>
+                          <span className={`user-tag user-tag-${item.user.username} shrink-0`}>
                             {item.user.username === "caio" ? "Caio" : "Giselle"}
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-muted-foreground font-mono bg-muted/60 border border-border/60 px-4 py-2 rounded inline-block mt-1 font-semibold">
-                        {item.size}
-                      </span>
+                      <div className="mt-2">
+                        <span className="text-[10px] text-muted-foreground font-mono bg-white/[0.03] border border-white/5 px-2.5 py-1 rounded-md font-semibold">
+                          {item.size}
+                        </span>
+                      </div>
                     </div>
-                    {/* Ponto Neon de Status */}
-                    <div className="flex items-center gap-4 shrink-0">
-                      <span className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_8px_#10b981]" />
-                      <span className="text-xs font-bold text-emerald uppercase hide-mobile font-display tracking-wider">
-                        Disponível
+                    {/* Status Dot */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]" />
+                      <span className="text-[10px] font-bold text-emerald-400 uppercase font-mono tracking-wider">
+                        OK
                       </span>
                     </div>
                   </div>
 
                   {/* Info do Arquivo */}
-                  <div className="text-sm text-muted-foreground flex justify-between items-center mt-3">
-                    <span className="font-semibold text-white/50">Clique para gerenciar arquivo</span>
-                    <span className="font-mono text-emerald font-bold flex items-center gap-0.5">
+                  <div className="text-[11px] text-muted-foreground flex justify-between items-center mt-4 pt-2 border-t border-border/20">
+                    <span className="font-semibold text-white/40">Clique para gerenciar</span>
+                    <span className="font-mono text-primary font-bold text-[10px]">
                       PC Link
                     </span>
                   </div>
@@ -306,12 +330,13 @@ export default function TorrentsPage() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-4 px-3.5 py-2 bg-primary text-white rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+            className="mt-4 px-3.5 py-2 bg-primary text-primary-foreground rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
           >
             Adicionar Primeiro Torrent
           </button>
         </div>
       )}
+      </div>
 
       {/* MODAL DE DETALHES DO TORRENT SELECIONADO */}
       <AnimatePresence>
@@ -321,7 +346,7 @@ export default function TorrentsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.6 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSelectedTorrent(null)}
+              onClick={() => { setSelectedTorrentId(null); setDetailTorrent(null); }}
               className="absolute inset-0 bg-black"
             />
 
@@ -338,7 +363,7 @@ export default function TorrentsPage() {
                   Detalhes do Torrent
                 </h2>
                 <button
-                  onClick={() => setSelectedTorrent(null)}
+                  onClick={() => { setSelectedTorrentId(null); setDetailTorrent(null); }}
                   className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
@@ -603,7 +628,7 @@ export default function TorrentsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-sm text-xs bg-primary hover:bg-primary/95 text-primary-foreground font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>

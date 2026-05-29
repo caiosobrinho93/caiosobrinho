@@ -56,6 +56,7 @@ function PasswordsContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
   const [selectedPassword, setSelectedPassword] = useState<PasswordItem | null>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
   
   // Visibilidade de senhas e cópias
   const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
@@ -186,6 +187,26 @@ function PasswordsContent() {
     }
   };
 
+  const handleSelectPassword = async (item: PasswordItem) => {
+    // Open modal immediately with partial data
+    setSelectedPassword(item);
+    setIsDetailLoading(true);
+    try {
+      const res = await fetch(`/api/passwords/${item.id}`);
+      if (res.ok) {
+        const fullItem = await res.json();
+        setSelectedPassword(fullItem);
+      } else {
+        alert("Erro ao buscar detalhes da credencial.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erro de rede ao buscar detalhes.");
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
+
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
@@ -245,39 +266,39 @@ function PasswordsContent() {
   return (
     <div className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4 mb-8">
-        <div>
-          <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
-            <Key className="w-5 h-5 text-primary" />
-            SENHAS
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5 font-medium uppercase tracking-wide">
-            Criptografia local AES-256 de Grau Militar
-          </p>
-        </div>
-        <div className="flex gap-5 shrink-0 select-none pb-1 sm:pb-0 ">
-          <button
-            onClick={() => {
-              handleGenerate();
-              setIsGeneratorOpen(true);
-            }}
-            className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold bg-[#8fe319] text-black hover:bg-[#8fe319]/90 transition-colors cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-black animate-pulse" />
-            Gerador
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Adicionar
-          </button>
-        </div>
+      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-5">
+          <Key className="w-5 h-5 text-primary" />
+          SENHAS
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1.5 font-medium uppercase tracking-wide">
+          Criptografia local AES-256 de Grau Militar
+        </p>
+      </div>
+
+      {/* Opções e Botões */}
+      <div className="px-5 pb-2 flex flex-wrap gap-4 items-center justify-start sm:px-0 sm:pb-0">
+        <button
+          onClick={() => {
+            handleGenerate();
+            setIsGeneratorOpen(true);
+          }}
+          className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold bg-primary text-black hover:bg-primary/90 transition-colors cursor-pointer"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-black animate-pulse" />
+          Gerador
+        </button>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center justify-center gap-4 px-3.5 py-1.5 rounded-sm text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          Adicionar
+        </button>
       </div>
  
       {/* Barra de Ferramentas / Filtros */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5.5 px-5 sm:px-0">
         <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none ">
           {categories.map((cat) => (
             <button
@@ -310,52 +331,42 @@ function PasswordsContent() {
 
       {/* Grade de Cards Minimalistas (Compacto Cockpit) */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5.5 animate-pulse">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5.5 animate-pulse px-5 sm:px-0">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="h-12 bg-card/40 rounded-sm border border-border/80" />
           ))}
         </div>
       ) : filteredPasswords.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5.5 px-5 sm:px-0">
           {filteredPasswords.map((item) => {
             return (
               <motion.div
                 key={item.id}
                 whileTap={{ scale: 0.98 }}
-                className="group cursor-pointer glass-panel flex items-center justify-between border border-border/75 rounded-sm p-5.5 hover:border-primary/45 transition-colors"
-                onClick={() => setSelectedPassword(item)}
+                className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-4 flex items-center justify-between min-h-[72px] h-auto relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-primary/5"
+                onClick={() => handleSelectPassword(item)}
               >
-                <div className="flex items-center gap-5.5 min-w-0 ">
-                  <div className="w-7.5 h-7.5 rounded-sm bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                    <Key className="w-3.5 h-3.5 text-primary" />
+                <div className="flex items-center gap-3.5 min-w-0 w-full">
+                  <div className="w-8.5 h-8.5 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                    <Key className="w-4 h-4 text-primary" />
                   </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-5">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
                       <h3 className="text-xs font-bold text-white group-hover:text-primary transition-colors truncate leading-tight">
                         {item.title}
                       </h3>
-                      {item.createdBy && (
-                        <span className={`user-tag user-tag-${item.createdBy}`}>
-                          {item.createdBy === "caio" ? "Caio" : "Giselle"}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {item.createdBy && (
+                          <span className={`user-tag user-tag-${item.createdBy}`}>
+                            {item.createdBy === "caio" ? "Caio" : "Giselle"}
+                          </span>
+                        )}
+                        <span className="text-[9px] px-1.5 py-0.5 bg-muted rounded border border-border/60 text-muted-foreground font-mono uppercase tracking-wider">
+                          {item.category || "Geral"}
                         </span>
-                      )}
+                      </div>
                     </div>
-                    <span className="text-xs text-muted-foreground truncate block leading-tight mt-0.5">
-                      {item.username || item.email || "Sem credencial"}
-                    </span>
                   </div>
-                </div>
-                <div className="flex items-center gap-4 shrink-0 ml-2 ">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCopy(`${item.id}-pass`, item.password);
-                    }}
-                    className="p-1 rounded-sm bg-muted/40 hover:bg-primary/20 border border-border/80 text-muted-foreground hover:text-white transition-colors cursor-pointer"
-                    title="Copiar Senha"
-                  >
-                    {copiedId === `${item.id}-pass` ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                  </button>
                 </div>
               </motion.div>
             );
@@ -370,7 +381,7 @@ function PasswordsContent() {
           </p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-3 px-3 py-1.5 bg-primary text-white rounded-lg text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
+            className="mt-3 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-sm font-bold glass-btn glass-btn-primary cursor-pointer"
           >
             Adicionar Credencial
           </button>
@@ -417,160 +428,167 @@ function PasswordsContent() {
                 <X className="w-4 h-4" />
               </button>
 
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <h2 className="text-base font-extrabold text-white">{selectedPassword.title}</h2>
-                    {selectedPassword.url && (
-                      <a
-                        href={selectedPassword.url.startsWith("http") ? selectedPassword.url : `https://${selectedPassword.url}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-primary hover:underline inline-flex items-center gap-2 mt-0.5 font-medium"
+              {isDetailLoading ? (
+                <div className="p-6 flex flex-col items-center justify-center py-12 gap-3">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary animate-pulse" />
+                  <p className="text-xs text-muted-foreground">Descriptografando e carregando credencial...</p>
+                </div>
+              ) : (
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <h2 className="text-base font-extrabold text-white">{selectedPassword.title}</h2>
+                      {selectedPassword.url && (
+                        <a
+                          href={selectedPassword.url.startsWith("http") ? selectedPassword.url : `https://${selectedPassword.url}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-primary hover:underline inline-flex items-center gap-2 mt-0.5 font-medium"
+                        >
+                          {selectedPassword.url}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4 shrink-0">
+                      {selectedPassword.createdBy && (
+                        <span className={`user-tag user-tag-${selectedPassword.createdBy}`}>
+                          {selectedPassword.createdBy === "caio" ? "Caio" : "Giselle"}
+                        </span>
+                      )}
+                      <span className="text-sm px-2.5 py-1 bg-muted rounded border border-border/80 text-muted-foreground font-bold uppercase tracking-wider">
+                        {selectedPassword.category || "Geral"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Campos Criptografados */}
+                  <div className="space-y-3 pt-2 border-t border-border/50">
+                    {/* Usuário */}
+                    {selectedPassword.username && (
+                      <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
+                        <span className="text-muted-foreground">Usuário:</span>
+                        <div className="flex items-center gap-5">
+                          <span className="text-white font-bold">{selectedPassword.username}</span>
+                          <button
+                            onClick={() => handleCopy(`${selectedPassword.id}-user`, selectedPassword.username || "")}
+                            className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
+                            title="Copiar Usuário"
+                          >
+                            {copiedId === `${selectedPassword.id}-user` ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Email */}
+                    {selectedPassword.email && (
+                      <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
+                        <span className="text-muted-foreground">E-mail:</span>
+                        <div className="flex items-center gap-5">
+                          <span className="text-white font-bold">{selectedPassword.email}</span>
+                          <button
+                            onClick={() => handleCopy(`${selectedPassword.id}-email`, selectedPassword.email || "")}
+                            className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
+                            title="Copiar E-mail"
+                          >
+                            {copiedId === `${selectedPassword.id}-email` ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Senha */}
+                    <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
+                      <span className="text-muted-foreground">Senha:</span>
+                      <div className="flex items-center gap-5">
+                        <span className="text-white font-mono font-bold tracking-wider text-sm">
+                          {visiblePasswords[selectedPassword.id] ? selectedPassword.password : "••••••••••••"}
+                        </span>
+                        <div className="flex items-center gap-2 ml-2">
+                          <button
+                            onClick={() =>
+                              setVisiblePasswords((prev) => ({ ...prev, [selectedPassword.id]: !prev[selectedPassword.id] }))
+                            }
+                            className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
+                            title={visiblePasswords[selectedPassword.id] ? "Ocultar Senha" : "Mostrar Senha"}
+                          >
+                            {visiblePasswords[selectedPassword.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                          <button
+                            onClick={() => handleCopy(`${selectedPassword.id}-pass`, selectedPassword.password)}
+                            className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
+                            title="Copiar Senha"
+                          >
+                            {copiedId === `${selectedPassword.id}-pass` ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Força da Senha (Entropia) */}
+                  <div className="p-3 bg-muted/20 border border-border/40 rounded-xl space-y-1.5">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Força da Senha:</span>
+                      <span className={`font-bold uppercase text-sm ${
+                        checkPasswordStrength(selectedPassword.password).label === "Forte"
+                          ? "text-emerald"
+                          : checkPasswordStrength(selectedPassword.password).label === "Média"
+                          ? "text-amber"
+                          : "text-destructive"
+                      }`}>
+                        {checkPasswordStrength(selectedPassword.password).label}
+                      </span>
+                    </div>
+                    <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${checkPasswordStrength(selectedPassword.password).color}`}
+                        style={{ width: checkPasswordStrength(selectedPassword.password).width }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Anotações */}
+                  {selectedPassword.notes && (
+                    <div className="p-3 bg-muted/20 border border-border/40 rounded-xl">
+                      <span className="text-sm font-bold text-muted-foreground uppercase block mb-1">Anotações</span>
+                      <p className="text-xs text-white/80 leading-relaxed font-medium whitespace-pre-wrap">{selectedPassword.notes}</p>
+                    </div>
+                  )}
+
+                  {/* Ações da Gaveta */}
+                  <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => handleDelete(selectedPassword.id)}
+                      className="flex items-center gap-4 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Excluir Credencial
+                    </button>
+
+                    <div className="flex gap-5">
+                      <button
+                        onClick={() => handleToggleFavorite(selectedPassword)}
+                        className={`flex items-center gap-4 px-3 py-2 border rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                          selectedPassword.isFavorite
+                            ? "border-primary/20 bg-primary/10 text-primary"
+                            : "border-border/80 text-muted-foreground hover:text-white"
+                        }`}
                       >
-                        {selectedPassword.url}
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-4 shrink-0">
-                    {selectedPassword.createdBy && (
-                      <span className={`user-tag user-tag-${selectedPassword.createdBy}`}>
-                        {selectedPassword.createdBy === "caio" ? "Caio" : "Giselle"}
-                      </span>
-                    )}
-                    <span className="text-sm px-2.5 py-1 bg-muted rounded border border-border/80 text-muted-foreground font-bold uppercase tracking-wider">
-                      {selectedPassword.category || "Geral"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Campos Criptografados */}
-                <div className="space-y-3 pt-2 border-t border-border/50">
-                  {/* Usuário */}
-                  {selectedPassword.username && (
-                    <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
-                      <span className="text-muted-foreground">Usuário:</span>
-                      <div className="flex items-center gap-5">
-                        <span className="text-white font-bold">{selectedPassword.username}</span>
-                        <button
-                          onClick={() => handleCopy(`${selectedPassword.id}-user`, selectedPassword.username || "")}
-                          className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
-                          title="Copiar Usuário"
-                        >
-                          {copiedId === `${selectedPassword.id}-user` ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Email */}
-                  {selectedPassword.email && (
-                    <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
-                      <span className="text-muted-foreground">E-mail:</span>
-                      <div className="flex items-center gap-5">
-                        <span className="text-white font-bold">{selectedPassword.email}</span>
-                        <button
-                          onClick={() => handleCopy(`${selectedPassword.id}-email`, selectedPassword.email || "")}
-                          className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
-                          title="Copiar E-mail"
-                        >
-                          {copiedId === `${selectedPassword.id}-email` ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Senha */}
-                  <div className="flex justify-between items-center text-xs p-5.5 bg-muted/20 border border-border/40 rounded-xl">
-                    <span className="text-muted-foreground">Senha:</span>
-                    <div className="flex items-center gap-5">
-                      <span className="text-white font-mono font-bold tracking-wider text-sm">
-                        {visiblePasswords[selectedPassword.id] ? selectedPassword.password : "••••••••••••"}
-                      </span>
-                      <div className="flex items-center gap-2 ml-2">
-                        <button
-                          onClick={() =>
-                            setVisiblePasswords((prev) => ({ ...prev, [selectedPassword.id]: !prev[selectedPassword.id] }))
-                          }
-                          className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
-                          title={visiblePasswords[selectedPassword.id] ? "Ocultar Senha" : "Mostrar Senha"}
-                        >
-                          {visiblePasswords[selectedPassword.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                        </button>
-                        <button
-                          onClick={() => handleCopy(`${selectedPassword.id}-pass`, selectedPassword.password)}
-                          className="p-1 hover:bg-muted text-muted-foreground hover:text-white rounded cursor-pointer transition-colors"
-                          title="Copiar Senha"
-                        >
-                          {copiedId === `${selectedPassword.id}-pass` ? <Check className="w-3.5 h-3.5 text-emerald" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      </div>
+                        <Star className={`w-3.5 h-3.5 ${selectedPassword.isFavorite ? "fill-current" : ""}`} />
+                        {selectedPassword.isFavorite ? "Favoritado" : "Favoritar"}
+                      </button>
+                      <button
+                        onClick={() => setSelectedPassword(null)}
+                        className="px-4 py-2 border border-border text-muted-foreground hover:text-white hover:bg-muted/40 text-xs font-semibold rounded-xl cursor-pointer transition-colors"
+                      >
+                        Fechar
+                      </button>
                     </div>
                   </div>
                 </div>
-
-                {/* Força da Senha (Entropia) */}
-                <div className="p-3 bg-muted/20 border border-border/40 rounded-xl space-y-1.5">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-muted-foreground">Força da Senha:</span>
-                    <span className={`font-bold uppercase text-sm ${
-                      checkPasswordStrength(selectedPassword.password).label === "Forte"
-                        ? "text-emerald"
-                        : checkPasswordStrength(selectedPassword.password).label === "Média"
-                        ? "text-amber"
-                        : "text-destructive"
-                    }`}>
-                      {checkPasswordStrength(selectedPassword.password).label}
-                    </span>
-                  </div>
-                  <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${checkPasswordStrength(selectedPassword.password).color}`}
-                      style={{ width: checkPasswordStrength(selectedPassword.password).width }}
-                    />
-                  </div>
-                </div>
-
-                {/* Anotações */}
-                {selectedPassword.notes && (
-                  <div className="p-3 bg-muted/20 border border-border/40 rounded-xl">
-                    <span className="text-sm font-bold text-muted-foreground uppercase block mb-1">Anotações</span>
-                    <p className="text-xs text-white/80 leading-relaxed font-medium whitespace-pre-wrap">{selectedPassword.notes}</p>
-                  </div>
-                )}
-
-                {/* Ações da Gaveta */}
-                <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-3">
-                  <button
-                    onClick={() => handleDelete(selectedPassword.id)}
-                    className="flex items-center gap-4 px-3 py-2 bg-destructive/10 hover:bg-destructive/20 border border-destructive/20 text-destructive text-xs font-semibold rounded-xl transition-all cursor-pointer"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    Excluir Credencial
-                  </button>
-
-                  <div className="flex gap-5">
-                    <button
-                      onClick={() => handleToggleFavorite(selectedPassword)}
-                      className={`flex items-center gap-4 px-3 py-2 border rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
-                        selectedPassword.isFavorite
-                          ? "border-primary/20 bg-primary/10 text-primary"
-                          : "border-border/80 text-muted-foreground hover:text-white"
-                      }`}
-                    >
-                      <Star className={`w-3.5 h-3.5 ${selectedPassword.isFavorite ? "fill-current" : ""}`} />
-                      {selectedPassword.isFavorite ? "Favoritado" : "Favoritar"}
-                    </button>
-                    <button
-                      onClick={() => setSelectedPassword(null)}
-                      className="px-4 py-2 border border-border text-muted-foreground hover:text-white hover:bg-muted/40 text-xs font-semibold rounded-xl cursor-pointer transition-colors"
-                    >
-                      Fechar
-                    </button>
-                  </div>
-                </div>
-              </div>
+              )}
             </motion.div>
           </div>
         )}
@@ -776,7 +794,7 @@ function PasswordsContent() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-white font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
+                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/95 text-primary-foreground font-semibold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10"
                   >
                     {isSubmitting ? (
                       <>
@@ -925,7 +943,7 @@ function PasswordsContent() {
                       }
                       setIsGeneratorOpen(false);
                     }}
-                    className="w-full py-2.5 rounded-xl bg-primary hover:bg-primary/95 text-white font-semibold text-center cursor-pointer shadow-lg shadow-primary/10"
+                    className="w-full py-2.5 rounded-xl bg-primary hover:bg-primary/95 text-primary-foreground font-semibold text-center cursor-pointer shadow-lg shadow-primary/10"
                   >
                     Usar Senha no Cadastro
                   </button>

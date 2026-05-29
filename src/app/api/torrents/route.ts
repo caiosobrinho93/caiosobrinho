@@ -11,7 +11,17 @@ export async function GET() {
   try {
     const torrents = await db.torrent.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        size: true,
+        status: true,
+        progress: true,
+        downloadSpeed: true,
+        uploadSpeed: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           select: {
             username: true,
@@ -19,7 +29,15 @@ export async function GET() {
         },
       },
     });
-    return NextResponse.json(torrents);
+
+    const minimalTorrents = torrents.map((t) => ({
+      ...t,
+      magnet: "",
+      notes: "",
+      createdBy: t.user.username,
+    }));
+
+    return NextResponse.json(minimalTorrents);
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch torrents" }, { status: 500 });
   }

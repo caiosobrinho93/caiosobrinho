@@ -368,17 +368,20 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 px-1 sm:px-0">
+    <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 pb-8">
       {/* Cabeçalho */}
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-5.5">
+      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-5.5">
           <Settings className="w-6 h-6 text-primary" />
           Configurações
         </h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
+        <p className="text-xs text-muted-foreground mt-1.5">
           Configure a aparência do painel, cores de realce e gerencie seus backups locais.
         </p>
       </div>
+
+      {/* Conteúdo com Padding */}
+      <div className="space-y-4 sm:space-y-6 px-5 sm:px-0">
 
       {/* 1. Visual e Temas do Painel */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-6">
@@ -627,7 +630,7 @@ export default function SettingsPage() {
               <button
                 onClick={toggleAnimations}
                 className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  animationsEnabled ? "bg-[#8fe319]" : "bg-muted"
+                  animationsEnabled ? "bg-primary" : "bg-muted"
                 }`}
               >
                 <span
@@ -644,7 +647,7 @@ export default function SettingsPage() {
       {/* 2. Entrada por Biometria */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
         <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
-          <Fingerprint className="w-4 h-4 text-[#8fe319]" />
+          <Fingerprint className="w-4 h-4 text-primary" />
           Segurança Biométrica (Passkeys)
         </h2>
 
@@ -708,7 +711,7 @@ export default function SettingsPage() {
       {/* 3. Backup e Banco de Dados */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
         <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
-          <Database className="w-4 h-4 text-[#8fe319]" />
+          <Database className="w-4 h-4 text-primary" />
           Operações de Banco de Dados
         </h2>
 
@@ -754,7 +757,7 @@ export default function SettingsPage() {
       {/* 3.5. Integração de Lembretes & Alertas */}
       <div className="glass-panel rounded-2xl sm:rounded-sm p-4 sm:p-5 space-y-4 sm:space-y-5">
         <h2 className="font-display text-sm tracking-widest text-white leading-tight flex items-center gap-4 sm:gap-5 border-b border-border/60 pb-3">
-          <Bell className="w-4 h-4 text-[#8fe319]" />
+          <Bell className="w-4 h-4 text-primary" />
           Integração de Lembretes (Telegram & Email)
         </h2>
 
@@ -859,6 +862,7 @@ export default function SettingsPage() {
             {isWiping ? "Limpando Banco..." : "Apagar Tudo"}
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

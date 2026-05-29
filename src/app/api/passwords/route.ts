@@ -11,7 +11,14 @@ export async function GET() {
   try {
     const passwords = await db.password.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        category: true,
+        isFavorite: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           select: {
             username: true,
@@ -20,14 +27,16 @@ export async function GET() {
       },
     });
 
-    // Decrypt passwords before returning to client
-    const decryptedPasswords = passwords.map((p) => ({
+    const minimalPasswords = passwords.map((p) => ({
       ...p,
-      password: decrypt(p.password),
+      password: "", // Omit password
+      email: "",
+      notes: "",
+      url: "",
       createdBy: p.user.username,
     }));
 
-    return NextResponse.json(decryptedPasswords);
+    return NextResponse.json(minimalPasswords);
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch passwords" }, { status: 500 });
   }

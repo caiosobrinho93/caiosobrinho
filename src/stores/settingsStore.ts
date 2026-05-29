@@ -36,16 +36,16 @@ export interface SettingsState {
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
-      accentColor: "limon",
+      accentColor: "cyan",
       density: "compact",
       animationsEnabled: true,
-      themePreset: "cyber-limon",
+      themePreset: "cyber-cyan",
       customTheme: {
-        bgGradient: "bg-preset-limon",
+        bgGradient: "bg-preset-cyber",
         bgImage: "",
         neonIntensity: "high",
         animationSpeed: "normal",
-        accentColor: "limon",
+        accentColor: "cyan",
         gridStyle: "dots",
       },
       setAccentColor: (color) => set({ accentColor: color }),

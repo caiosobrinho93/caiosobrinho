@@ -11,8 +11,23 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const folderId = searchParams.get("folderId") || null;
   const search = searchParams.get("search") || "";
+  const allFolders = searchParams.get("allFolders") === "true";
 
   try {
+    if (allFolders) {
+      const folders = await db.folder.findMany({
+        include: {
+          user: {
+            select: {
+              username: true,
+            },
+          },
+        },
+        orderBy: { name: "asc" },
+      });
+      return NextResponse.json({ folders });
+    }
+
     if (search) {
       const files = await db.file.findMany({
         where: {

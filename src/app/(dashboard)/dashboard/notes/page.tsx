@@ -544,21 +544,21 @@ function NotesContent() {
                   <>
                     {/* Formatting Toolbar */}
                     <div className="flex items-center gap-2 px-4 py-2 border-b border-border/60 bg-muted/10 overflow-x-auto whitespace-nowrap scrollbar-hide shrink-0">
-                      <button onClick={() => insertFormatting("**", "**")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                      <button onClick={() => insertFormatting("**", "**")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-primary transition-colors focus:text-primary">
                         <Bold className="w-4 h-4" />
                       </button>
-                      <button onClick={() => insertFormatting("*", "*")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                      <button onClick={() => insertFormatting("*", "*")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-primary transition-colors focus:text-primary">
                         <Italic className="w-4 h-4" />
                       </button>
                       <div className="w-px h-4 bg-border mx-1 shrink-0" />
-                      <button onClick={() => insertFormatting("- ")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                      <button onClick={() => insertFormatting("- ")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-primary transition-colors focus:text-primary">
                         <List className="w-4 h-4" />
                       </button>
-                      <button onClick={() => insertFormatting("1. ")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                      <button onClick={() => insertFormatting("1. ")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-primary transition-colors focus:text-primary">
                         <ListOrdered className="w-4 h-4" />
                       </button>
                       <div className="w-px h-4 bg-border mx-1 shrink-0" />
-                      <button onClick={() => insertFormatting("`", "`")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-[#8fe319] transition-colors focus:text-[#8fe319]">
+                      <button onClick={() => insertFormatting("`", "`")} className="p-1.5 rounded-sm hover:bg-muted text-muted-foreground hover:text-primary transition-colors focus:text-primary">
                         <Code className="w-4 h-4" />
                       </button>
                     </div>
@@ -660,7 +660,7 @@ function NotesContent() {
             </p>
             <button
               onClick={handleCreateNote}
-              className="mt-4 px-3.5 py-2 bg-primary text-white rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
+              className="mt-4 px-3.5 py-2 bg-primary text-primary-foreground rounded-sm text-xs font-semibold hover:bg-primary/95 transition-all cursor-pointer"
             >
               Criar Primeira Nota
             </button>

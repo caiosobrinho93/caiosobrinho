@@ -140,40 +140,42 @@ export default function ReceiptsPage() {
   );
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto p-4">
+    <div className="space-y-6 max-w-6xl mx-auto pb-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4 mb-8">
-        <div>
-          <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
-            <FileCheck className="w-5 h-5 text-primary" />
-            Comprovantes de Pagamentos
-          </h1>
-          <p className="text-xs text-muted-foreground mt-1.5">
-            Guarde e organize todos os recibos e comprovantes em um só lugar.
-          </p>
-        </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="glass-btn glass-btn-primary self-start sm:self-auto cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          Adicionar Recibo
-        </button>
+      <div className="px-5 sm:px-0 py-5 flex flex-col items-start text-left border-b border-border/40 mb-6">
+        <h1 className="text-xl font-display font-bold text-white flex items-center gap-5.5">
+          <FileCheck className="w-5 h-5 text-primary" />
+          Comprovantes de Pagamentos
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1.5">
+          Guarde e organize todos os recibos e comprovantes em um só lugar.
+        </p>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative max-w-md">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground pointer-events-none">
-          <Search className="w-4 h-4" />
-        </span>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar por título, categoria ou descrição..."
-          className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-card/45 border border-border focus:border-primary text-white focus:outline-none placeholder-muted-foreground"
-        />
-      </div>
+      {/* Conteúdo com Padding */}
+      <div className="space-y-6 px-5 sm:px-0">
+        {/* Opções e Botões */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="relative w-full sm:max-w-md">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground pointer-events-none">
+              <Search className="w-4 h-4" />
+            </span>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Pesquisar por título, categoria ou descrição..."
+              className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-card/45 border border-border focus:border-primary text-white focus:outline-none placeholder-muted-foreground"
+            />
+          </div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="glass-btn glass-btn-primary self-start sm:self-auto cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Adicionar Recibo
+          </button>
+        </div>
 
       {/* Content list */}
       {isLoading ? (
@@ -231,15 +233,15 @@ export default function ReceiptsPage() {
                 key={receipt.id}
                 layout
                 onClick={() => { setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
-                className="glass-panel p-5 border border-border/60 hover:border-primary/35 hover:shadow-[0_0_15px_rgba(197,255,26,0.05)] cursor-pointer flex flex-col justify-between h-56 relative overflow-hidden transition-all duration-300 group"
+                className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-5 hover:border-primary/30 hover:bg-card/30 hover:shadow-primary/5 flex flex-col justify-between min-h-[180px] h-auto relative overflow-hidden transition-all duration-300"
               >
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
-                      <span className="px-2 py-2 rounded text-xs font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wide">
+                      <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
                         {receipt.category || "Outros"}
                       </span>
-                      <h3 className="font-semibold text-sm text-white mt-1.5 truncate" title={receipt.title}>
+                      <h3 className="font-extrabold text-xs text-white mt-2.5 truncate group-hover:text-primary transition-colors" title={receipt.title}>
                         {receipt.title}
                       </h3>
                     </div>
@@ -249,18 +251,18 @@ export default function ReceiptsPage() {
                   </div>
 
                   {receipt.description && (
-                    <p className="text-xs text-muted-foreground line-clamp-5">{receipt.description}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{receipt.description}</p>
                   )}
 
-                  <div className="pt-2 space-y-1 text-xs text-muted-foreground">
+                  <div className="pt-2 space-y-1.5 text-[11px] text-muted-foreground">
                     {receipt.amount !== null && (
-                      <div className="flex items-center gap-4 text-white font-semibold">
+                      <div className="flex items-center gap-2 text-white font-semibold">
                         <DollarSign className="w-3.5 h-3.5 text-primary" />
                         R$ {receipt.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </div>
                     )}
                     {receipt.paymentDate && (
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
                         <Calendar className="w-3.5 h-3.5 text-primary" />
                         Pago em: {new Date(receipt.paymentDate).toLocaleDateString("pt-BR")}
                       </div>
@@ -268,15 +270,15 @@ export default function ReceiptsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-border/40 pt-3 mt-4 shrink-0">
-                  <span className="text-sm text-muted-foreground">
+                <div className="flex items-center justify-between border-t border-border/20 pt-3 mt-4 shrink-0">
+                  <span className="text-[11px] text-muted-foreground font-mono">
                     {new Date(receipt.createdAt).toLocaleDateString("pt-BR")}
                   </span>
-                  <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-2">
                     {receipt.fileUrl && (
                       <button
                         onClick={(e) => { e.stopPropagation(); setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
-                        className="p-5 rounded-xl bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 transition-all cursor-pointer flex items-center justify-center"
+                        className="p-2 rounded-xl bg-white/[0.03] hover:bg-primary/20 border border-white/5 text-muted-foreground hover:text-white transition-all cursor-pointer flex items-center justify-center"
                         title="Ver Comprovante"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -284,7 +286,7 @@ export default function ReceiptsPage() {
                     )}
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDelete(receipt.id); }}
-                      className="p-5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all cursor-pointer flex items-center justify-center"
+                      className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all cursor-pointer flex items-center justify-center"
                       title="Excluir Comprovante"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -302,6 +304,7 @@ export default function ReceiptsPage() {
           <p className="text-xs text-muted-foreground mt-1">Insira seus comprovantes de pagamentos para mantê-los seguros.</p>
         </div>
       )}
+      </div>
 
       {/* Modal Add Receipt */}
       <AnimatePresence>
@@ -485,7 +488,7 @@ export default function ReceiptsPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 rounded-xl text-xs bg-[#8fe319] hover:bg-[#8fe319]/90 text-black font-bold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-[#8fe319]/10 transition-colors"
+                    className="px-4 py-2 rounded-xl text-xs bg-primary hover:bg-primary/90 text-black font-bold flex items-center justify-center gap-4 cursor-pointer shadow-lg shadow-primary/10 transition-colors"
                   >
                     {isSubmitting ? (
                       <>
@@ -524,8 +527,8 @@ export default function ReceiptsPage() {
               {/* Header */}
               <div className="h-16 border-b border-border/40 bg-card flex items-center justify-between px-5 shrink-0 z-20">
                 <div className="flex items-center gap-4 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-[#8fe319]/10 border border-[#8fe319]/20 flex items-center justify-center shrink-0">
-                    <FileCheck className="w-4 h-4 text-[#8fe319]" />
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                    <FileCheck className="w-4 h-4 text-primary" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-sm font-semibold text-white truncate block max-w-md">
@@ -573,7 +576,7 @@ export default function ReceiptsPage() {
                       onClick={() => setActivePreviewIndex(idx)}
                       className={`px-3 py-1.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all cursor-pointer ${
                         activePreviewIndex === idx
-                          ? "bg-[#8fe319] text-black"
+                          ? "bg-primary text-black"
                           : "bg-muted/40 text-muted-foreground hover:text-white"
                       }`}
                     >
@@ -625,7 +628,7 @@ export default function ReceiptsPage() {
                           download
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-5 px-4 py-2 bg-[#8fe319] text-black font-bold rounded-xl text-xs hover:bg-[#8fe319]/90 transition-all shadow-md cursor-pointer flex items-center gap-4"
+                          className="mt-5 px-4 py-2 bg-primary text-black font-bold rounded-xl text-xs hover:bg-primary/90 transition-all shadow-md cursor-pointer flex items-center gap-4"
                         >
                           <Download className="w-3.5 h-3.5" />
                           Baixar para Visualizar
