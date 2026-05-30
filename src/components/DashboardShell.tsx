@@ -34,7 +34,7 @@ import {
   Star,
   Home
 } from "lucide-react";
-import { RssTechWidget } from './RssTechWidget';
+import RssTechWidget from './RssTechWidget';
 import NeonParticles from './NeonParticles';
 import GiselleBackground from './GiselleBackground';
 import { useAuth } from '@/hooks/useAuth';
