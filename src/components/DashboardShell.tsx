@@ -37,7 +37,6 @@ import {
 import RssTechWidget from './RssTechWidget';
 import NeonParticles from './NeonParticles';
 import GiselleBackground from './GiselleBackground';
-import { useAuth } from '@/hooks/useAuth';
 import CommandPalette from "./CommandPalette";
 
 import { useSettingsStore } from "@/stores/settingsStore";
