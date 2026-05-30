@@ -38,8 +38,8 @@ export default function NeonParticles() {
       particles = Array.from({ length: PARTICLE_COUNT }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: -(Math.random() * 0.4 + 0.1),
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: -(Math.random() * 0.8 + 0.3),
         radius: Math.random() * 1.5 + 0.5,
         alpha: Math.random() * 0.4 + 0.15,
         alphaDir: Math.random() > 0.5 ? 0.003 : -0.003,
