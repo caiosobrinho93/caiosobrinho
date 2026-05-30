@@ -26,6 +26,8 @@ export interface StatsData {
     xp: number;
     level: number;
     username: string;
+    coverImage?: string;
+    image?: string;
   };
   goals: Goal[];
   recentItems: Array<{
