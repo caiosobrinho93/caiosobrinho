@@ -19,8 +19,8 @@ export default function NeonParticles({ isGiselle = false }: NeonParticlesProps)
     const CONNECTION_DISTANCE = window.innerWidth < 768 ? 80 : 120;
 
     // You can tweak colors here!
-    const primaryHex = isGiselle ? '#f43f5e' : '#00f2fe'; // Rose for Giselle, Cyan for Caio
-    const accentHex = isGiselle ? '#a855f7' : '#3b82f6'; // Purple for Giselle, Blue for Caio
+    const primaryHex = isGiselle ? '#000000' : '#00f2fe'; // Black for Giselle, Cyan for Caio
+    const accentHex = isGiselle ? '#4b5563' : '#3b82f6'; // Gray for Giselle, Blue for Caio
 
     function hexToRgb(hex: string) {
       let c = hex.substring(1).trim();
