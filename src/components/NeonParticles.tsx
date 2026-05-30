@@ -1,46 +1,40 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  radius: number;
-  alpha: number;
-  alphaDir: number;
-  color: string;
-}
+import { useEffect } from "react";
 
 export default function NeonParticles() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const canvas = canvasRef.current;
+    const canvas = document.getElementById('particles-canvas') as HTMLCanvasElement;
     if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const isMobile = window.innerWidth < 768;
-    const PARTICLE_COUNT = isMobile ? 18 : 35;
-    const CONNECTION_DISTANCE = isMobile ? 80 : 120;
+    let particles: any[] = [];
+    const PARTICLE_COUNT = window.innerWidth < 768 ? 18 : 35;
+    const CONNECTION_DISTANCE = window.innerWidth < 768 ? 80 : 120;
 
-    let animId: number;
-    let particles: Particle[] = [];
+    // You can tweak colors here!
+    const primaryHex = '#00f2fe';
+    const accentHex = '#3b82f6';
 
-    const resize = () => {
+    function hexToRgb(hex: string) {
+      let c = hex.substring(1).trim();
+      if (c.length === 3) {
+        c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+      }
+      const num = parseInt(c, 16);
+      return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+    }
+
+    function resize() {
+      if (!canvas) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    };
+    }
 
-    const createParticles = () => {
-      // Use standard colors from user's component exactly
-      const primaryHex = '#00f2fe';
-      const accentHex = '#3b82f6';
-
+    function createParticles() {
+      if (!canvas) return;
       particles = Array.from({ length: PARTICLE_COUNT }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -51,14 +45,14 @@ export default function NeonParticles() {
         alphaDir: Math.random() > 0.5 ? 0.003 : -0.003,
         color: Math.random() > 0.5 ? primaryHex : accentHex,
       }));
-    };
+    }
 
-    const draw = () => {
+    let animId: number;
+
+    function draw() {
+      if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const primaryHex = '#00f2fe';
-
-      // Draw connections
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -77,7 +71,6 @@ export default function NeonParticles() {
         }
       }
 
-      // Draw particles
       particles.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -104,26 +97,18 @@ export default function NeonParticles() {
       });
 
       animId = requestAnimationFrame(draw);
-    };
-
-    const hexToRgb = (hex: string) => {
-      let c = hex.substring(1).trim();
-      if (c.length === 3) {
-        c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
-      }
-      const num = parseInt(c, 16);
-      return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
-    };
-
-    resize();
-    createParticles();
-    draw();
+    }
 
     const handleResize = () => {
       resize();
       createParticles();
     };
+
     window.addEventListener('resize', handleResize);
+
+    resize();
+    createParticles();
+    draw();
 
     return () => {
       cancelAnimationFrame(animId);
@@ -133,8 +118,8 @@ export default function NeonParticles() {
 
   return (
     <canvas
-      ref={canvasRef}
-      className="particles-canvas absolute inset-0 pointer-events-none z-0"
+      id="particles-canvas"
+      className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
       aria-hidden="true"
     />
   );
