@@ -378,46 +378,40 @@ export default function DashboardShell({ children, username }: DashboardShellPro
         themeBgClass = customTheme?.bgGradient || "bg-preset-synth";
       }
     }
-
   }
+
+  // Toggle options (Desktop Central)
+  const toggleCentralOptions = () => setIsCentralOptionsOpen(!isCentralOptionsOpen);
+
+  // Close options when clicking outside
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsCentralOptionsOpen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  // Handle module access and track recent activity
+  const handleAccessModule = (type: string, path: string) => {
+    // Pushing recent item (mock implementation for visuals)
+    setIsCentralOptionsOpen(false);
+    router.push(path);
+  };
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1200;
 
   return (
     <div 
       style={customStyle}
-      className={`${isGiselle ? 'user-giselle' : ''} theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${themeBgClass} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
+      className={`theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} bg-[#050505] ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
     >
       
-      {/* Custom Animated App Background */}
-      <div className={`absolute inset-0 pointer-events-none z-0 bg-gradient-to-br animate-gradient-bg mix-blend-screen opacity-40 ${
-        isGiselle
-          ? "from-rose-600 via-purple-700 to-orange-600"
-          : "from-blue-700 via-indigo-800 to-cyan-700"
-      }`} />
-
       {/* Background Cyber Grid Layer */}
-      <div className={`absolute inset-0 pointer-events-none z-0 ${gridStyleClass}`} />
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]" />
       
       {/* Dynamic Cyberpunk Particle Canvas */}
       {mounted && <NeonParticles />}
-      
-      {/* Floating Aurora Gradient Blobs (Looping Animations) */}
-      {mounted && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 mix-blend-screen">
-          {isGiselle ? (
-            <>
-              <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-rose-500/30 blur-[120px] animate-blob-1" />
-              <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-orange-500/30 blur-[120px] animate-blob-2" />
-              <div className="absolute top-1/2 left-1/3 w-80 h-80 rounded-full bg-purple-500/30 blur-[120px] animate-blob-3" />
-            </>
-          ) : (
-            <>
-              <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-blue-500/25 blur-[120px] animate-blob-1" />
-              <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-cyan-500/25 blur-[120px] animate-blob-2" />
-              <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full bg-sky-500/25 blur-[120px] animate-blob-3" />
-            </>
-          )}
-        </div>
-      )}
       
       {/* 1. SIDEBAR DESKTOP */}
       <motion.aside

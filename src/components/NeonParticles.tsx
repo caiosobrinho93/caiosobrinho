@@ -37,9 +37,9 @@ export default function NeonParticles() {
     };
 
     const createParticles = () => {
-      // Get CSS colors dynamically
-      const primaryHex = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00f2fe';
-      const accentHex = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#3b82f6';
+      // Use standard colors from user's component exactly
+      const primaryHex = '#00f2fe';
+      const accentHex = '#3b82f6';
 
       particles = Array.from({ length: PARTICLE_COUNT }, () => ({
         x: Math.random() * canvas.width,
@@ -56,8 +56,7 @@ export default function NeonParticles() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Get current primary color dynamically in case theme changes
-      const primaryHex = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00f2fe';
+      const primaryHex = '#00f2fe';
 
       // Draw connections
       for (let i = 0; i < particles.length; i++) {
@@ -71,9 +70,7 @@ export default function NeonParticles() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = primaryHex.startsWith('#') 
-              ? `rgba(${hexToRgb(primaryHex)}, ${opacity})`
-              : `rgba(0, 242, 254, ${opacity})`;
+            ctx.strokeStyle = `rgba(${hexToRgb(primaryHex)}, ${opacity})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -94,9 +91,7 @@ export default function NeonParticles() {
 
         ctx.beginPath();
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 3);
-        gradient.addColorStop(0, p.color.startsWith('#') 
-          ? `rgba(${hexToRgb(p.color)}, ${p.alpha})`
-          : `rgba(0, 242, 254, ${p.alpha})`);
+        gradient.addColorStop(0, `rgba(${hexToRgb(p.color)}, ${p.alpha})`);
         gradient.addColorStop(1, 'transparent');
         ctx.fillStyle = gradient;
         ctx.arc(p.x, p.y, p.radius * 3, 0, Math.PI * 2);
@@ -104,9 +99,7 @@ export default function NeonParticles() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color.startsWith('#')
-          ? `rgba(${hexToRgb(p.color)}, ${Math.min(p.alpha * 1.5, 1)})`
-          : `rgba(0, 242, 254, ${Math.min(p.alpha * 1.5, 1)})`;
+        ctx.fillStyle = `rgba(${hexToRgb(p.color)}, ${Math.min(p.alpha * 1.5, 1)})`;
         ctx.fill();
       });
 
