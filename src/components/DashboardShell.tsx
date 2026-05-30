@@ -404,7 +404,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   return (
     <div 
       style={customStyle}
-      className={`theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${isGiselle ? 'bg-[#db2777]' : 'bg-[#050505]'} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
+      className={`${isGiselle ? 'user-giselle bg-[#db2777]' : `theme-${mounted ? accentColor : "violet"} bg-[#050505]`} density-${mounted ? density : "normal"} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
     >
       
       {/* Background Cyber Grid Layer */}
