@@ -44,7 +44,7 @@ export default function NeonParticles({ isGiselle = false }: NeonParticlesProps)
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 0.5,
         vy: -(Math.random() * 0.8 + 0.3),
-        radius: Math.random() * 1.5 + 0.5,
+        radius: Math.random() * 3 + 1,
         alpha: Math.random() * 0.4 + 0.15,
         alphaDir: Math.random() > 0.5 ? 0.003 : -0.003,
         color: Math.random() > 0.5 ? primaryHex : accentHex,
