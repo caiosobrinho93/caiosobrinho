@@ -330,10 +330,10 @@ export default function DashboardPage() {
   }
 
   const moduleStats = [
-    { name: "Senhas", count: data.counts.passwords, details: "Credenciais seguras", icon: Key, color: "text-rose bg-rose/10 border-rose/20", href: "/dashboard/passwords" },
-    { name: "Cofre de Arquivos", count: data.counts.files, details: "Arquivos locais", icon: FolderOpen, color: "text-amber bg-amber/10 border-amber/20", href: "/dashboard/files" },
-    { name: "Contas Ativas", count: data.counts.bills, details: "Pagar & Receber", icon: CreditCard, color: "text-emerald bg-emerald/10 border-emerald/20", href: "/dashboard/bills" },
-    { name: "Comprovantes", count: data.counts.receipts, details: "Recibos salvos", icon: FileCheck, color: "text-primary bg-cyan/10 border-cyan/20", href: "/dashboard/receipts" },
+    { name: "Senhas", count: data.counts.passwords, details: "Credenciais seguras", icon: Key, color: "text-rose-500 bg-rose-500/10 border-rose-500/30", href: "/dashboard/passwords" },
+    { name: "Cofre de Arquivos", count: data.counts.files, details: "Arquivos locais", icon: FolderOpen, color: "text-amber-500 bg-amber-500/10 border-amber-500/30", href: "/dashboard/files" },
+    { name: "Contas Ativas", count: data.counts.bills, details: "Pagar & Receber", icon: CreditCard, color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/30", href: "/dashboard/bills" },
+    { name: "Comprovantes", count: data.counts.receipts, details: "Recibos salvos", icon: FileCheck, color: "text-cyan-500 bg-cyan-500/10 border-cyan-500/30", href: "/dashboard/receipts" },
   ];
 
   // Cálculo da barra de XP (cada nível tem 1000 XP)
@@ -366,8 +366,9 @@ export default function DashboardPage() {
         layout
         key="recent_activities"
         variants={itemVariants}
-        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-2 block"
+        className="nexus-card min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-2 relative group/panel overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
         {renderWidgetHeader("Atividades Recentes", <Clock className="w-3.5 h-3.5 text-primary" />, idx, (
           <span className="text-xs text-muted-foreground bg-muted/15 border border-border px-4 py-2 rounded-sm font-bold uppercase tracking-wider font-display">
             Console Ativo
@@ -378,29 +379,26 @@ export default function DashboardPage() {
             <div
               key={item.id}
               onClick={() => router.push(getModuleLink(item.type))}
-              className="flex items-center justify-between p-4 rounded-sm hover:bg-muted/15 transition-all cursor-pointer group border border-transparent hover:border-border/30"
+              className="flex items-center justify-between p-4 bg-white/5 rounded-[6px] hover:bg-white/10 transition-all cursor-pointer group border border-transparent hover:border-border/30 relative z-10"
             >
-              <div className="flex items-center gap-5.5 min-w-0">
-                <div className="w-6.5 h-6.5 rounded-sm bg-card border border-border flex items-center justify-center shrink-0">
-                  {getModuleIcon(item.type)}
-                </div>
-                <div className="min-w-0 ">
-                  <div className="flex items-center gap-5">
-                    <p className="text-sm font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
-                      {item.title}
-                    </p>
-                    {item.createdBy && (
-                      <span className={`user-tag user-tag-${item.createdBy}`}>
-                        {item.createdBy === "caio" ? "Caio" : "Giselle"}
-                      </span>
-                    )}
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                {item.createdBy ? (
+                  <img src={item.createdBy === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} alt={item.createdBy} className="w-8 h-8 rounded-full object-cover shrink-0 border border-white/10 bg-black" />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center shrink-0">
+                    {getModuleIcon(item.type)}
                   </div>
-                  <p className="text-xs text-muted-foreground truncate leading-none mt-0.5 uppercase tracking-wide font-mono">
-                    {item.type} // {item.details}
+                )}
+                <div className="min-w-0 ">
+                  <p className="text-sm font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
+                    {item.title}
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground truncate leading-none mt-1 uppercase tracking-wide font-mono flex items-center gap-1.5">
+                    {getModuleIcon(item.type)} <span>{item.type} // {item.details}</span>
                   </p>
                 </div>
               </div>
-              <span className="text-xs text-muted-foreground font-semibold whitespace-nowrap ml-4 shrink-0 flex items-center gap-0.5 font-mono">
+              <span className="text-[10px] sm:text-xs text-muted-foreground font-semibold whitespace-nowrap ml-2 sm:ml-4 shrink-0 hidden sm:flex items-center gap-0.5 font-mono">
                 {new Date(item.date).toLocaleDateString("pt-BR", {month: "short", day: "numeric"})}
                 <ArrowUpRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-opacity" />
               </span>
@@ -418,8 +416,9 @@ export default function DashboardPage() {
         layout
         key="storage"
         variants={itemVariants}
-        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-2 block"
+        className="nexus-card min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-2 relative group/panel overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
         {renderWidgetHeader("Armazenamento", <HardDrive className="w-3.5 h-3.5 text-primary" />, idx, (
           <span className="text-muted-foreground text-sm font-mono">
             <span className="text-white font-bold">{data.storageStats.usedSize} ({data.storageStats.percentUsed}%)</span> / {data.storageStats.totalSize}
@@ -464,8 +463,9 @@ export default function DashboardPage() {
         layout
         key="goals"
         variants={itemVariants}
-        className="glass-panel h-full flex flex-col lg:col-span-1 block"
+        className="nexus-card h-full flex flex-col lg:col-span-1 relative group/panel overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
         {renderWidgetHeader(`Central de Metas`, <Trophy className="w-3.5 h-3.5 text-primary " />, idx, (
           <span className="text-xs text-primary bg-primary/10 border border-primary/20 px-4 py-2 rounded-sm font-bold font-mono">
             {currentLevelXp}/1000 XP
@@ -490,10 +490,10 @@ export default function DashboardPage() {
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -10 }}
-                  className={`flex items-center justify-between p-4 rounded-sm border transition-all ${
+                  className={`flex items-center justify-between p-4 rounded-[6px] border transition-all relative z-10 ${
                     goal.isCompleted
                       ? "bg-emerald-500/5 border-emerald-500/10 text-emerald-100/50"
-                      : "bg-muted/10 border-border/40 text-white/90"
+                      : "bg-white/5 border-border/40 text-white/90 hover:bg-white/10"
                   }`}
                 >
                   <div className="flex items-center gap-5 min-w-0">
@@ -575,8 +575,9 @@ export default function DashboardPage() {
         layout
         key="rewards"
         variants={itemVariants}
-        className="glass-panel h-full flex flex-col lg:col-span-1 block"
+        className="nexus-card h-full flex flex-col lg:col-span-1 relative group/panel overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
         {renderWidgetHeader("Baú de Prêmios Pix", <Trophy className="w-3.5 h-3.5 text-primary" />, idx, (
           <span className="text-xs text-muted-foreground uppercase font-bold font-display">
             Co-op Shop
@@ -596,12 +597,12 @@ export default function DashboardPage() {
               return (
                 <div
                   key={reward.id}
-                  className={`p-5 border rounded-sm flex items-center justify-between gap-3 transition-colors ${
+                  className={`p-5 border rounded-[6px] flex items-center justify-between gap-3 transition-colors relative z-10 ${
                     isClaimed
                       ? "bg-muted/5 border-border/20 opacity-60"
                       : canClaim
                       ? "bg-primary/5 border-primary/20 hover:bg-primary/10"
-                      : "bg-card/30 border-border/40"
+                      : "bg-white/5 border-border/40 hover:bg-white/10"
                   }`}
                 >
                   <div className="min-w-0">
@@ -654,8 +655,9 @@ export default function DashboardPage() {
         layout
         key="shortcuts"
         variants={itemVariants}
-        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 block"
+        className="nexus-card min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 relative group/panel overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
         {renderWidgetHeader("Atalhos Rápidos", <Zap className="w-3 h-3 text-primary" />, idx)}
         
         <div className="grid grid-cols-2 gap-2 px-[15px] pb-[15px]">
@@ -703,8 +705,9 @@ export default function DashboardPage() {
         layout
         key="operations"
         variants={itemVariants}
-        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 block"
+        className="nexus-card min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 relative group/panel overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
         {renderWidgetHeader("Operações Recentes", <Activity className="w-3 h-3 text-primary" />, idx)}
 
         <div className="px-[15px] pb-[15px]">
@@ -714,7 +717,7 @@ export default function DashboardPage() {
               <div className={`absolute left-[3px] w-1.5 h-1.5 border border-card mt-1 ${
                 log.status === "success" ? "bg-emerald-500" : log.status === "warning" ? "bg-amber-400" : "bg-primary"
               }`} />
-              <div className="min-w-0">
+              <div className="min-w-0 bg-white/5 p-2.5 rounded-[6px] relative z-10 w-full hover:bg-white/10 transition-colors">
                 <p className="text-sm text-white/95 leading-tight font-bold">{log.text}</p>
                 <span className="text-xs text-muted-foreground block mt-0.5 font-mono">{log.time}</span>
               </div>
@@ -733,8 +736,9 @@ export default function DashboardPage() {
         layout
         key="favorites"
         variants={itemVariants}
-        className="glass-panel min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 block"
+        className="nexus-card min-w-[280px] h-fit max-h-[500px] overflow-y-auto flex flex-col lg:col-span-1 relative group/panel overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover/panel:opacity-100 transition-opacity duration-700 pointer-events-none z-0" />
         {renderWidgetHeader(`Favoritos (${data.favorites.length})`, <Star className="w-3 h-3 text-primary fill-primary/10" />, idx)}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-[15px] pb-[15px]">
@@ -743,17 +747,21 @@ export default function DashboardPage() {
               <div
                 key={fav.id}
                 onClick={() => router.push(getModuleLink(fav.type))}
-                className="flex items-center gap-4 p-4 bg-muted/10 hover:bg-muted/20 rounded-sm cursor-pointer transition-colors border border-border/40 min-w-0"
+                className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white/5 hover:bg-white/10 rounded-[6px] cursor-pointer transition-colors border border-border/40 min-w-0 relative z-10 group"
               >
-                {getModuleIcon(fav.type)}
-                <span className="text-xs font-bold text-white/95 truncate flex-1 leading-tight flex items-center justify-between gap-4">
-                  <span className="truncate">{fav.title}</span>
-                  {fav.createdBy && (
-                    <span className={`user-tag user-tag-${fav.createdBy} shrink-0`}>
-                      {fav.createdBy === "caio" ? "Caio" : "Giselle"}
-                    </span>
-                  )}
-                </span>
+                {fav.createdBy ? (
+                  <img src={fav.createdBy === "caio" ? "/avatar-caio.png" : "/avatar-giselle.png"} alt={fav.createdBy} className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover shrink-0 border border-white/10 bg-black" />
+                ) : (
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-card border border-border flex items-center justify-center shrink-0">
+                    {getModuleIcon(fav.type)}
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <span className="text-xs sm:text-sm font-bold text-white/95 truncate block group-hover:text-primary transition-colors">{fav.title}</span>
+                </div>
+                <div className="opacity-50 group-hover:opacity-100 transition-opacity">
+                  {getModuleIcon(fav.type)}
+                </div>
               </div>
             ))
           ) : (
@@ -772,14 +780,23 @@ export default function DashboardPage() {
       className="space-y-6"
     >
 
-
-
-
-
-
       {/* 🔮 Spatial Hero Header */}
-      <motion.div variants={itemVariants} className="glass-panel min-w-[280px] p-5 sm:p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-8 relative overflow-hidden group mb-4 sm:mb-8">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
+      <motion.div variants={itemVariants} className="glass-panel min-w-[280px] p-5 sm:p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-8 relative overflow-hidden group mb-4 sm:mb-8 border-none bg-black/40 -mx-3 -mt-4 sm:mx-0 sm:mt-0 !rounded-none sm:!rounded-2xl">
+        
+        {data?.profile?.coverImage && (
+          <div 
+            className="absolute inset-0 bg-cover bg-center pointer-events-none z-0 opacity-70 mix-blend-screen"
+            style={{ backgroundImage: `url(${data.profile.coverImage})` }}
+          />
+        )}
+        
+        {/* Efeito de Vinheta 3D (Bordas escuras) */}
+        <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.9)] pointer-events-none z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.9)_100%)] pointer-events-none z-0" />
+        
+        {!data?.profile?.coverImage && (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none z-0" />
+        )}
         
         <div className="flex flex-col md:flex-row items-center gap-5 sm:gap-8 z-10 w-full md:w-auto">
           <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-40 md:h-40 rounded-full border border-white/20 overflow-hidden shrink-0 shadow-[0_0_40px_rgba(255,255,255,0.1)] relative group-hover:scale-105 transition-transform duration-500">
@@ -804,18 +821,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-        
-        {/* Right side - Notification */}
-        <div className="z-10 mt-3 md:mt-0 flex items-center justify-center shrink-0">
-           <button type="button" onClick={() => setIsNotificationsOpen(true)}
-             className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full glass-panel !overflow-visible flex items-center justify-center hover:scale-110 transition-all group cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.3)] hover:border-primary/50"
-           >
-             <Bell className="w-5 h-5 sm:w-7 sm:h-7 text-white/80 group-hover:text-primary transition-colors" />
-             <span className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full border-2 border-[#0a0a0a] flex items-center justify-center text-[9px] sm:text-[11px] font-bold text-white shadow-[0_0_10px_rgba(239,68,68,0.6)]">
-               3
-             </span>
-           </button>
-        </div>
       </motion.div>
 
       {/* Grade de Métricas Compacta (Horizontal) */}
@@ -828,19 +833,23 @@ export default function DashboardPage() {
               variants={itemVariants}
               onClick={() => router.push(stat.href)}
               whileTap={{ scale: 0.97 }}
-              className="group cursor-pointer relative overflow-hidden p-2 sm:p-3 h-[52px] sm:h-[60px] glass-panel min-w-[120px] flex items-center justify-between border border-primary/10 rounded-sm hover:border-primary/45 transition-colors"
+              className="nexus-card group cursor-pointer relative overflow-hidden p-3 sm:p-4 h-auto min-h-[60px] sm:min-h-[70px] flex items-center justify-between border border-primary/10 hover:border-primary/45 transition-colors"
             >
-              <div className="flex items-center gap-2 sm:gap-5 min-w-0">
-                <div className={`p-2 sm:p-4 rounded-sm border ${stat.color} shrink-0`}>
-                  <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              {/* Glow Effects */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-primary/10 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0 relative z-10">
+                <div className={`p-2.5 sm:p-3.5 rounded-xl border ${stat.color} shrink-0 bg-black/40 shadow-inner`}>
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div className="min-w-0">
                   <h3 className="text-xs sm:text-sm font-display font-semibold text-white/95 group-hover:text-primary transition-colors leading-tight truncate">{stat.name}</h3>
                   <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight mt-0.5 truncate hidden sm:block">{stat.details}</p>
                 </div>
               </div>
-              <div className="text-right shrink-0 ml-1 sm:ml-2">
-                <span className="text-sm sm:text-base font-bold text-white group-hover:text-primary transition-colors">
+              <div className="text-right shrink-0 ml-2 relative z-10">
+                <span className="text-base sm:text-lg font-black text-white group-hover:text-primary transition-colors font-mono">
                   {stat.count}
                 </span>
               </div>

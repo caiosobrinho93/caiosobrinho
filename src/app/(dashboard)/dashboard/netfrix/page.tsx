@@ -192,9 +192,13 @@ export default function NetfrixPage() {
             <div
               key={vid.id}
               onClick={() => setActiveVideo(vid)}
-              className="w-64 shrink-0 snap-start group relative border border-white/5 bg-black/40 rounded-lg overflow-hidden cursor-pointer hover:scale-105 hover:border-primary/40 hover:z-20 transition-all duration-300 shadow-md hover:shadow-[0_10px_20px_rgba(0,0,0,0.6)]"
+              className="nexus-card p-3 w-64 shrink-0 snap-start group cursor-pointer flex flex-col min-h-[190px] h-auto"
             >
-              <div className="relative aspect-video bg-black/60 overflow-hidden">
+              {/* Decorative Glow */}
+              <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none bg-red-500/40 group-hover:opacity-40 transition-opacity duration-500" />
+              <div className="absolute -left-20 -bottom-20 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none bg-red-500/20 group-hover:opacity-30 transition-opacity duration-500" />
+
+              <div className="relative aspect-video bg-black/60 overflow-hidden rounded-lg shadow-inner z-10 border border-white/5">
                 {vid.thumbnailUrl ? (
                   <img
                     src={vid.thumbnailUrl}
@@ -229,7 +233,7 @@ export default function NetfrixPage() {
                 )}
               </div>
 
-              <div className="p-3 space-y-2">
+              <div className="pt-3 space-y-2 relative z-10 flex flex-col flex-1 justify-between">
                 <h3 className="text-xs font-bold text-white leading-tight truncate group-hover:text-primary transition-colors">
                   {vid.title}
                 </h3>
@@ -337,9 +341,13 @@ export default function NetfrixPage() {
                   <div
                     key={vid.id}
                     onClick={() => setActiveVideo(vid)}
-                    className="group relative border border-white/5 bg-black/40 rounded-lg overflow-hidden cursor-pointer hover:scale-105 hover:border-primary/40 hover:z-20 transition-all duration-300 shadow-md text-left"
+                    className="nexus-card p-4 group cursor-pointer flex flex-col min-h-[220px] h-auto"
                   >
-                    <div className="relative aspect-video bg-black/60 overflow-hidden">
+                    {/* Decorative Glow */}
+                    <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none bg-red-500/40 group-hover:opacity-40 transition-opacity duration-500" />
+                    <div className="absolute -left-20 -bottom-20 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none bg-red-500/20 group-hover:opacity-30 transition-opacity duration-500" />
+
+                    <div className="relative aspect-video bg-black/60 overflow-hidden rounded-lg shadow-inner z-10 border border-white/5">
                       {vid.thumbnailUrl ? (
                         <img
                           src={vid.thumbnailUrl}
@@ -364,7 +372,7 @@ export default function NetfrixPage() {
                         </span>
                       )}
                     </div>
-                    <div className="p-3 space-y-2">
+                    <div className="pt-4 space-y-2 relative z-10 flex flex-col flex-1 justify-between">
                       <h3 className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">
                         {vid.title}
                       </h3>

@@ -186,58 +186,20 @@ export default function ReceiptsPage() {
         </div>
       ) : filteredReceipts.length > 0 ? (
         <>
-          {/* MOBILE: compact list rows (max ~80px each) */}
-          <div className="sm:hidden flex flex-col gap-5">
+          {/* DESKTOP + MOBILE cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredReceipts.map((receipt) => (
               <motion.div
                 key={receipt.id}
                 layout
                 onClick={() => { setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
-                className="flex items-center gap-3 px-3 py-3 rounded-xl nexus-card !p-3 !rounded-xl hover:border-primary/30 hover:bg-card/50 cursor-pointer active:scale-[0.99] transition-all"
+                className="nexus-card p-6 group cursor-pointer flex flex-col justify-between min-h-[180px] h-auto"
+              >
+                {/* Decorative Glow */}
+                <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none bg-primary/40 group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="absolute -left-20 -bottom-20 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none bg-primary/20 group-hover:opacity-30 transition-opacity duration-500" />
                 
-              >
-                {/* Icon */}
-                <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                  <FileCheck className="w-4 h-4 text-primary" />
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-white truncate leading-tight">{receipt.title}</p>
-                  <p className="text-sm text-muted-foreground truncate leading-tight mt-0.5">
-                    {receipt.category || "Outros"}
-                    {receipt.paymentDate ? ` · ${new Date(receipt.paymentDate).toLocaleDateString("pt-BR")}` : ""}
-                  </p>
-                </div>
-
-                {/* Amount + actions */}
-                <div className="flex items-center gap-5 shrink-0">
-                  {receipt.amount !== null && (
-                    <span className="text-sm font-bold text-primary whitespace-nowrap">
-                      R$ {receipt.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
-                  )}
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleDelete(receipt.id); }}
-                    className="p-4 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* DESKTOP: original card grid */}
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredReceipts.map((receipt) => (
-              <motion.div
-                key={receipt.id}
-                layout
-                onClick={() => { setPreviewReceipt(receipt); setActivePreviewIndex(0); }}
-                className="group cursor-pointer bg-card/20 backdrop-blur-md border border-border/50 rounded-2xl p-5 hover:border-primary/30 hover:bg-card/30 hover:shadow-primary/5 flex flex-col justify-between min-h-[180px] h-auto relative overflow-hidden transition-all duration-300"
-              >
-                <div className="space-y-3">
+                <div className="space-y-3 relative z-10">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
@@ -253,10 +215,10 @@ export default function ReceiptsPage() {
                   </div>
 
                   {receipt.description && (
-                    <p className="text-xs text-muted-foreground line-clamp-2">{receipt.description}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2 relative z-10">{receipt.description}</p>
                   )}
 
-                  <div className="pt-2 space-y-1.5 text-[11px] text-muted-foreground">
+                  <div className="pt-2 space-y-1.5 text-[11px] text-muted-foreground relative z-10">
                     {receipt.amount !== null && (
                       <div className="flex items-center gap-2 text-white font-semibold">
                         <DollarSign className="w-3.5 h-3.5 text-primary" />
@@ -272,7 +234,7 @@ export default function ReceiptsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-border/20 pt-3 mt-4 shrink-0">
+                <div className="flex items-center justify-between border-t border-border/20 pt-3 mt-4 shrink-0 relative z-10">
                   <span className="text-[11px] text-muted-foreground font-mono">
                     {new Date(receipt.createdAt).toLocaleDateString("pt-BR")}
                   </span>

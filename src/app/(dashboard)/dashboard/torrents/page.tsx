@@ -250,43 +250,22 @@ export default function TorrentsPage() {
         </div>
       ) : filteredTorrents.length > 0 ? (
         <>
-          {/* MOBILE: compact list rows */}
-          <div className="sm:hidden flex flex-col gap-5">
-            {filteredTorrents.map((item) => (
-              <motion.div
-                key={item.id}
-                onClick={() => handleSelectTorrent(item)}
-                whileTap={{ scale: 0.99 }}
-                className="flex items-center gap-3 px-3 py-3 rounded-xl nexus-card !p-3 !rounded-xl hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all"
-                
-              >
-                <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                  <DownloadCloud className="w-4 h-4 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-white truncate leading-tight">{item.title}</p>
-                  <p className="text-sm text-muted-foreground leading-tight mt-0.5 font-mono">{item.size}</p>
-                </div>
-                <div className="flex items-center gap-4 shrink-0">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]" />
-                  <span className="text-xs font-bold text-emerald-400 uppercase">OK</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* DESKTOP: original card grid */}
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* DESKTOP + MOBILE cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {filteredTorrents.map((item) => {
               return (
                 <motion.div
                   key={item.id}
                   onClick={() => handleSelectTorrent(item)}
                   whileTap={{ scale: 0.97 }}
-                  className="group cursor-pointer nexus-card cursor-pointer group flex flex-col justify-between min-h-[120px] flex flex-col justify-between min-h-[120px] h-auto relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-[0_0_20px_rgba(143,227,25,0.04)]"
+                  className="group cursor-pointer nexus-card p-5 flex flex-col justify-between min-h-[120px] h-auto relative overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-card/30 hover:shadow-[0_0_20px_rgba(143,227,25,0.04)]"
                 >
+                  {/* Decorative Glow */}
+                  <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none bg-emerald-500/40 group-hover:opacity-40 transition-opacity duration-500" />
+                  <div className="absolute -left-20 -bottom-20 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none bg-emerald-500/20 group-hover:opacity-30 transition-opacity duration-500" />
+                  
                   {/* Linha superior */}
-                  <div className="flex justify-between items-start gap-4">
+                  <div className="flex justify-between items-start gap-4 relative z-10">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="text-xs font-extrabold text-white group-hover:text-primary transition-colors truncate max-w-[150px]">
@@ -314,7 +293,7 @@ export default function TorrentsPage() {
                   </div>
 
                   {/* Info do Arquivo */}
-                  <div className="text-[11px] text-muted-foreground flex justify-between items-center mt-4 pt-2 border-t border-border/20">
+                  <div className="text-[11px] text-muted-foreground flex justify-between items-center mt-4 pt-2 border-t border-border/20 relative z-10">
                     <span className="font-semibold text-white/40">Clique para gerenciar</span>
                     <span className="font-mono text-primary font-bold text-[10px]">
                       PC Link

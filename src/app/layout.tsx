@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent"
+  }
 };
 
 export const viewport = {
@@ -40,7 +45,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
-      <body className="min-h-[100dvh] flex flex-col bg-background text-foreground selection:bg-primary/30 overscroll-none font-sans">
+      <body className="min-h-[100dvh] flex flex-col bg-black text-foreground selection:bg-primary/30 overscroll-none font-sans relative">
+        <div className="fixed inset-0 z-[-1] bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-900 animate-gradient-bg pointer-events-none" />
         <ThemeProvider>{children}</ThemeProvider>
         
         {/* Script para PWA Service Worker e auto-recuperação de erros de carregamento (ChunkLoadError) */}

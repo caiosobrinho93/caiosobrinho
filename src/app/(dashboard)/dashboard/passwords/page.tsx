@@ -278,16 +278,7 @@ function PasswordsContent() {
 
       {/* Opções e Botões */}
       <div className="px-5 pb-2 flex flex-wrap gap-4 items-center justify-start sm:px-0 sm:pb-0">
-        <button
-          onClick={() => {
-            handleGenerate();
-            setIsGeneratorOpen(true);
-          }}
-          className="flex items-center justify-center gap-4 px-3 py-1.5 rounded-sm text-sm font-bold bg-primary text-black hover:bg-primary/90 transition-colors cursor-pointer"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-black animate-pulse" />
-          Gerador
-        </button>
+
           <button
             onClick={() => setIsModalOpen(true)}
             className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform">

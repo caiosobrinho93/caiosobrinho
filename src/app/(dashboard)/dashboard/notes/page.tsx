@@ -348,12 +348,10 @@ function NotesContent() {
             </span>
             <button
               onClick={handleCreateNote}
-              className="frutiger-button"
+              className="frutiger-button rounded-xl shadow-[0_4px_15px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-transform"
               title="Nova Nota"
             >
-              <div className="frutiger-inner"><span className="frutiger-top-white"></span><span className="frutiger-text flex items-center justify-center"><Plus className="w-4 h-4" /></span></div>
-              
-              
+              <div className="frutiger-inner px-4 py-2 rounded-xl"><span className="frutiger-top-white"></span><span className="frutiger-text flex items-center justify-center"><Plus className="w-4 h-4" /></span></div>
             </button>
           </div>
 
@@ -662,8 +660,8 @@ function NotesContent() {
             </p>
             <button
               onClick={handleCreateNote}
-              className="frutiger-button w-48 mx-auto mt-4">
-  <div className="frutiger-inner"><span className="frutiger-top-white"></span><span className="frutiger-text font-bold">Criar Primeira Nota</span></div>
+              className="frutiger-button rounded-xl w-48 mx-auto mt-4 shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-transform">
+  <div className="frutiger-inner rounded-xl py-3"><span className="frutiger-top-white"></span><span className="frutiger-text font-bold">Criar Primeira Nota</span></div>
 </button>
           </div>
         )}

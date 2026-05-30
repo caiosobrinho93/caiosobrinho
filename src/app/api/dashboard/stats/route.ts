@@ -264,7 +264,7 @@ export async function GET() {
       // 1. Perfil de usuário
       db.user.findUnique({
         where: { id: userId },
-        select: { xp: true, level: true, username: true }
+        select: { xp: true, level: true, username: true, profileImage: true, coverImage: true }
       }),
       
       // 2. Estatísticas consolidadas (counts, storage, bills sums)
@@ -563,6 +563,8 @@ export async function GET() {
         xp: userProfile?.xp || 0,
         level: userProfile?.level || 1,
         username: userProfile?.username === "caio" ? "Caio" : userProfile?.username === "giselle" ? "Giselle" : "Usuário",
+        profileImage: userProfile?.profileImage || null,
+        coverImage: userProfile?.coverImage || null,
       },
       goals,
       recentItems,

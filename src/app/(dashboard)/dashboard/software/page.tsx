@@ -277,41 +277,20 @@ export default function SoftwarePage() {
         viewMode === "grid" ? (
           /* Visualização em Grade */
           <>
-            {/* Mobile compact rows */}
-            <div className="flex flex-col gap-5 sm:hidden">
+            {/* Desktop + Mobile grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5.5">
               {filteredSoftware.map((item) => (
                 <motion.div
                   key={item.id}
                   onClick={() => handleSelectSoftware(item)}
                   whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all group animate-fadeIn"
+                  className="nexus-card p-6 group cursor-pointer flex flex-col justify-between min-h-[110px] h-auto"
                 >
-                  <div className="w-9 h-9 rounded-lg bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden">
-                    {item.iconUrl ? <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" /> : <Cpu className="w-4 h-4 text-primary" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-4">
-                      <p className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">{item.name}</p>
-                      <span className="text-xs font-mono text-primary shrink-0">v{item.version}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground truncate leading-tight mt-0.5">{item.category || 'Geral'}</p>
-                  </div>
-                  <div className="flex items-center gap-4 shrink-0">
-                    <span className="text-[10px] font-bold text-primary uppercase font-mono tracking-wider">Ver</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            {/* Desktop grid */}
-            <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5.5">
-              {filteredSoftware.map((item) => (
-                <motion.div
-                  key={item.id}
-                  onClick={() => handleSelectSoftware(item)}
-                  whileTap={{ scale: 0.98 }}
-                  className="nexus-card group cursor-pointer flex flex-col justify-between min-h-[110px] h-auto"
-                >
-                  <div className="flex gap-5.5 items-center">
+                  {/* Decorative Glow */}
+                  <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none bg-blue-500/40 group-hover:opacity-40 transition-opacity duration-500" />
+                  <div className="absolute -left-20 -bottom-20 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none bg-blue-500/20 group-hover:opacity-30 transition-opacity duration-500" />
+                  
+                  <div className="flex gap-5.5 items-center relative z-10">
                     <div className="w-9 h-9 rounded-xl bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden shadow-inner bg-gradient-to-br from-card to-muted">
                       {item.iconUrl ? (
                         <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" />
@@ -344,7 +323,7 @@ export default function SoftwarePage() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-[11px] text-muted-foreground flex justify-between items-center mt-4 pt-2 border-t border-border/20">
+                  <div className="text-[11px] text-muted-foreground flex justify-between items-center mt-4 pt-2 border-t border-border/20 relative z-10">
                     <span className="font-semibold text-white/40">Clique para ver detalhes</span>
                     <span className="font-mono text-primary font-bold text-[10px]">HUD Info</span>
                   </div>
@@ -355,33 +334,8 @@ export default function SoftwarePage() {
         ) : (
           /* Visualização em Lista */
           <>
-            {/* Mobile compact rows (list mode) */}
-            <div className="flex flex-col gap-5 sm:hidden">
-              {filteredSoftware.map((item) => (
-                <motion.div
-                  key={item.id}
-                  onClick={() => handleSelectSoftware(item)}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 cursor-pointer transition-all group"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-muted border border-border flex items-center justify-center shrink-0 overflow-hidden">
-                    {item.iconUrl ? <img src={item.iconUrl} alt={item.name} className="w-full h-full object-cover" /> : <Cpu className="w-4 h-4 text-primary" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-4">
-                      <p className="text-xs font-bold text-white truncate leading-tight group-hover:text-primary transition-colors">{item.name}</p>
-                      <span className="text-xs font-mono text-primary shrink-0">v{item.version}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground truncate leading-tight">{item.category || 'Geral'}</p>
-                  </div>
-                  <div className="flex items-center gap-4 shrink-0">
-                    <span className="text-[10px] font-bold text-primary uppercase font-mono tracking-wider">Ver</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            {/* Desktop table */}
-            <div className="hidden sm:block bg-card/55 border border-border rounded-2xl overflow-x-auto shadow-sm">
+            {/* Table (Responsive) */}
+            <div className="bg-card/55 border border-border rounded-2xl overflow-x-auto shadow-sm">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-border text-muted-foreground font-semibold uppercase tracking-wider bg-muted/20">

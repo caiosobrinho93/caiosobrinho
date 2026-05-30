@@ -235,7 +235,7 @@ export default function WallpapersPage() {
                   <img
                     src={item.url}
                     alt={item.title}
-                    className="w-full object-cover aspect-square sm:aspect-auto sm:max-h-[420px]"
+                    className="w-full h-full object-cover aspect-video"
                     loading="lazy"
                   />
  

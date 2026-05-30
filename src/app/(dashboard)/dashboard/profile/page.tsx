@@ -18,7 +18,10 @@ import {
   Trophy,
   Activity,
   HardDrive,
-  Heart
+  Heart,
+  Edit3,
+  X,
+  Upload
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playClickSound, playHoverSound } from "@/components/CyberAudio";
@@ -27,6 +30,10 @@ export default function ProfilePage() {
   const router = useRouter();
   const { data, isLoading, fetchStats } = useStatsStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     fetchStats();
@@ -58,6 +65,43 @@ export default function ProfilePage() {
       console.error("Logout error:", error);
     } finally {
       setIsLoggingOut(false);
+    }
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profileImageFile && !coverImageFile) {
+      setIsEditingProfile(false);
+      return;
+    }
+
+    setIsUploading(true);
+    playClickSound();
+
+    try {
+      const formData = new FormData();
+      if (profileImageFile) formData.append("profileImage", profileImageFile);
+      if (coverImageFile) formData.append("coverImage", coverImageFile);
+
+      const response = await fetch("/api/users/profile", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        await fetchStats(true); // Force refetch from server
+        setIsEditingProfile(false);
+        setProfileImageFile(null);
+        setCoverImageFile(null);
+      } else {
+        const errData = await response.json();
+        alert("Erro ao atualizar perfil: " + errData.error);
+      }
+    } catch (error) {
+      console.error("Profile update error:", error);
+      alert("Erro ao atualizar perfil");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -95,7 +139,7 @@ export default function ProfilePage() {
           <div className="relative w-28 h-28 rounded-full p-[3px] bg-gradient-to-tr from-primary via-primary/40 to-primary shadow-[0_0_20px_var(--primary)]">
             <div className="w-full h-full rounded-full bg-black overflow-hidden relative">
               <img 
-                src={profile.username === "Giselle" ? "/avatar-giselle.png" : "/avatar-caio.png"} 
+                src={profile.profileImage || (profile.username === "Giselle" ? "/avatar-giselle.png" : "/avatar-caio.png")} 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108" 
                 alt={profile.username} 
               />
@@ -111,9 +155,17 @@ export default function ProfilePage() {
         <h1 className="text-xl font-black text-white tracking-wider uppercase mt-4 font-display">
           {profile.username}
         </h1>
-        <p className="text-[9px] font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full uppercase tracking-widest mt-1.5 leading-none">
-          Co-op Administrator
-        </p>
+        <div className="flex items-center gap-2 mt-1.5">
+          <p className="text-[9px] font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full uppercase tracking-widest leading-none">
+            Co-op Administrator
+          </p>
+          <button 
+            onClick={() => { playClickSound(); setIsEditingProfile(true); }}
+            className="flex items-center gap-1 text-[9px] font-bold text-white/70 bg-white/5 border border-white/10 px-3 py-1 rounded-full uppercase tracking-widest leading-none hover:bg-white/10 transition-colors"
+          >
+            <Edit3 className="w-3 h-3" /> Editar
+          </button>
+        </div>
 
         {/* Level / XP Progress Bar */}
         <div className="mt-5 w-full bg-white/5 border border-white/5 p-3 rounded-2xl">
@@ -256,7 +308,7 @@ export default function ProfilePage() {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 shrink-0">
               <img 
-                src={profile.username === "Giselle" ? "/avatar-caio.png" : "/avatar-giselle.png"} 
+                src={partnerName === "Giselle" ? "/avatar-giselle.png" : "/avatar-caio.png"} 
                 className="w-full h-full object-cover" 
                 alt={partnerName} 
               />
@@ -286,6 +338,92 @@ export default function ProfilePage() {
           </button>
         </motion.div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <AnimatePresence>
+        {isEditingProfile && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => !isUploading && setIsEditingProfile(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-sm glass-panel p-6 shadow-2xl flex flex-col gap-6"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-black text-white font-display">Editar Perfil</h3>
+                <button
+                  onClick={() => setIsEditingProfile(false)}
+                  disabled={isUploading}
+                  className="p-1.5 hover:bg-white/10 rounded-full transition-colors disabled:opacity-50"
+                >
+                  <X className="w-5 h-5 text-muted-foreground" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveProfile} className="space-y-5">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Imagem de Perfil</label>
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => setProfileImageFile(e.target.files?.[0] || null)}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      disabled={isUploading}
+                    />
+                    <div className="w-full bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center gap-2 group hover:border-primary/50 hover:bg-primary/5 transition-all">
+                      <Upload className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-xs font-mono text-center text-white/70">
+                        {profileImageFile ? profileImageFile.name : "Clique ou arraste a Imagem de Perfil"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Imagem de Capa (Hero)</label>
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => setCoverImageFile(e.target.files?.[0] || null)}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      disabled={isUploading}
+                    />
+                    <div className="w-full bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center gap-2 group hover:border-primary/50 hover:bg-primary/5 transition-all">
+                      <Upload className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-xs font-mono text-center text-white/70">
+                        {coverImageFile ? coverImageFile.name : "Clique ou arraste a Imagem de Capa"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isUploading || (!profileImageFile && !coverImageFile)}
+                  className="w-full py-3 bg-primary text-black font-black uppercase tracking-widest text-xs rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
+                >
+                  {isUploading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                      Salvando...
+                    </>
+                  ) : "Salvar Alterações"}
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

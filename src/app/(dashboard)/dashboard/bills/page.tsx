@@ -257,38 +257,8 @@ export default function BillsPage() {
         </div>
       ) : filteredBills.length > 0 ? (
         <>
-          {/* Mobile compact rows */}
-          <div className="flex flex-col gap-3 sm:hidden">
-            {filteredBills.map((bill) => {
-              const isCompleted = bill.status === "pago" || bill.status === "recebido";
-              return (
-                <motion.div
-                  key={bill.id}
-                  className={`flex items-center justify-between gap-3 px-4 py-3 rounded-xl border cursor-pointer active:scale-[0.99] transition-all ${
-                    isCompleted
-                      ? 'border-border/30 bg-card/20 opacity-70'
-                      : 'border-border/50 bg-card/30 hover:border-border/70'
-                  }`}
-                  onClick={() => setSelectedBill(bill)}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className={`w-2 h-2 rounded-full shrink-0 ${
-                      bill.type === 'pagar' ? 'bg-red-400' : bill.type === 'receber' ? 'bg-emerald-400' : 'bg-amber-400'
-                    }`} />
-                    <p className={`text-sm font-semibold truncate ${isCompleted ? 'line-through text-muted-foreground' : 'text-white'}`}>{bill.title}</p>
-                  </div>
-                  <div className="shrink-0">
-                    <span className={`text-sm font-bold ${
-                      bill.type === 'pagar' ? 'text-red-400' : bill.type === 'receber' ? 'text-emerald-400' : 'text-amber-400'
-                    }`}>R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Desktop full cards */}
-          <div className="hidden sm:grid grid-cols-1 gap-4">
+          {/* Full cards */}
+          <div className="grid grid-cols-1 gap-4">
             {filteredBills.map((bill) => {
               const isCompleted = bill.status === "pago" || bill.status === "recebido";
               const diffDays = Math.ceil((new Date(bill.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
@@ -297,7 +267,7 @@ export default function BillsPage() {
                 <motion.div
                   key={bill.id}
                   layout
-                  className={`nexus-card flex flex-col md:flex-row md:items-center justify-between gap-4 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300 hover:shadow-primary/5 ${
+                  className={`nexus-card relative overflow-hidden p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-lg ${
                     isCompleted 
                       ? "border-border/30 opacity-60 bg-card/10" 
                       : bill.type === "pagar" 
@@ -307,8 +277,12 @@ export default function BillsPage() {
                           : "border-amber-500/20 bg-card/20 hover:border-amber-500/40"
                   }`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className={`p-3 border rounded-xl shrink-0 ${
+                  {/* Subtle Background Glow by Type */}
+                  <div className={`absolute -right-20 -top-20 w-48 h-48 blur-[80px] rounded-full opacity-20 pointer-events-none ${
+                    bill.type === "pagar" ? "bg-red-500" : bill.type === "receber" ? "bg-emerald-500" : "bg-amber-500"
+                  }`} />
+                  <div className="flex items-start gap-5 relative z-10">
+                    <div className={`p-4 border rounded-2xl shrink-0 shadow-inner ${
                       bill.type === "pagar" 
                         ? "text-red-400 bg-red-500/10 border-red-500/20" 
                         : bill.type === "receber"

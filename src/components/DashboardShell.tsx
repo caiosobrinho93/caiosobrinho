@@ -387,6 +387,13 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       className={`${isGiselle ? 'user-giselle' : ''} theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${themeBgClass} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
     >
       
+      {/* Custom Animated App Background */}
+      <div className={`absolute inset-0 pointer-events-none z-0 bg-gradient-to-br animate-gradient-bg ${
+        isGiselle
+          ? "from-[#0a0000] via-pink-900/40 via-black to-rose-900/30"
+          : "from-[#00040a] via-blue-900/40 via-black to-cyan-900/30"
+      }`} />
+
       {/* Background Cyber Grid Layer */}
       <div className={`absolute inset-0 pointer-events-none z-0 ${gridStyleClass}`} />
       
@@ -396,9 +403,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       {/* Floating Aurora Gradient Blobs (Looping Animations) */}
       {mounted && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/10 blur-[100px] animate-blob-1" />
-          <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-accent/10 blur-[100px] animate-blob-2" />
-          <div className="absolute top-1/2 left-1/3 w-80 h-80 rounded-full bg-secondary/15 blur-[120px] animate-blob-3" />
+          <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/20 blur-[100px] animate-blob-1" />
+          <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-accent/20 blur-[100px] animate-blob-2" />
+          <div className="absolute top-1/2 left-1/3 w-80 h-80 rounded-full bg-secondary/20 blur-[120px] animate-blob-3" />
         </div>
       )}
       
@@ -570,35 +577,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Calculator Trigger */}
-            <button
-              onClick={() => { playClickSound(); setIsCalculatorOpen(prev => !prev); }}
-              onMouseEnter={playHoverSound}
-              title="Calculadora HUD"
-              className={`hidden min-[1200px]:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
-                isCalculatorOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Calculator className="w-4 h-4" />
-            </button>
-
-
-
-            {/* Synth Radio Trigger */}
-            <button
-              onClick={() => { playClickSound(); setIsRadioOpen(prev => !prev); }}
-              onMouseEnter={playHoverSound}
-              title="Rádio Synthwave"
-              className={`hidden min-[1200px]:flex items-center justify-center w-8 h-8 rounded-lg border transition-all cursor-pointer shrink-0 ${
-                isRadioOpen 
-                  ? "bg-primary/20 border-primary/45 text-primary " 
-                  : "bg-muted/20 hover:bg-muted/40 border border-border/80 text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Music className="w-4 h-4" />
-            </button>
+            {/* Search Trigger - Icon only */}
 
             {/* Notification Bell */}
             <button
@@ -776,98 +755,105 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               className="fixed inset-0 bg-black/75 z-40 md:hidden backdrop-blur-md"
             />
 
-            {/* Bottom Drawer — Silky smooth spring, no bounce */}
+            {/* Bottom Drawer — Sleek Glassmorphism and Scale Animation */}
             <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", stiffness: 380, damping: 40, mass: 0.6 }}
-              className="fixed bottom-0 left-0 right-0 max-h-[80vh] z-50 md:hidden flex flex-col overflow-y-auto rounded-t-3xl"
-              style={{ background: "linear-gradient(180deg, #111214 0%, #09090b 100%)", borderTop: "1px solid rgba(255,255,255,0.07)" }}
+              initial={{ y: "100%", opacity: 0, scale: 0.98 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: "100%", opacity: 0, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8 }}
+              className="fixed bottom-0 left-0 right-0 z-50 md:hidden flex flex-col overflow-y-auto rounded-t-[32px] bg-black/60 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
+              style={{ maxHeight: "85vh" }}
             >
+              {/* Decorative Glow */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-primary/40 blur-md rounded-full pointer-events-none" />
+
               {/* Handle */}
-              <div className="w-full flex justify-center pt-3 pb-1 shrink-0">
-                <div className="w-10 h-0.5 rounded-full bg-white/10" />
+              <div className="w-full flex justify-center pt-4 pb-2 shrink-0">
+                <div className="w-12 h-1.5 rounded-full bg-white/20" />
               </div>
 
               {/* Header */}
-              <div className="flex items-center justify-between px-5 pt-3 pb-3 shrink-0">
-                <span className="text-base font-bold text-white tracking-tight">Menu</span>
+              <div className="flex items-center justify-between px-6 pt-2 pb-4 shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                    <LayoutDashboard className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-lg font-bold text-white tracking-tight">Navegação</span>
+                </div>
                 <button
                   onClick={() => setIsCentralOptionsOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/8 hover:bg-white/15 text-white/60 hover:text-white cursor-pointer transition-colors flex items-center justify-center"
+                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-white/50 hover:text-white cursor-pointer transition-colors flex items-center justify-center border border-white/5"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Sections — Clean unified icon grid */}
-              <div className="flex-1 px-4 pb-8 space-y-5">
+              {/* Sections — Premium Unified Icons */}
+              <div className="flex-1 px-5 pb-8 space-y-6">
                 {[
                   {
                     label: "Finanças",
                     items: [
-                      { href: "/dashboard/bills", icon: CreditCard, name: "Contas" },
-                      { href: "/dashboard/receipts", icon: FileCheck, name: "Comprovantes" },
+                      { href: "/dashboard/bills", icon: CreditCard, name: "Contas", color: "text-emerald-400", bg: "bg-emerald-400/10" },
+                      { href: "/dashboard/receipts", icon: FileCheck, name: "Comprovantes", color: "text-cyan-400", bg: "bg-cyan-400/10" },
                     ],
                   },
                   {
                     label: "Arquivos & Mídia",
                     items: [
-                      { href: "/dashboard/files", icon: FolderOpen, name: "Arquivos" },
-                      { href: "/dashboard/netfrix", icon: Video, name: "Netfrix" },
-                      { href: "/dashboard/wallpapers", icon: ImageIcon, name: "Imagens" },
-                      { href: "/dashboard/torrents", icon: DownloadCloud, name: "Torrents" },
+                      { href: "/dashboard/files", icon: FolderOpen, name: "Arquivos", color: "text-amber-400", bg: "bg-amber-400/10" },
+                      { href: "/dashboard/netfrix", icon: Video, name: "Netfrix", color: "text-red-500", bg: "bg-red-500/10" },
+                      { href: "/dashboard/wallpapers", icon: ImageIcon, name: "Imagens", color: "text-fuchsia-400", bg: "bg-fuchsia-400/10" },
+                      { href: "/dashboard/torrents", icon: DownloadCloud, name: "Torrents", color: "text-purple-400", bg: "bg-purple-400/10" },
                     ],
                   },
                   {
                     label: "Segurança & Produtividade",
                     items: [
-                      { href: "/dashboard/passwords", icon: Key, name: "Senhas" },
-                      { href: "/dashboard/notes", icon: FileText, name: "Notas" },
-                      { href: "/dashboard/software", icon: Cpu, name: "Softwares" },
-                      { href: "/dashboard/dev", icon: Code, name: "DEV Central" },
+                      { href: "/dashboard/passwords", icon: Key, name: "Senhas", color: "text-rose-500", bg: "bg-rose-500/10" },
+                      { href: "/dashboard/notes", icon: FileText, name: "Notas", color: "text-yellow-400", bg: "bg-yellow-400/10" },
+                      { href: "/dashboard/software", icon: Cpu, name: "Softwares", color: "text-blue-400", bg: "bg-blue-400/10" },
+                      { href: "/dashboard/dev", icon: Code, name: "DEV Central", color: "text-green-400", bg: "bg-green-400/10" },
                     ],
-                  },
-                  {
-                    label: "Utilitários",
-                    items: [
-                      { onClick: () => setIsCalculatorOpen(v => !v), icon: Calculator, name: "Calculadora" },
-                      { onClick: () => setIsRadioOpen(v => !v), icon: Music, name: "Rádio Synth" },
-                    ] as any[],
                   },
                 ].map((section, sIdx) => (
                   <div key={section.label}>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2.5 px-1 text-white/40">{section.label}</p>
-                    <div className="grid grid-cols-2 gap-2">
+                    <p className="text-[11px] font-bold uppercase tracking-widest mb-3 px-1 text-white/30 flex items-center gap-2">
+                      {section.label}
+                      <span className="flex-1 h-px bg-white/5" />
+                    </p>
+                    <div className="grid grid-cols-2 gap-2.5">
                       {section.items.map((item: any, iIdx: number) => {
                         const Icon = item.icon;
                         const isActive = item.href ? pathname === item.href : false;
                         
                         const elementContent = (
                           <motion.div
-                            whileTap={{ scale: 0.95 }}
-                            className={`flex items-center gap-3 px-3.5 py-3 rounded-2xl border transition-all cursor-pointer select-none ${
+                            whileTap={{ scale: 0.92 }}
+                            className={`flex flex-col items-start justify-center gap-2.5 p-4 rounded-2xl border transition-all cursor-pointer select-none group relative overflow-hidden ${
                               isActive
-                                ? "bg-primary/10 border-primary/30 text-primary shadow-[0_0_12px_rgba(var(--primary-color-rgb),0.15)] font-bold"
-                                : "bg-white/[0.03] border-white/5 text-white/70 hover:bg-white/[0.06] hover:text-white"
+                                ? "bg-primary/10 border-primary/40 shadow-[0_0_15px_rgba(var(--primary-color-rgb),0.2)]"
+                                : "bg-white/[0.02] border-white/5 hover:bg-white/[0.05]"
                             }`}
                           >
-                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                              isActive ? "bg-primary/15 text-primary" : "bg-black/25 text-white/50"
+                            {isActive && (
+                              <div className="absolute inset-0 bg-primary/5 blur-xl pointer-events-none" />
+                            )}
+                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all shadow-sm ${
+                              isActive ? "bg-primary text-black scale-110" : `${item.bg} ${item.color} group-hover:scale-110`
                             }`}>
-                              <Icon className="w-4 h-4" />
+                              <Icon className="w-4.5 h-4.5" />
                             </div>
-                            <span className={`text-[13px] font-semibold truncate ${isActive ? "text-primary" : "text-white"}`}>{item.name}</span>
+                            <span className={`text-[13px] font-semibold tracking-wide ${isActive ? "text-primary" : "text-white/80 group-hover:text-white"}`}>{item.name}</span>
                           </motion.div>
                         );
 
                         return (
                           <motion.div
                             key={item.name}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: (sIdx * 4 + iIdx) * 0.025 + 0.04, type: "spring", stiffness: 340, damping: 26 }}
+                            initial={{ opacity: 0, x: -15 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: (sIdx * 4 + iIdx) * 0.03 + 0.1, type: "spring", stiffness: 300, damping: 25 }}
                           >
                             {item.href ? (
                               <Link href={item.href} onClick={() => setIsCentralOptionsOpen(false)}>
@@ -887,24 +873,20 @@ export default function DashboardShell({ children, username }: DashboardShellPro
               </div>
 
               {/* Quick actions row */}
-              <div className="pt-3 border-t border-white/5 grid grid-cols-2 gap-2">
+              <div className="mt-auto px-5 pb-6 pt-4 border-t border-white/10 bg-white/[0.02] grid grid-cols-2 gap-3 backdrop-blur-md">
                   <button
                     onClick={() => { setIsCentralOptionsOpen(false); setIsCommandPaletteOpen(true); }}
-                    className="flex items-center gap-3 px-3.5 py-3 rounded-2xl border border-white/8 bg-white/4 text-white/60 hover:text-white hover:bg-white/8 transition-all cursor-pointer"
+                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl bg-white/5 text-white/70 hover:text-white hover:bg-white/10 border border-white/5 transition-all cursor-pointer font-semibold text-[13px]"
                   >
-                    <div className="w-8 h-8 rounded-xl bg-black/20 flex items-center justify-center shrink-0">
-                      <Search className="w-4 h-4 text-white/50" />
-                    </div>
-                    <span className="text-[13px] font-semibold text-white">Buscar</span>
+                    <Search className="w-4 h-4" />
+                    Buscar
                   </button>
                   <button
                     onClick={() => { setIsCentralOptionsOpen(false); handleLogout(); }}
-                    className="flex items-center gap-3 px-3.5 py-3 rounded-2xl border border-red-500/10 bg-red-500/5 text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+                    className="flex items-center justify-center gap-2 p-3.5 rounded-xl bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/20 transition-all cursor-pointer font-semibold text-[13px]"
                   >
-                    <div className="w-8 h-8 rounded-xl bg-black/20 flex items-center justify-center shrink-0">
-                      <LogOut className="w-4 h-4" />
-                    </div>
-                    <span className="text-[13px] font-semibold">Sair</span>
+                    <LogOut className="w-4 h-4" />
+                    Bloquear
                   </button>
               </div>
             </motion.div>
