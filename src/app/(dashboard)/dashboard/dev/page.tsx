@@ -55,11 +55,14 @@ export default function DevPage() {
     const url = isNew ? "/api/dev-components" : `/api/dev-components/${selectedComp.id}`;
     const method = isNew ? "POST" : "PATCH";
 
+    // Prevent passing fields that Prisma cannot update or will cause errors
+    const { id, createdAt, updatedAt, userId, ...payload } = selectedComp as any;
+
     try {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(selectedComp),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {

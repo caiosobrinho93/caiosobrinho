@@ -34,8 +34,11 @@ import {
   Star,
   Home
 } from "lucide-react";
+import { RssTechWidget } from './RssTechWidget';
+import NeonParticles from './NeonParticles';
+import GiselleBackground from './GiselleBackground';
+import { useAuth } from '@/hooks/useAuth';
 import CommandPalette from "./CommandPalette";
-import NeonParticles from "./NeonParticles";
 
 import { useSettingsStore } from "@/stores/settingsStore";
 import { APP_VERSION } from "@/lib/version";
@@ -411,7 +414,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]" />
       
       {/* Dynamic Cyberpunk Particle Canvas */}
-      {mounted && <NeonParticles isGiselle={isGiselle} />}
+      {mounted && (
+        isGiselle ? <GiselleBackground /> : <NeonParticles isGiselle={isGiselle} />
+      )}
       
       {/* 1. SIDEBAR DESKTOP */}
       <motion.aside
