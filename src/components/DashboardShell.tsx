@@ -404,14 +404,14 @@ export default function DashboardShell({ children, username }: DashboardShellPro
   return (
     <div 
       style={customStyle}
-      className={`theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} bg-[#050505] ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
+      className={`theme-${mounted ? accentColor : "violet"} density-${mounted ? density : "normal"} ${isGiselle ? 'bg-[#1c0515]' : 'bg-[#050505]'} ${neonIntensityClass} ${animationSpeedClass} min-h-screen w-full flex text-foreground overflow-hidden relative`}
     >
       
       {/* Background Cyber Grid Layer */}
       <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]" />
       
       {/* Dynamic Cyberpunk Particle Canvas */}
-      {mounted && <NeonParticles />}
+      {mounted && <NeonParticles isGiselle={isGiselle} />}
       
       {/* 1. SIDEBAR DESKTOP */}
       <motion.aside

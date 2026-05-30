@@ -2,7 +2,11 @@
 
 import { useEffect } from "react";
 
-export default function NeonParticles() {
+interface NeonParticlesProps {
+  isGiselle?: boolean;
+}
+
+export default function NeonParticles({ isGiselle = false }: NeonParticlesProps) {
   useEffect(() => {
     const canvas = document.getElementById('particles-canvas') as HTMLCanvasElement;
     if (!canvas) return;
@@ -15,8 +19,8 @@ export default function NeonParticles() {
     const CONNECTION_DISTANCE = window.innerWidth < 768 ? 80 : 120;
 
     // You can tweak colors here!
-    const primaryHex = '#00f2fe';
-    const accentHex = '#3b82f6';
+    const primaryHex = isGiselle ? '#f43f5e' : '#00f2fe'; // Rose for Giselle, Cyan for Caio
+    const accentHex = isGiselle ? '#a855f7' : '#3b82f6'; // Purple for Giselle, Blue for Caio
 
     function hexToRgb(hex: string) {
       let c = hex.substring(1).trim();
