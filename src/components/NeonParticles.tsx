@@ -11,7 +11,7 @@ export default function NeonParticles() {
     if (!ctx) return;
 
     let particles: any[] = [];
-    const PARTICLE_COUNT = window.innerWidth < 768 ? 18 : 35;
+    const PARTICLE_COUNT = window.innerWidth < 768 ? 36 : 70;
     const CONNECTION_DISTANCE = window.innerWidth < 768 ? 80 : 120;
 
     // You can tweak colors here!
