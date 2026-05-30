@@ -661,38 +661,34 @@ export default function DashboardPage() {
         {renderWidgetHeader("Atalhos Rápidos", <Zap className="w-3 h-3 text-primary" />, idx)}
         
         <div className="grid grid-cols-2 gap-2 px-[15px] pb-[15px]">
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard/notes?new=true")}
-            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
+          <Link
+            href="/dashboard/notes?new=true"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-sm font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px] transition-colors hover:bg-muted/30"
           >
             <Plus className="w-3 h-3 text-primary shrink-0" />
             Criar Nota
-          </button>
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard/passwords?generate=true")}
-            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
+          </Link>
+          <Link
+            href="/dashboard/passwords?generate=true"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-sm font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px] transition-colors hover:bg-muted/30"
           >
             <Key className="w-3 h-3 text-secondary shrink-0" />
             Nova Senha
-          </button>
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard/torrents")}
-            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
+          </Link>
+          <Link
+            href="/dashboard/torrents?new=true"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-sm font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px] transition-colors hover:bg-muted/30"
           >
             <RefreshCw className="w-3 h-3 text-amber shrink-0" />
             Torrent
-          </button>
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard/files")}
-            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-xs font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px]"
+          </Link>
+          <Link
+            href="/dashboard/files"
+            className="flex items-center gap-1.5 p-2 sm:p-2.5 bg-muted/15 border border-border rounded-lg text-sm font-bold glass-btn cursor-pointer justify-center h-[42px] sm:h-[50px] transition-colors hover:bg-muted/30"
           >
             <FolderOpen className="w-3 h-3 text-emerald shrink-0" />
             Upload
-          </button>
+          </Link>
         </div>
       </motion.div>
     );

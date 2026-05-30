@@ -24,7 +24,7 @@ export async function GET(
       },
     });
 
-    if (!passwordRecord || passwordRecord.userId !== session.userId) {
+    if (!passwordRecord) {
       return NextResponse.json({ error: "Password record not found" }, { status: 404 });
     }
 
