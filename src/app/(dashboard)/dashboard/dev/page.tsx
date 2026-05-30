@@ -123,7 +123,7 @@ export default function DevPage() {
   return (
     <div className="flex flex-col h-full space-y-6 pb-8">
       {/* HEADER OVERHAUL */}
-      <div className="relative p-6 sm:p-8 rounded-2xl overflow-hidden shadow-2xl bg-[#0a0a0f] border border-white/5 mb-6 mx-5 sm:mx-0 mt-5 sm:mt-0">
+      <div className="shrink-0 relative p-6 sm:p-8 rounded-2xl overflow-hidden shadow-2xl bg-[#0a0a0f] border border-white/5 mb-6 mx-5 sm:mx-0 mt-5 sm:mt-0">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex flex-col items-start text-left">
