@@ -390,8 +390,8 @@ export default function DashboardShell({ children, username }: DashboardShellPro
       {/* Custom Animated App Background */}
       <div className={`absolute inset-0 pointer-events-none z-0 bg-gradient-to-br animate-gradient-bg ${
         isGiselle
-          ? "from-[#0a0000] via-pink-900/40 via-black to-rose-900/30"
-          : "from-[#00040a] via-blue-900/40 via-black to-cyan-900/30"
+          ? "from-rose-900/40 via-fuchsia-900/30 to-orange-900/40"
+          : "from-emerald-900/40 via-indigo-900/30 to-red-900/40"
       }`} />
 
       {/* Background Cyber Grid Layer */}
