@@ -388,10 +388,10 @@ export default function DashboardShell({ children, username }: DashboardShellPro
     >
       
       {/* Custom Animated App Background */}
-      <div className={`absolute inset-0 pointer-events-none z-0 bg-gradient-to-br animate-gradient-bg mix-blend-screen opacity-50 ${
+      <div className={`absolute inset-0 pointer-events-none z-0 bg-gradient-to-br animate-gradient-bg mix-blend-screen opacity-40 ${
         isGiselle
           ? "from-rose-600 via-purple-700 to-orange-600"
-          : "from-emerald-600 via-indigo-700 to-rose-600"
+          : "from-blue-700 via-indigo-800 to-cyan-700"
       }`} />
 
       {/* Background Cyber Grid Layer */}
@@ -411,9 +411,9 @@ export default function DashboardShell({ children, username }: DashboardShellPro
             </>
           ) : (
             <>
-              <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-emerald-500/25 blur-[120px] animate-blob-1" />
-              <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-rose-500/25 blur-[120px] animate-blob-2" />
-              <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full bg-indigo-500/25 blur-[120px] animate-blob-3" />
+              <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-blue-500/25 blur-[120px] animate-blob-1" />
+              <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-cyan-500/25 blur-[120px] animate-blob-2" />
+              <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full bg-sky-500/25 blur-[120px] animate-blob-3" />
             </>
           )}
         </div>
