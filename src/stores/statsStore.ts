@@ -28,6 +28,7 @@ export interface StatsData {
     username: string;
     coverImage?: string;
     image?: string;
+    profileImage?: string;
   };
   goals: Goal[];
   recentItems: Array<{
