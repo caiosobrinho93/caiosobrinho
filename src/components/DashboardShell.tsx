@@ -622,7 +622,7 @@ export default function DashboardShell({ children, username }: DashboardShellPro
           </div>
         </header>
  
-        <main className="flex-1 overflow-y-auto bg-background/35 relative pt-4 px-3 sm:pt-6 sm:px-4 md:p-8 lg:p-10 pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-8">
+        <main className="flex-1 overflow-y-auto bg-background/35 relative p-2.5 pb-[calc(70px+env(safe-area-inset-bottom))]">
           <motion.div
             key={pathname}
             initial={{ opacity: 0, y: 6 }}
